@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" width="800" height="580" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">The four quadrants of Harness Engineering</title>
+  <desc id="desc">Architecture Constraints, Feedback Loops, Workflow Control, and Improvement Cycles surround the central Context Engineering layer</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5F5E5A"/>
+    </marker>
+  </defs>
+
+  <!-- Outer frame -->
+  <rect x="20" y="40" width="760" height="520" rx="14" fill="none" stroke="#0F6E56" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="400" y="68" text-anchor="middle" fill="#0F6E56" font-size="15" font-weight="700">Harness Engineering (System-Wide Design &amp; Control)</text>
+
+  <!-- Top-Left: Architecture Constraints -->
+  <rect x="50" y="100" width="290" height="170" rx="12" fill="#FBE7DF" stroke="#D85A30" stroke-width="2"/>
+  <text x="65" y="124" fill="#D85A30" font-size="14" font-weight="700">Architecture Constraints</text>
+  <text x="65" y="142" fill="#D85A30" font-size="11" font-style="italic">Question: "What to prevent"</text>
+  <text x="65" y="170" fill="#7A2F12" font-size="11">- Linters</text>
+  <text x="65" y="190" fill="#7A2F12" font-size="11">- Structural tests</text>
+  <text x="65" y="210" fill="#7A2F12" font-size="11">- Dependency direction rules</text>
+
+  <!-- Top-Right: Feedback Loops -->
+  <rect x="460" y="100" width="290" height="170" rx="12" fill="#DFF4EA" stroke="#1D9E75" stroke-width="2"/>
+  <text x="475" y="124" fill="#1D9E75" font-size="14" font-weight="700">Feedback Loops</text>
+  <text x="475" y="142" fill="#1D9E75" font-size="11" font-style="italic">Question: "What to measure"</text>
+  <text x="475" y="170" fill="#0E5A40" font-size="11">- CI/CD integration</text>
+  <text x="475" y="190" fill="#0E5A40" font-size="11">- Observability</text>
+  <text x="475" y="210" fill="#0E5A40" font-size="11">- Metrics / logs</text>
+
+  <!-- Bottom-Left: Workflow Control -->
+  <rect x="50" y="320" width="290" height="170" rx="12" fill="#E3EEFB" stroke="#378ADD" stroke-width="2"/>
+  <text x="65" y="344" fill="#185FA5" font-size="14" font-weight="700">Workflow Control</text>
+  <text x="65" y="362" fill="#185FA5" font-size="11" font-style="italic">Question: "How to run"</text>
+  <text x="65" y="390" fill="#0F3A66" font-size="11">- Task splitting / parallelization</text>
+  <text x="65" y="410" fill="#0F3A66" font-size="11">- Permission management</text>
+  <text x="65" y="430" fill="#0F3A66" font-size="11">- Human-in-the-loop control</text>
+
+  <!-- Bottom-Right: Improvement Cycles -->
+  <rect x="460" y="320" width="290" height="170" rx="12" fill="#FAE3EC" stroke="#D4537E" stroke-width="2"/>
+  <text x="475" y="344" fill="#D4537E" font-size="14" font-weight="700">Improvement Cycles</text>
+  <text x="475" y="362" fill="#D4537E" font-size="11" font-style="italic">Question: "How to sustain"</text>
+  <text x="475" y="390" fill="#7A2A48" font-size="11">- Entropy mitigation</text>
+  <text x="475" y="410" fill="#7A2A48" font-size="11">- Auto cleanup</text>
+  <text x="475" y="430" fill="#7A2A48" font-size="11">- Doc freshness</text>
+
+  <!-- Center: Context Engineering -->
+  <rect x="345" y="265" width="110" height="60" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="2"/>
+  <text x="400" y="290" text-anchor="middle" fill="#185FA5" font-size="11" font-weight="700">Context</text>
+  <text x="400" y="306" text-anchor="middle" fill="#185FA5" font-size="11" font-weight="700">Engineering</text>
+  <text x="400" y="318" text-anchor="middle" fill="#185FA5" font-size="9">What the LLM Sees</text>
+
+  <!-- Arrows from each quadrant to center -->
+  <line x1="320" y1="270" x2="350" y2="278" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="480" y1="270" x2="450" y2="278" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="320" y1="320" x2="350" y2="312" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="480" y1="320" x2="450" y2="312" stroke="#5F5E5A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Caption -->
+  <text x="400" y="540" text-anchor="middle" fill="#5F5E5A" font-size="11">The four quadrants surround the context layer, ensuring system-wide quality through mechanisms.</text>
+</svg>

@@ -1,0 +1,30 @@
+/* Footer Links Styling */
+.md-footer-links {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.md-footer-links a {
+  color: hsla(0,0%,100%,0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.md-footer-links a:hover {
+  color: hsla(0,0%,100%,1);
+}
+
+.md-footer-separator {
+  margin: 0 0.5rem;
+  color: hsla(0,0%,100%,0.3);
+}
+
+/* Responsive styling for mobile */
+@media screen and (max-width: 76.1875em) {
+  .md-footer-links {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大谷HR×日経225 用語集</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --c-blue: #2979FF;
+  --c-bg-card: #F8F8F6;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --c-blue: #5B9DFF;
+  --c-bg-card: #262624;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background: var(--color-background-primary);
+  font-size: 14px;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 15px; margin: 0 0 4px; font-weight: 700; }
+.sub { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 14px; }
+.item {
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: var(--c-bg-card);
+  overflow: hidden;
+}
+.head {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.head .term-jp { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.head .summary {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+.head .toggle {
+  font-size: 14px; color: var(--c-blue);
+  transition: transform 0.2s;
+}
+.item.open .head .toggle { transform: rotate(45deg); }
+.body {
+  display: none;
+  padding: 0 14px 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  border-top: 1px dashed var(--color-border-tertiary);
+}
+.item.open .body { display: block; padding-top: 10px; }
+.body .label { color: var(--color-text-primary); font-weight: 700; font-size: 11px; }
+.body .example {
+  margin-top: 6px;
+  background: var(--color-background-primary);
+  border-left: 3px solid var(--c-blue);
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: var(--color-text-primary);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>用語集 — 大谷HR×日経225 検証</h1>
+  <p class="sub">クリックで展開。記事中で出てきた統計・投資用語の最小限の説明集。</p>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">バックテスト <span class="summary">— 過去データで仮想売買を検証する</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      「もしこのルールで過去に売買していたら、儲かっていたか？」を過去データで再現する手法。
+      <div class="example">「このルールで10年前から売買してたら？」を過去データで答え合わせするイメージ。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">寄付きギャップ <span class="summary">— 前日終値→翌朝始値の変化率</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      株式市場が朝に開いた最初の値段（始値）が、前日の終値からどれだけ動いたかを示す。夜の間に入ったニュースや海外市場の動きが反映される。
+      <div class="example">前日終値39,000円 → 翌朝始値39,100円 = 寄付きギャップ +0.26%。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">t値 <span class="summary">— 観測差がノイズに対してどれだけ大きいか</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      観測された差を、データのバラつきで割った数値。t値が大きいほど「偶然でこの差が出る可能性は低い」。
+      <div class="example">t≥1.96で「5%有意」（偶然で起きる確率5%以下）が慣習的な合格ライン。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">p値 <span class="summary">— 偶然だけでこの結果が出る確率</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      帰無仮説（効果なし）が正しいと仮定したとき、観測された差以上の差がランダムに出る確率。
+      <div class="example">p=0.038 → 「ランダムにやって100回中3.8回しか起きない」という意味。p&lt;0.05が慣習的な合格ライン。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">コントロール変数 <span class="summary">— 他の原因の影響を差し引く変数</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      「他の要因の影響を取り除いた上で、本当にAがBに効いているか」を確かめるために回帰モデルに同時投入する変数。
+      <div class="example">「傘を持つ人が多い日は事故が多い」→ 「雨かどうか」をコントロールに入れると関係は消える。今回はS&amp;P500が「雨」に相当。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">疑似相関 <span class="summary">— 第三の原因が両方を動かしているだけ</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      2つの出来事が「一緒に起きやすい」ように見えるが、実は第三の原因が両方を引き起こしている現象。
+      <div class="example">アイスの売上が増える日は水難事故も増える。原因は「夏の暑さ」であって、アイスが事故を起こすわけではない。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">媒介変数 <span class="summary">— 原因と結果の間に挟まる中間ステップ</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      「原因 → 中間ステップ → 結果」の連鎖における中間ステップ。これをコントロール変数に入れると、本物の効果まで除去してしまう。
+      <div class="example">運動 → 筋肉量増加 → 基礎代謝アップ。「筋肉量」をコントロールに入れると「運動の効果なし」と誤った結論になる。</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="term-jp">Bonferroni補正 <span class="summary">— 検定回数で合格ラインを割る</span></span><span class="toggle">+</span></div>
+    <div class="body">
+      検定を何回も繰り返すと「偶然5%で当たる」くじを何枚も引くのと同じで、どれかは当たりやすくなる。これを防ぐために合格ラインを検定回数で割る方法。
+      <div class="example">45回検定なら 0.05 ÷ 45 ≒ 0.001 が新しい合格ライン。今回のp=0.038はこの基準を満たさない。</div>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll(".item .head").forEach(function(h){
+  h.addEventListener("click", function(){
+    h.parentElement.classList.toggle("open");
+  });
+});
+(function() {
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

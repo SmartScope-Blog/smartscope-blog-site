@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-labelledby="title desc">
+  <title id="title">Bollinger Band Mean Reversion</title>
+  <desc id="desc">Price, moving average, and 2-sigma bands with mean-reversion signals.</desc>
+  <style>
+    .axis { stroke: #888780; stroke-width: 1.5; }
+    .grid { stroke: #ecebe6; stroke-width: 1; }
+    .band { fill: #dcdad2; opacity: 0.55; }
+    .ma { fill: none; stroke: #888780; stroke-width: 2.5; stroke-dasharray: 8 6; }
+    .price { fill: none; stroke: #378add; stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+    .title { font: 700 26px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .label { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4f4f49; }
+    .small { font: 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+    .note { fill: #fbf8f3; stroke: #d85a30; stroke-width: 1; }
+    .buy { fill: #1d9e75; }
+    .sell { fill: #e24b4a; }
+  </style>
+  <rect width="800" height="420" fill="#ffffff" rx="24"/>
+  <text x="70" y="38" class="title">Bollinger Band Mean Reversion</text>
+
+  <g transform="translate(70 70)">
+    <line x1="0" y1="0" x2="0" y2="240" class="axis"/>
+    <line x1="0" y1="240" x2="520" y2="240" class="axis"/>
+    <line x1="0" y1="40" x2="520" y2="40" class="grid"/>
+    <line x1="0" y1="100" x2="520" y2="100" class="grid"/>
+    <line x1="0" y1="160" x2="520" y2="160" class="grid"/>
+    <line x1="104" y1="0" x2="104" y2="240" class="grid"/>
+    <line x1="208" y1="0" x2="208" y2="240" class="grid"/>
+    <line x1="312" y1="0" x2="312" y2="240" class="grid"/>
+    <line x1="416" y1="0" x2="416" y2="240" class="grid"/>
+
+    <path class="band" d="M0 96 L26 92 L52 88 L78 86 L104 84 L130 82 L156 80 L182 84 L208 90 L234 98 L260 104 L286 112 L312 120 L338 122 L364 118 L390 112 L416 108 L442 104 L468 100 L494 98 L520 96 L520 184 L494 188 L468 194 L442 200 L416 204 L390 206 L364 210 L338 216 L312 220 L286 218 L260 212 L234 204 L208 198 L182 194 L156 188 L130 182 L104 176 L78 174 L52 172 L26 174 L0 176 Z"/>
+    <polyline class="ma" points="0,136 26,132 52,130 78,130 104,130 130,132 156,134 182,139 208,144 234,151 260,158 286,165 312,170 338,169 364,164 390,159 416,156 442,152 468,147 494,143 520,140"/>
+    <polyline class="price" points="0,146 26,138 52,134 78,132 104,126 130,120 156,110 182,116 208,128 234,142 260,154 286,168 312,232 338,184 364,158 390,146 416,140 442,134 468,126 494,92 520,118"/>
+
+    <polygon points="306,212 318,236 294,236" class="buy"/>
+    <text x="324" y="232" class="small" fill="#177a5b">Buy</text>
+    <polygon points="488,112 500,88 476,88" class="sell"/>
+    <text x="506" y="106" class="small" fill="#b53d3c">Sell</text>
+
+    <text x="-18" y="10" class="label">Price</text>
+    <text x="0" y="260" class="small">Time</text>
+  </g>
+
+  <rect x="70" y="336" width="688" height="50" rx="14" class="note"/>
+  <text x="414" y="360" text-anchor="middle" class="label">Sigma = standard deviation. About 95% of prices sit within a 2-sigma band.</text>
+  <text x="414" y="378" text-anchor="middle" class="small">Below lower band = oversold. Above upper band = overbought.</text>
+</svg>

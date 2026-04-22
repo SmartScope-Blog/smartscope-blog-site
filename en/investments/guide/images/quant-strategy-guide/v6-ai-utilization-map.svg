@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-labelledby="title desc">
+  <title id="title">AI Utilization in Quant Workflow</title>
+  <desc id="desc">Horizontal bar chart showing conceptual AI usage across quant workflow stages.</desc>
+  <style>
+    .title { font: 700 25px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .axis { stroke: #888780; stroke-width: 1.5; }
+    .grid { stroke: #ecebe6; stroke-width: 1; }
+    .label { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #3d3d38; }
+    .value { font: 700 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .note { font: 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+  </style>
+  <rect width="800" height="420" fill="#ffffff" rx="24"/>
+  <text x="30" y="38" class="title">AI Utilization in Quant Workflow</text>
+
+  <g transform="translate(180 74)">
+    <line x1="0" y1="0" x2="0" y2="246" class="axis"/>
+    <line x1="0" y1="246" x2="500" y2="246" class="axis"/>
+    <line x1="100" y1="0" x2="100" y2="246" class="grid"/>
+    <line x1="200" y1="0" x2="200" y2="246" class="grid"/>
+    <line x1="300" y1="0" x2="300" y2="246" class="grid"/>
+    <line x1="400" y1="0" x2="400" y2="246" class="grid"/>
+    <line x1="500" y1="0" x2="500" y2="246" class="grid"/>
+
+    <text x="-16" y="26" text-anchor="end" class="label">Hypothesis</text>
+    <rect x="0" y="10" width="375" height="22" rx="11" fill="#7f77dd"/>
+    <text x="387" y="26" class="value">75%</text>
+
+    <text x="-16" y="66" text-anchor="end" class="label">Features</text>
+    <rect x="0" y="50" width="425" height="22" rx="11" fill="#378add"/>
+    <text x="437" y="66" class="value">85%</text>
+
+    <text x="-16" y="106" text-anchor="end" class="label">Modeling</text>
+    <rect x="0" y="90" width="450" height="22" rx="11" fill="#1d9e75"/>
+    <text x="462" y="106" class="value">90%</text>
+
+    <text x="-16" y="146" text-anchor="end" class="label">Risk Mgmt</text>
+    <rect x="0" y="130" width="300" height="22" rx="11" fill="#ef9f27"/>
+    <text x="312" y="146" class="value">60%</text>
+
+    <text x="-16" y="186" text-anchor="end" class="label">Execution</text>
+    <rect x="0" y="170" width="400" height="22" rx="11" fill="#d85a30"/>
+    <text x="412" y="186" class="value">80%</text>
+
+    <text x="-16" y="226" text-anchor="end" class="label">Causality</text>
+    <rect x="0" y="210" width="100" height="22" rx="11" fill="#e24b4a"/>
+    <text x="112" y="226" class="value">20%</text>
+
+    <text x="0" y="268" class="note">0</text>
+    <text x="92" y="268" class="note">20</text>
+    <text x="192" y="268" class="note">40</text>
+    <text x="292" y="268" class="note">60</text>
+    <text x="392" y="268" class="note">80</text>
+    <text x="486" y="268" class="note">100%</text>
+  </g>
+
+  <text x="30" y="348" class="label">Note:</text>
+  <text x="60" y="348" class="note">Causal judgment stays human. AI is strong at correlation search, not causal design.</text>
+  <text x="60" y="368" class="note">These percentages are conceptual, not measured market-wide data.</text>
+</svg>

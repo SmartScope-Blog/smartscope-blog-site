@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 520" width="840" height="520" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
+  <title id="title">/team-onboarding と正規の設定資産の役割分担</title>
+  <desc id="desc">/team-onboarding が直近の利用実態をガイド化し、その中で安定したルールを CLAUDE.md、settings.json、skills に昇格させる流れを示す図</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="840" height="520" fill="#ffffff"/>
+  <text x="420" y="34" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#1f2937">/team-onboarding と正規の設定資産の役割分担</text>
+  <text x="420" y="60" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#475569">下書き生成と、長く残すべきルールの保管場所は分けて考える</text>
+
+  <rect x="210" y="88" width="420" height="140" rx="16" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="420" y="126" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#9a3412">/team-onboarding</text>
+  <text x="420" y="152" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">過去30日の利用実態を分析し、</text>
+  <text x="420" y="170" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">新メンバー向けガイドの</text>
+  <text x="420" y="188" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">下書きを自動生成する</text>
+  <rect x="338" y="200" width="164" height="18" rx="9" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="420" y="213" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#9a3412">正本ではなく入口</text>
+
+  <line x1="420" y1="228" x2="420" y2="246" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="46" y="268" width="230" height="154" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="161" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">CLAUDE.md</text>
+  <text x="161" y="324" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">毎セッションで読む恒久指示</text>
+  <text x="161" y="348" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">アーキテクチャ</text>
+  <text x="161" y="368" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">命名規約</text>
+  <text x="161" y="388" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">共通ワークフロー</text>
+  <rect x="80" y="398" width="162" height="18" rx="9" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="161" y="411" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#1d4ed8">事実とルールを残す</text>
+
+  <rect x="305" y="268" width="230" height="154" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="420" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#047857">.claude/settings.json</text>
+  <text x="420" y="324" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">チーム共有の設定資産</text>
+  <text x="420" y="348" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">permissions / hooks</text>
+  <text x="420" y="368" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">MCP / project settings</text>
+  <text x="420" y="388" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">安全な既定値</text>
+  <rect x="362" y="398" width="116" height="18" rx="9" fill="#d1fae5" stroke="#059669"/>
+  <text x="420" y="411" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#047857">設定を揃える</text>
+
+  <rect x="564" y="268" width="230" height="154" rx="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="679" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#6d28d9">.claude/skills/</text>
+  <text x="679" y="324" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">手順化した再利用知識</text>
+  <text x="679" y="348" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">定型作業</text>
+  <text x="679" y="368" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">長い手順</text>
+  <text x="679" y="388" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">チェックリスト</text>
+  <rect x="604" y="398" width="150" height="18" rx="9" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="679" y="411" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#6d28d9">行動手順を残す</text>
+
+  <line x1="420" y1="246" x2="161" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="246" x2="420" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="246" x2="679" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="110" y="452" width="620" height="42" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="420" y="478" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">共有前レビューの重点: ローカル絶対パス / 個人alias / MCP依存 / 危険な権限許可</text>
+</svg>

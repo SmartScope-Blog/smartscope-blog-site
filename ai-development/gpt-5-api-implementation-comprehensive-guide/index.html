@@ -1,0 +1,772 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="GPT-5 API実装の実践的な手法を詳解。Node.js、Python、GitHub Actionsとの連携、エラーハンドリング、コスト最適化まで網羅した開発者必携のガイド。"><meta name="author" content="Claude Code"><link rel="canonical" href="https://smartscope.blog/ai-development/gpt-5-api-implementation-comprehensive-guide/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../en/ai-development/gpt-5-api-implementation-comprehensive-guide/" hreflang="en"><link rel="icon" href="../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>GPT-5 API実装完全ガイド：実践的な連携とパフォーマンス最適化【2025年8月最新】 - SmartScope</title><link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../stylesheets/extra.css"><link rel="stylesheet" href="../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="GPT-5 API実装完全ガイド：実践的な連携とパフォーマンス最適化【2025年8月最新】"><meta property="og:description" content="GPT-5 API実装の実践的な手法を詳解。Node.js、Python、GitHub Actionsとの連携、エラーハンドリング、コスト最適化まで網羅した開発者必携のガイド。"><meta property="og:url" content="https://smartscope.blog/ai-development/gpt-5-api-implementation-comprehensive-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GPT-5 API実装完全ガイド：実践的な連携とパフォーマンス最適化【2025年8月最新】"><meta name="twitter:description" content="GPT-5 API実装の実践的な手法を詳解。Node.js、Python、GitHub Actionsとの連携、エラーハンドリング、コスト最適化まで網羅した開発者必携のガイド。"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#gpt-5-api実装完全ガイド実践的な連携とパフォーマンス最適化2025年8月最新" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> GPT-5 API実装完全ガイド：実践的な連携とパフォーマンス最適化【2025年8月最新】 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../en/ai-development/gpt-5-api-implementation-comprehensive-guide/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#gpt-5-api基本実装" class="md-nav__link"><span class="md-ellipsis"> GPT-5 API基本実装 </span></a><nav class="md-nav" aria-label="GPT-5 API基本実装"><ul class="md-nav__list"><li class="md-nav__item"><a href="#nodejs環境での実装" class="md-nav__link"><span class="md-ellipsis"> Node.js環境での実装 </span></a></li><li class="md-nav__item"><a href="#python環境での高度な実装" class="md-nav__link"><span class="md-ellipsis"> Python環境での高度な実装 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#github-actions統合" class="md-nav__link"><span class="md-ellipsis"> GitHub Actions統合 </span></a><nav class="md-nav" aria-label="GitHub Actions統合"><ul class="md-nav__list"><li class="md-nav__item"><a href="#自動コードレビューworkflow" class="md-nav__link"><span class="md-ellipsis"> 自動コードレビューWorkflow </span></a></li><li class="md-nav__item"><a href="#キャッシング戦略" class="md-nav__link"><span class="md-ellipsis"> キャッシング戦略 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#高度なエラーハンドリング" class="md-nav__link"><span class="md-ellipsis"> 高度なエラーハンドリング </span></a><nav class="md-nav" aria-label="高度なエラーハンドリング"><ul class="md-nav__list"><li class="md-nav__item"><a href="#回復可能なエラー処理" class="md-nav__link"><span class="md-ellipsis"> 回復可能なエラー処理 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#監視分析ダッシュボード" class="md-nav__link"><span class="md-ellipsis"> 監視・分析ダッシュボード </span></a><nav class="md-nav" aria-label="監視・分析ダッシュボード"><ul class="md-nav__list"><li class="md-nav__item"><a href="#メトリクス収集" class="md-nav__link"><span class="md-ellipsis"> メトリクス収集 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#まとめ" class="md-nav__link"><span class="md-ellipsis"> まとめ </span></a></li><li class="md-nav__item"><a href="#関連記事" class="md-nav__link"><span class="md-ellipsis"> 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../tags/#tag:api実装" class="md-tag">API実装</a><a href="../../tags/#tag:gpt-5" class="md-tag">GPT-5</a><a href="../../tags/#tag:openai" class="md-tag">OpenAI</a><a href="../../tags/#tag:パフォーマンス最適化" class="md-tag">パフォーマンス最適化</a><a href="../../tags/#tag:開発効率化" class="md-tag">開発効率化</a></nav><h1 id="gpt-5-api実装完全ガイド実践的な連携とパフォーマンス最適化2025年8月最新">GPT-5 API実装完全ガイド：実践的な連携とパフォーマンス最適化【2025年8月最新】<a class="headerlink" href="#gpt-5-api実装完全ガイド実践的な連携とパフォーマンス最適化2025年8月最新" title="Permanent link">&para;</a></h1><p>GPT-5のリリースに伴い、開発者向けAPIの実装方法と最適化技術が重要になっています。本記事では、実際のコード例とベストプラクティスを通じて、GPT-5を活用したアプリケーション開発の実践的な手法を解説します。</p><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M7 7H5a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2m0 4H5V9h2m7-2h-4v10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m0 4h-2V9h2m6 0v6h1v2h-4v-2h1V9h-1V7h4v2Z"/></svg></span> <strong>高速API連携</strong></p><p>Node.js/Python環境での効率的なGPT-5 API実装とレスポンス最適化</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <strong>CI/CD自動化</strong></p><p>GitHub ActionsとGPT-5の連携による自動テスト、コードレビュー、ドキュメント生成</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></span> <strong>データ処理自動化</strong></p><p>大量データの処理、分析レポート生成、構造化データ変換の自動化</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>エラー対応強化</strong></p><p>堅牢なエラーハンドリング、リトライ機構、フォールバック戦略の実装</p></li></ul></div><h2 id="gpt-5-api基本実装">GPT-5 API基本実装<a class="headerlink" href="#gpt-5-api基本実装" title="Permanent link">&para;</a></h2><h3 id="nodejs環境での実装">Node.js環境での実装<a class="headerlink" href="#nodejs環境での実装" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">OpenAI</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;openai&#39;</span><span class="p">;</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">GPT5Client</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OpenAI</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="nx">apiKey</span><span class="p">,</span>
+<span class="w">      </span><span class="c1">// GPT-5専用設定</span>
+<span class="w">      </span><span class="nx">defaultHeaders</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s1">&#39;OpenAI-Beta&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gpt-5-release&#39;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">generateWithStreaming</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gpt-5&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nx">stream</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">temperature</span><span class="o">:</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">temperature</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">max_tokens</span><span class="o">:</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">maxTokens</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">4000</span><span class="p">,</span>
+<span class="w">      </span><span class="c1">// GPT-5新機能：思考モード</span>
+<span class="w">      </span><span class="nx">reasoning_effort</span><span class="o">:</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">reasoning</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;medium&#39;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">stream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">chunk</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">delta</span><span class="o">?</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">content</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// リアルタイム処理</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">onChunk</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">options</span><span class="p">.</span><span class="nx">onChunk</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">batchProcess</span><span class="p">(</span><span class="nx">requests</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">batchId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">batches</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">input_file_id</span><span class="o">:</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">uploadBatchFile</span><span class="p">(</span><span class="nx">requests</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">endpoint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">completion_window</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;24h&quot;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">waitForBatchCompletion</span><span class="p">(</span><span class="nx">batchId</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">uploadBatchFile</span><span class="p">(</span><span class="nx">requests</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">jsonl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">requests</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">req</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">custom_id</span><span class="o">:</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gpt-5&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">messages</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">max_tokens</span><span class="o">:</span><span class="w"> </span><span class="mf">4000</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">file</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Blob</span><span class="p">([</span><span class="nx">jsonl</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/jsonl&#39;</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">      </span><span class="nx">purpose</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;batch&#39;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">file</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用例</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">gpt5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GPT5Client</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OPENAI_API_KEY</span><span class="p">);</span>
+
+<span class="c1">// ストリーミング応答</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">gpt5</span><span class="p">.</span><span class="nx">generateWithStreaming</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">&quot;コードレビューを実行してください&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">reasoning</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;high&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">onChunk</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div><h3 id="python環境での高度な実装">Python環境での高度な実装<a class="headerlink" href="#python環境での高度な実装" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncOpenAI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">AsyncGenerator</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GPT5AsyncClient</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_concurrent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+            <span class="n">default_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;OpenAI-Beta&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-5-release&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">max_concurrent</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_with_retry</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+        <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リトライ機能付きGPT-5 API呼び出し&quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">,</span>
+                        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+                        <span class="n">temperature</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
+                        <span class="n">max_tokens</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_tokens&#39;</span><span class="p">,</span> <span class="mi">4000</span><span class="p">),</span>
+                        <span class="n">reasoning_effort</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reasoning&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                        <span class="s1">&#39;usage&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+                        <span class="s1">&#39;reasoning_time&#39;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;reasoning_time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="p">}</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="n">max_retries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="p">{</span>
+                            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                            <span class="s1">&#39;attempt&#39;</span><span class="p">:</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="p">}</span>
+
+                    <span class="c1"># 指数バックオフ</span>
+                    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">parallel_process</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;並列処理による一括実行&quot;&quot;&quot;</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_with_retry</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
+            <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">streaming_generate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;非同期ストリーミング生成&quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="p">:</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">,</span>
+                <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+                <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
+
+            <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span>
+
+<span class="c1"># 使用例</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">gpt5</span> <span class="o">=</span> <span class="n">GPT5AsyncClient</span><span class="p">(</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your-api-key&quot;</span><span class="p">,</span>
+        <span class="n">max_concurrent</span><span class="o">=</span><span class="mi">5</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 並列処理</span>
+    <span class="n">prompts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;バグレポートを分析してください&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;コードの最適化提案をしてください&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;テストケースを生成してください&quot;</span>
+    <span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">gpt5</span><span class="o">.</span><span class="n">parallel_process</span><span class="p">(</span>
+        <span class="n">prompts</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">reasoning</span><span class="o">=</span><span class="s1">&#39;high&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokens used: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;usage&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 実行</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div><h2 id="github-actions統合">GitHub Actions統合<a class="headerlink" href="#github-actions統合" title="Permanent link">&para;</a></h2><h3 id="自動コードレビューworkflow">自動コードレビューWorkflow<a class="headerlink" href="#自動コードレビューworkflow" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GPT-5 Code Review</span>
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">synchronize</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gpt5-review</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Node.js</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">npm install openai@latest</span>
+<span class="w">        </span><span class="no">npm install @octokit/rest</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GPT-5 Code Review</span>
+<span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">OPENAI_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.OPENAI_API_KEY }}</span>
+<span class="w">        </span><span class="nt">GITHUB_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">cat &lt;&lt; &#39;EOF&#39; &gt; review.js</span>
+<span class="w">        </span><span class="no">const OpenAI = require(&#39;openai&#39;);</span>
+<span class="w">        </span><span class="no">const { Octokit } = require(&#39;@octokit/rest&#39;);</span>
+
+<span class="w">        </span><span class="no">const gpt5 = new OpenAI({</span>
+<span class="w">          </span><span class="no">apiKey: process.env.OPENAI_API_KEY,</span>
+<span class="w">          </span><span class="no">defaultHeaders: { &#39;OpenAI-Beta&#39;: &#39;gpt-5-release&#39; }</span>
+<span class="w">        </span><span class="no">});</span>
+
+<span class="w">        </span><span class="no">const octokit = new Octokit({</span>
+<span class="w">          </span><span class="no">auth: process.env.GITHUB_TOKEN</span>
+<span class="w">        </span><span class="no">});</span>
+
+<span class="w">        </span><span class="no">async function reviewCode() {</span>
+<span class="w">          </span><span class="no">// 変更されたファイルを取得</span>
+<span class="w">          </span><span class="no">const { execSync } = require(&#39;child_process&#39;);</span>
+<span class="w">          </span><span class="no">const diff = execSync(&#39;git diff HEAD~1..HEAD&#39;).toString();</span>
+
+<span class="w">          </span><span class="no">if (!diff.trim()) {</span>
+<span class="w">            </span><span class="no">console.log(&#39;No changes to review&#39;);</span>
+<span class="w">            </span><span class="no">return;</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">          </span><span class="no">const prompt = `</span>
+<span class="w">          </span><span class="no">以下のコード変更をレビューしてください：</span>
+
+<span class="w">          </span><span class="no">## コード変更</span>
+<span class="w">          </span><span class="no">\`\`\`diff</span>
+<span class="w">          </span><span class="no">${diff}</span>
+<span class="w">          </span><span class="no">\`\`\`</span>
+
+<span class="w">          </span><span class="no">## レビュー観点</span>
+<span class="w">          </span><span class="no">- セキュリティ問題</span>
+<span class="w">          </span><span class="no">- パフォーマンスの問題</span>
+<span class="w">          </span><span class="no">- コードの可読性</span>
+<span class="w">          </span><span class="no">- ベストプラクティス準拠</span>
+<span class="w">          </span><span class="no">- 潜在的なバグ</span>
+
+<span class="w">          </span><span class="no">具体的な改善提案と、その理由を含めて回答してください。</span>
+<span class="w">          </span><span class="no">`;</span>
+
+<span class="w">          </span><span class="no">const response = await gpt5.chat.completions.create({</span>
+<span class="w">            </span><span class="no">model: &#39;gpt-5&#39;,</span>
+<span class="w">            </span><span class="no">messages: [{ role: &#39;user&#39;, content: prompt }],</span>
+<span class="w">            </span><span class="no">temperature: 0.3,</span>
+<span class="w">            </span><span class="no">reasoning_effort: &#39;high&#39;</span>
+<span class="w">          </span><span class="no">});</span>
+
+<span class="w">          </span><span class="no">const review = response.choices[0].message.content;</span>
+
+<span class="w">          </span><span class="no">// PR にコメント投稿</span>
+<span class="w">          </span><span class="no">await octokit.rest.issues.createComment({</span>
+<span class="w">            </span><span class="no">owner: process.env.GITHUB_REPOSITORY.split(&#39;/&#39;)[0],</span>
+<span class="w">            </span><span class="no">repo: process.env.GITHUB_REPOSITORY.split(&#39;/&#39;)[1],</span>
+<span class="w">            </span><span class="no">issue_number: process.env.GITHUB_PR_NUMBER,</span>
+<span class="w">            </span><span class="no">body: `## 🤖 GPT-5 コードレビュー\n\n${review}`</span>
+<span class="w">          </span><span class="no">});</span>
+
+<span class="w">          </span><span class="no">console.log(&#39;Code review completed&#39;);</span>
+<span class="w">        </span><span class="no">}</span>
+
+<span class="w">        </span><span class="no">reviewCode().catch(console.error);</span>
+<span class="w">        </span><span class="no">EOF</span>
+
+<span class="w">        </span><span class="no">GITHUB_PR_NUMBER=${{ github.event.number }} node review.js</span>
+
+<span class="c1">## パフォーマンス最適化</span>
+
+<span class="c1">### コスト効率的なモデル選択</span>
+
+<span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">class GPT5ModelRouter</span><span class="p">:</span>
+<span class="w">    </span><span class="s">&quot;&quot;&quot;タスクの複雑度に応じて最適なGPT-5モデルを選択&quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def __init__(self, api_key</span><span class="nt">: str)</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.client = AsyncOpenAI(api_key=api_key)</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain"># コストとパフォーマンスのマトリクス</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self.model_costs = {</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;gpt-5-nano&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;input&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0.25</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2.50</span><span class="p p-Indicator">}</span><span class="err">,</span>
+<span class="w">            </span><span class="s">&#39;gpt-5-mini&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;input&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0.50</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">5.00</span><span class="p p-Indicator">}</span><span class="err">,</span>
+<span class="w">            </span><span class="s">&#39;gpt-5&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;input&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1.25</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">10.00</span><span class="p p-Indicator">}</span><span class="err">,</span>
+<span class="w">            </span><span class="s">&#39;gpt-5-pro&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;input&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2.50</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">20.00</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">def analyze_complexity(self, prompt</span><span class="nt">: str) -&gt; str</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&quot;&quot;&quot;プロンプトの複雑度を分析してモデルを選択&quot;&quot;&quot;</span>
+
+<span class="w">        </span><span class="c1"># 簡単な判定ロジック</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">word_count = len(prompt.split())</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain"># コーディング、数学、科学的推論を含むか判定</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">complex_keywords = [</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;algorithm&#39;, &#39;implementation&#39;, &#39;debug&#39;, &#39;optimize&#39;,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;mathematical&#39;, &#39;scientific&#39;, &#39;reasoning&#39;, &#39;analysis&#39;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">]</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">has_complex_keywords = any(</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">keyword in prompt.lower()</span><span class="w"> </span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">for keyword in complex_keywords</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">if word_count &lt; 50 and not has_complex_keywords</span><span class="p p-Indicator">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">return &#39;gpt-5-nano&#39;</span><span class="w">  </span><span class="c1"># 高速レスポンス</span>
+<span class="w">        </span><span class="nt">elif word_count &lt; 200 and not has_complex_keywords</span><span class="p">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">return &#39;gpt-5-mini&#39;</span><span class="w">  </span><span class="c1"># バランス重視</span>
+<span class="w">        </span><span class="nt">elif has_complex_keywords or word_count &gt; 500</span><span class="p">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">return &#39;gpt-5-pro&#39;</span><span class="w">   </span><span class="c1"># 高度な推論</span>
+<span class="w">        </span><span class="nt">else</span><span class="p">:</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">return &#39;gpt-5&#39;</span><span class="w">       </span><span class="c1"># 標準モデル</span>
+
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">async def generate_optimized(</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">self,</span><span class="w"> </span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">prompt</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str,</span><span class="w"> </span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">**kwargs</span>
+<span class="w">    </span><span class="nt">) -&gt; Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&quot;&quot;&quot;最適なモデルで生成実行&quot;&quot;&quot;</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">model = kwargs.get(&#39;model&#39;) or self.analyze_complexity(prompt)</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">response = await self.client.chat.completions.create(</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">model=model,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">messages=[{&#39;role&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;user&#39;</span><span class="err">,</span><span class="w"> </span><span class="s">&#39;content&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prompt}],</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">**{k</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v for k, v in kwargs.items() if k != &#39;model&#39;}</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+
+<span class="w">        </span><span class="c1"># コスト計算</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">usage = response.usage</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cost = (</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">usage.prompt_tokens * self.model_costs[model][&#39;input&#39;] / 1000000 +</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">usage.completion_tokens * self.model_costs[model][&#39;output&#39;] / 1000000</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">)</span>
+
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">return {</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;content&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">response.choices[0].message.content,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;model_used&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">model,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;tokens&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usage.model_dump(),</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;estimated_cost&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cost,</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&#39;reasoning_time&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getattr(response, &#39;reasoning_time&#39;, 0)</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="c1"># 使用例</span>
+<span class="l l-Scalar l-Scalar-Plain">router = GPT5ModelRouter(&quot;your-api-key&quot;)</span>
+
+<span class="c1"># 自動的に最適なモデルを選択</span>
+<span class="l l-Scalar l-Scalar-Plain">result = await router.generate_optimized(</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">&quot;簡単な質問です。今日の天気は？&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">)</span><span class="w">  </span><span class="c1"># → gpt-5-nano を選択</span>
+
+<span class="l l-Scalar l-Scalar-Plain">result = await router.generate_optimized(</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">&quot;複雑なソートアルゴリズムを実装し、最適化してください。&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">)</span><span class="w">  </span><span class="c1"># → gpt-5-pro を選択</span>
+</code></pre></div><h3 id="キャッシング戦略">キャッシング戦略<a class="headerlink" href="#キャッシング戦略" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">GPT5Cache</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">redisClient</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">redisClient</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">hashFunction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;crypto&#39;</span><span class="p">).</span><span class="nx">createHash</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// プロンプトのハッシュ化</span>
+<span class="w">  </span><span class="nx">generateKey</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="p">,</span><span class="w"> </span><span class="nx">temperature</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">hashFunction</span><span class="p">(</span><span class="s1">&#39;sha256&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">hash</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">model</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">temperature</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">prompt</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="sb">`gpt5:</span><span class="si">${</span><span class="nx">hash</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// セマンティックキャッシュ</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">semanticSearch</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.8</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 既存のプロンプトとの類似度を計算</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">embedding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateEmbedding</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">similar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">ft</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;prompt_embeddings&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="sb">`*=&gt;[KNN 5 @embedding $blob AS score]`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">PARAMS</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">blob</span><span class="o">:</span><span class="w"> </span><span class="nx">embedding</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">RETURN</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;score&#39;</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">DIALECT</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">similar</span><span class="p">.</span><span class="nx">documents</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">score</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">threshold</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">similar</span><span class="p">.</span><span class="nx">documents</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">content</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="p">,</span><span class="w"> </span><span class="nx">temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.7</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateKey</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="p">,</span><span class="w"> </span><span class="nx">temperature</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 完全一致キャッシュ</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">exactMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">exactMatch</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">exactMatch</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// セマンティックキャッシュ（temperature &lt; 0.3の場合のみ）</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">temperature</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">semanticMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">semanticSearch</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">semanticMatch</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">semanticMatch</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">set</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="p">,</span><span class="w"> </span><span class="nx">temperature</span><span class="p">,</span><span class="w"> </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3600</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateKey</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="p">,</span><span class="w"> </span><span class="nx">temperature</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+<span class="w">      </span><span class="nx">key</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="nx">ttl</span><span class="p">,</span><span class="w"> </span>
+<span class="w">      </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="p">...</span><span class="nx">response</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">cached_at</span><span class="o">:</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// セマンティックインデックスに追加</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">temperature</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">embedding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateEmbedding</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">hset</span><span class="p">(</span>
+<span class="w">        </span><span class="sb">`embedding:</span><span class="si">${</span><span class="nx">key</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;content&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">response</span><span class="p">),</span>
+<span class="w">        </span><span class="s1">&#39;embedding&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">embedding</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;prompt&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">prompt</span>
+<span class="w">      </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="高度なエラーハンドリング">高度なエラーハンドリング<a class="headerlink" href="#高度なエラーハンドリング" title="Permanent link">&para;</a></h2><h3 id="回復可能なエラー処理">回復可能なエラー処理<a class="headerlink" href="#回復可能なエラー処理" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ErrorType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RATE_LIMIT</span> <span class="o">=</span> <span class="s2">&quot;rate_limit_exceeded&quot;</span>
+    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="s2">&quot;timeout&quot;</span>
+    <span class="n">API_ERROR</span> <span class="o">=</span> <span class="s2">&quot;api_error&quot;</span>
+    <span class="n">NETWORK</span> <span class="o">=</span> <span class="s2">&quot;network_error&quot;</span>
+    <span class="n">INSUFFICIENT_QUOTA</span> <span class="o">=</span> <span class="s2">&quot;insufficient_quota&quot;</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RetryConfig</span><span class="p">:</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">base_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">max_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span>
+    <span class="n">exponential_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">jitter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GPT5ErrorHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fallback_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_model</span> <span class="o">=</span> <span class="n">fallback_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_counts</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">classify_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ErrorType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;エラーを分類&quot;&quot;&quot;</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">&quot;rate limit&quot;</span> <span class="ow">in</span> <span class="n">error_message</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">RATE_LIMIT</span>
+        <span class="k">elif</span> <span class="s2">&quot;timeout&quot;</span> <span class="ow">in</span> <span class="n">error_message</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">TIMEOUT</span>
+        <span class="k">elif</span> <span class="s2">&quot;insufficient quota&quot;</span> <span class="ow">in</span> <span class="n">error_message</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">INSUFFICIENT_QUOTA</span>
+        <span class="k">elif</span> <span class="s2">&quot;network&quot;</span> <span class="ow">in</span> <span class="n">error_message</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">NETWORK</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">API_ERROR</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_retry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_type</span><span class="p">:</span> <span class="n">ErrorType</span><span class="p">,</span> <span class="n">attempt</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リトライすべきかを判定&quot;&quot;&quot;</span>
+        <span class="n">retry_eligible</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">ErrorType</span><span class="o">.</span><span class="n">RATE_LIMIT</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">ErrorType</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">ErrorType</span><span class="o">.</span><span class="n">NETWORK</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">ErrorType</span><span class="o">.</span><span class="n">API_ERROR</span><span class="p">:</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">ErrorType</span><span class="o">.</span><span class="n">INSUFFICIENT_QUOTA</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">retry_eligible</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_delay</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">attempt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+        <span class="n">config</span><span class="p">:</span> <span class="n">RetryConfig</span><span class="p">,</span>
+        <span class="n">error_type</span><span class="p">:</span> <span class="n">ErrorType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;エラータイプに応じた遅延時間を計算&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="n">ErrorType</span><span class="o">.</span><span class="n">RATE_LIMIT</span><span class="p">:</span>
+            <span class="c1"># レート制限の場合は長めの遅延</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">base_delay</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">base_delay</span>
+
+        <span class="n">delay</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="n">base</span> <span class="o">*</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">exponential_factor</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">),</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">max_delay</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">jitter</span><span class="p">:</span>
+            <span class="n">delay</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">delay</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_with_fallback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">primary_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">fallback_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">RetryConfig</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;フォールバック付きでfunction実行&quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">RetryConfig</span><span class="p">()</span>
+        <span class="n">last_error</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">max_retries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">primary_func</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                    <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;used_fallback&#39;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="p">}</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">error_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classify_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">last_error</span> <span class="o">=</span> <span class="n">e</span>
+
+                <span class="c1"># エラー統計を更新</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">error_counts</span><span class="p">[</span><span class="n">error_type</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">error_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">max_retries</span> <span class="ow">and</span> \
+                   <span class="bp">self</span><span class="o">.</span><span class="n">should_retry</span><span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="n">attempt</span><span class="p">):</span>
+
+                    <span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_delay</span><span class="p">(</span><span class="n">attempt</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">error_type</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># リトライ上限に達した場合、フォールバックを試行</span>
+                <span class="k">if</span> <span class="n">fallback_func</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">fallback_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fallback_func</span><span class="p">()</span>
+                        <span class="k">return</span> <span class="p">{</span>
+                            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">fallback_result</span><span class="p">,</span>
+                            <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="s1">&#39;used_fallback&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="s1">&#39;primary_error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_error</span><span class="p">)</span>
+                        <span class="p">}</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">fallback_error</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="p">{</span>
+                            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_error</span><span class="p">),</span>
+                            <span class="s1">&#39;fallback_error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">fallback_error</span><span class="p">),</span>
+                            <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="p">}</span>
+
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_error</span><span class="p">),</span>
+            <span class="s1">&#39;attempts&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">max_retries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;error_type&#39;</span><span class="p">:</span> <span class="n">error_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">}</span>
+
+<span class="c1"># 使用例</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">GPT5ErrorHandler</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">primary_request</span><span class="p">():</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">gpt5_client</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;複雑な質問&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fallback_request</span><span class="p">():</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">gpt4_client</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;複雑な質問&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">execute_with_fallback</span><span class="p">(</span>
+        <span class="n">primary_request</span><span class="p">,</span>
+        <span class="n">fallback_request</span><span class="p">,</span>
+        <span class="n">RetryConfig</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">base_delay</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;成功: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;used_fallback&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;フォールバックモデルを使用&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;失敗: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div><h2 id="監視分析ダッシュボード">監視・分析ダッシュボード<a class="headerlink" href="#監視分析ダッシュボード" title="Permanent link">&para;</a></h2><h3 id="メトリクス収集">メトリクス収集<a class="headerlink" href="#メトリクス収集" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">APIMetrics</span><span class="p">:</span>
+    <span class="n">total_requests</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">successful_requests</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">failed_requests</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">average_response_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">model_usage</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">error_breakdown</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">hourly_stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GPT5Monitor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_backend</span><span class="o">=</span><span class="s1">&#39;redis&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">APIMetrics</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage_backend</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_request</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">tokens_used</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">response_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">error_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リクエストのメトリクスを記録&quot;&quot;&quot;</span>
+
+        <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:00&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 基本統計</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">successful_requests</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">failed_requests</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># リソース使用量</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_tokens</span> <span class="o">+=</span> <span class="n">tokens_used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_cost</span> <span class="o">+=</span> <span class="n">cost</span>
+
+        <span class="c1"># レスポンス時間の移動平均</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">average_response_time</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">average_response_time</span> <span class="o">*</span> 
+             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">response_time</span><span class="p">)</span> <span class="o">/</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span>
+        <span class="p">)</span>
+
+        <span class="c1"># モデル別統計</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;requests&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;tokens&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">[</span><span class="n">model</span><span class="p">][</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">[</span><span class="n">model</span><span class="p">][</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">tokens_used</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">[</span><span class="n">model</span><span class="p">][</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cost</span>
+
+        <span class="c1"># エラー統計</span>
+        <span class="k">if</span> <span class="n">error_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">error_breakdown</span><span class="p">[</span><span class="n">error_type</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">error_breakdown</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># 時間別統計</span>
+        <span class="k">if</span> <span class="n">current_hour</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">hourly_stats</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">hourly_stats</span><span class="p">[</span><span class="n">current_hour</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;requests&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;avg_response_time&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="p">}</span>
+
+        <span class="n">hourly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">hourly_stats</span><span class="p">[</span><span class="n">current_hour</span><span class="p">]</span>
+        <span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cost</span>
+        <span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;avg_response_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;avg_response_time&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> 
+             <span class="n">response_time</span><span class="p">)</span> <span class="o">/</span> <span class="n">hourly</span><span class="p">[</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;詳細なレポートを生成&quot;&quot;&quot;</span>
+
+        <span class="n">success_rate</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">successful_requests</span> <span class="o">/</span> 
+             <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="c1"># コスト効率性分析</span>
+        <span class="n">most_efficient_model</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span> 
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;requests&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span>
+            <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;overview&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;total_requests&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span><span class="p">,</span>
+                <span class="s1">&#39;success_rate&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;total_cost&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;avg_response_time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">average_response_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;model_performance&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">model_usage</span><span class="p">,</span>
+            <span class="s1">&#39;cost_analysis&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;most_efficient_model&#39;</span><span class="p">:</span> <span class="n">most_efficient_model</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s1">&#39;cost_per_request&#39;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_cost</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_requests</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;error_analysis&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">error_breakdown</span><span class="p">,</span>
+            <span class="s1">&#39;hourly_trends&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">hourly_stats</span>
+        <span class="p">}</span>
+
+<span class="c1"># 使用例とダッシュボードHTML生成</span>
+<span class="n">monitor</span> <span class="o">=</span> <span class="n">GPT5Monitor</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">monitored_request</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gpt-5&#39;</span><span class="p">):</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">gpt5_client</span><span class="o">.</span><span class="n">generate_optimized</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">response_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="k">await</span> <span class="n">monitor</span><span class="o">.</span><span class="n">record_request</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;model_used&#39;</span><span class="p">],</span>
+            <span class="n">tokens_used</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">][</span><span class="s1">&#39;total_tokens&#39;</span><span class="p">],</span>
+            <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;estimated_cost&#39;</span><span class="p">],</span>
+            <span class="n">response_time</span><span class="o">=</span><span class="n">response_time</span><span class="p">,</span>
+            <span class="n">success</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">response_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="k">await</span> <span class="n">monitor</span><span class="o">.</span><span class="n">record_request</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">tokens_used</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">response_time</span><span class="o">=</span><span class="n">response_time</span><span class="p">,</span>
+            <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">error_type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="k">raise</span>
+</code></pre></div><div class="admonition tip"><p class="admonition-title">実装のポイント</p><p><strong>APIキーの管理</strong> - 環境変数またはシークレット管理サービスを使用 - 本番環境では絶対にハードコーディングしない - 定期的なローテーションを実装</p><p><strong>レート制限対策</strong> - 指数バックオフによるリトライ機構 - 並行リクエスト数の制限 - QPM（Queries Per Minute）の監視</p></div><div class="admonition warning"><p class="admonition-title">注意事項</p><p><strong>コスト管理</strong> - 予期しない高額請求を防ぐため、使用量のアラート設定が必須 - 開発環境では使用量制限を設定 - バッチ処理は必ず事前にコスト試算を実施</p></div><h2 id="まとめ">まとめ<a class="headerlink" href="#まとめ" title="Permanent link">&para;</a></h2><p>GPT-5 APIの実装において重要なポイント：</p><ul><li><strong>適切なモデル選択</strong>: タスクの複雑度に応じたモデル選択でコスト最適化</li><li><strong>堅牢なエラーハンドリング</strong>: リトライ機構とフォールバック戦略の実装</li><li><strong>パフォーマンス監視</strong>: 詳細なメトリクス収集と分析による継続的改善</li><li><strong>セキュリティ対策</strong>: APIキーの適切な管理と使用量監視</li></ul><p>これらの実装パターンを活用することで、GPT-5の優れた性能を最大限に引き出し、信頼性の高いAI駆動アプリケーションを構築できます。</p><h2 id="関連記事">関連記事<a class="headerlink" href="#関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="/ai-development/gpt-5-release-comprehensive-guide/">GPT-5ついに正式リリース！2025年8月完全解説</a> - GPT-5の基本機能と競合比較</li><li><a href="/ai-development/gpt-5-real-world-usage-report/">GPT-5初期アクセスレポート：開発者ベータと今後の企業導入計画</a> - 企業導入事例と実績レポート ```</li></ul><p><function_calls><invoke name="TodoWrite"><parameter name="todos">[{"content": "\u671d\u306e\u8a18\u4e8b\u5185\u5bb9\u3092\u78ba\u8a8d\u3057\u3001\u6df1\u6398\u308a\u30c8\u30d4\u30c3\u30af\u3092\u7279\u5b9a", "status": "completed", "activeForm": "\u671d\u306e\u8a18\u4e8b\u5185\u5bb9\u3092\u78ba\u8a8d\u6e08\u307f"}, {"content": "\u6280\u8853\u7684\u6df1\u6398\u308a\u30c6\u30fc\u30de\u306e\u9078\u5b9a\u3068\u8a18\u4e8b\u69cb\u6210\u8a2d\u8a08", "status": "completed", "activeForm": "\u6280\u8853\u7684\u6df1\u6398\u308a\u30c6\u30fc\u30de\u9078\u5b9a\u5b8c\u4e86"}, {"content": "\u5b9f\u88c5\u4f8b\u30fb\u30b3\u30fc\u30c9\u4f8b\u30fb\u5b9f\u8df5\u30ac\u30a4\u30c9\u3092\u4f5c\u6210", "status": "completed", "activeForm": "\u5b9f\u88c5\u4f8b\u30fb\u30b3\u30fc\u30c9\u4f8b\u4f5c\u6210\u5b8c\u4e86"}, {"content": "hybrid-article-template.md\u30d5\u30a9\u30fc\u30de\u30c3\u30c8\u3067\u8a18\u4e8b\u4f5c\u6210", "status": "in_progress", "activeForm": "\u8a18\u4e8b\u3092hybrid-template\u30d5\u30a9\u30fc\u30de\u30c3\u30c8\u3067\u4f5c\u6210\u4e2d"}, {"content": "mkdocs.yml\u30ca\u30d3\u30b2\u30fc\u30b7\u30e7\u30f3\u8ffd\u52a0", "status": "pending", "activeForm": "mkdocs.yml\u30ca\u30d3\u30b2\u30fc\u30b7\u30e7\u30f3\u3092\u8ffd\u52a0\u4e2d"}, {"content": "CLAUDE.md\u30eb\u30fc\u30eb\u6e96\u62e0\u30c1\u30a7\u30c3\u30af\uff08GitHub Actions\u5909\u6570\u30a8\u30b9\u30b1\u30fc\u30d7\u7b49\uff09", "status": "pending", "activeForm": "CLAUDE.md\u30eb\u30fc\u30eb\u306b\u6e96\u62e0\u3057\u3066\u3044\u308b\u304b\u30c1\u30a7\u30c3\u30af\u4e2d"}, {"content": "Git\u30b3\u30df\u30c3\u30c8\u30fb\u30d7\u30c3\u30b7\u30e5\u3057\u3066\u516c\u958b", "status": "pending", "activeForm": "Git\u30b3\u30df\u30c3\u30c8\u30fb\u30d7\u30c3\u30b7\u30e5\u4e2d"}]</p><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年2月17日 23:29:52 JST">2026年2月17日 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../javascripts/mermaid-init.js"></script><script src="../../javascripts/mobile-nav.js"></script><script src="../../javascripts/daily-progress.js"></script><script src="../../javascripts/fix-md-links.js"></script><script src="../../javascripts/mobile-category-tabs.js"></script></body></html>

@@ -1,0 +1,655 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/ai-development/enforcing-spec-driven-development-claude-copilot-2025/"><link rel="prev" href="../spec-driven-development-kiro-2025/"><link rel="next" href="../github-actions-automated-testing-claude-code-2025/"><link rel="alternate" href="../../../ai-development/enforcing-spec-driven-development-claude-copilot-2025/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Enforcing Spec-Driven on AI Agents - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Enforcing Spec-Driven on AI Agents"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/ai-development/enforcing-spec-driven-development-claude-copilot-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Enforcing Spec-Driven on AI Agents"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#practical-guide-to-enforcing-spec-based-development-with-ai-agents-claude-code--github-copilot-complete-setup-2025-edition" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Enforcing Spec-Driven on AI Agents </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../ai-development/enforcing-spec-driven-development-claude-copilot-2025/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item md-tabs__item--active"><a href="../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked><div class="md-nav__link md-nav__container"><a href="../../" class="md-nav__link "><span class="md-ellipsis"> 🏠 Home </span></a><label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true"><label class="md-nav__title" for="__nav_1"><span class="md-nav__icon md-icon"></span> 🏠 Home </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2"><label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex><span class="md-ellipsis"> ⭐ Recommended </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false"><label class="md-nav__title" for="__nav_1_2"><span class="md-nav__icon md-icon"></span> ⭐ Recommended </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../blog/context-engineering-overview/" class="md-nav__link"><span class="md-ellipsis"> Context Engineering Overview </span></a></li><li class="md-nav__item"><a href="../../blog/harness-engineering-overview/" class="md-nav__link"><span class="md-ellipsis"> What Is Harness Engineering </span></a></li><li class="md-nav__item"><a href="../../blog/ai-coding-practices-evolution-vibe-to-skills/" class="md-nav__link"><span class="md-ellipsis"> How AI Coding Practices Have Evolved </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3"><label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex><span class="md-ellipsis"> 📰 Recently Published </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false"><label class="md-nav__title" for="__nav_1_3"><span class="md-nav__icon md-icon"></span> 📰 Recently Published </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/" class="md-nav__link"><span class="md-ellipsis"> The Real Problem Behind GitHub Copilot's Ind… </span></a></li><li class="md-nav__item"><a href="../../blog/gh-stack-multi-agent-branch-strategy/" class="md-nav__link"><span class="md-ellipsis"> gh-stack Explained: Why Branching Strategy C… </span></a></li><li class="md-nav__item"><a href="../../Gadgets/luca-touch-wrong-monitor-fix/" class="md-nav__link"><span class="md-ellipsis"> How to Fix an External Touch Monitor Control… </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" checked><label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex><span class="md-ellipsis"> 📚 Guide Collection </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="true"><label class="md-nav__title" for="__nav_1_4"><span class="md-nav__icon md-icon"></span> 📚 Guide Collection </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../pillars/claude-code/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Claude Code Articles </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../pillars/codex/" class="md-nav__link"><span class="md-ellipsis"> ⚡ Codex / CLI Articles </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../pillars/github-copilot/" class="md-nav__link"><span class="md-ellipsis"> 🧑‍✈️ GitHub Copilot Articles </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../pillars/skills/" class="md-nav__link"><span class="md-ellipsis"> 🎯 Skills Articles </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/google-gemini/gemini-3-1-pro-benchmark-analysis-2026/" class="md-nav__link"><span class="md-ellipsis"> 🌐 Google Gemini Articles </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4_6" checked><label class="md-nav__link" for="__nav_1_4_6" id="__nav_1_4_6_label" tabindex="0"><span class="md-ellipsis"> 📐 Spec-Driven / Testing Articles </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_4_6_label" aria-expanded="true"><label class="md-nav__title" for="__nav_1_4_6"><span class="md-nav__icon md-icon"></span> 📐 Spec-Driven / Testing Articles </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../pillars/spec-and-testing/" class="md-nav__link"><span class="md-ellipsis"> Spec-driven Development / Testing (SDD + TDD) </span></a></li><li class="md-nav__item"><a href="../spec-driven-development-kiro-2025/" class="md-nav__link"><span class="md-ellipsis"> Why Spec-Driven Dev Matters Now </span></a></li><li class="md-nav__item md-nav__item--active"><input class="md-nav__toggle md-toggle" type="checkbox" id="__toc"><label class="md-nav__link md-nav__link--active" for="__toc"><span class="md-ellipsis"> Enforcing Spec-Driven on AI Agents </span><span class="md-nav__icon md-icon"></span></label><a href="./" class="md-nav__link md-nav__link--active"><span class="md-ellipsis"> Enforcing Spec-Driven on AI Agents </span></a><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#-overall-design-spec-based-development-enforcement-architecture" class="md-nav__link"><span class="md-ellipsis"> 🎯 Overall Design: Spec-Based Development Enforcement Architecture </span></a><nav class="md-nav" aria-label="🎯 Overall Design: Spec-Based Development Enforcement Architecture"><ul class="md-nav__list"><li class="md-nav__item"><a href="#phase-gate-approach" class="md-nav__link"><span class="md-ellipsis"> Phase Gate Approach </span></a></li><li class="md-nav__item"><a href="#enforcement-mechanism-comparison" class="md-nav__link"><span class="md-ellipsis"> Enforcement Mechanism Comparison </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-claude-code-complete-control-implementation" class="md-nav__link"><span class="md-ellipsis"> 🔒 Claude Code: Complete Control Implementation </span></a><nav class="md-nav" aria-label="🔒 Claude Code: Complete Control Implementation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-claudemd---memory-and-behavioral-rules" class="md-nav__link"><span class="md-ellipsis"> 1. CLAUDE.md - Memory and Behavioral Rules </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-definition-of-done" class="md-nav__link"><span class="md-ellipsis"> 📋 Definition of Done </span></a><nav class="md-nav" aria-label="📋 Definition of Done"><ul class="md-nav__list"><li class="md-nav__item"><a href="#3-hooks---gatekeeper-implementation" class="md-nav__link"><span class="md-ellipsis"> 3. Hooks - Gatekeeper Implementation </span></a><nav class="md-nav" aria-label="3. Hooks - Gatekeeper Implementation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#claudehooksconfigjson" class="md-nav__link"><span class="md-ellipsis"> .claude/hooks/config.json </span></a></li><li class="md-nav__item"><a href="#claudehooksgatekeeperpy" class="md-nav__link"><span class="md-ellipsis"> .claude/hooks/gatekeeper.py </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#4-subagents---role-separation" class="md-nav__link"><span class="md-ellipsis"> 4. Subagents - Role Separation </span></a><nav class="md-nav" aria-label="4. Subagents - Role Separation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#claudeagentsspecifiermd" class="md-nav__link"><span class="md-ellipsis"> .claude/agents/specifier.md </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#handoff" class="md-nav__link"><span class="md-ellipsis"> Handoff: </span></a></li><li class="md-nav__item"><a href="#handoff_1" class="md-nav__link"><span class="md-ellipsis"> Handoff: </span></a><nav class="md-nav" aria-label="Handoff:"><ul class="md-nav__list"><li class="md-nav__item"><a href="#definition-of-done" class="md-nav__link"><span class="md-ellipsis"> Definition of Done </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-security-rules" class="md-nav__link"><span class="md-ellipsis"> 🛡️ Security Rules </span></a><nav class="md-nav" aria-label="🛡️ Security Rules"><ul class="md-nav__list"><li class="md-nav__item"><a href="#never" class="md-nav__link"><span class="md-ellipsis"> NEVER: </span></a></li><li class="md-nav__item"><a href="#always" class="md-nav__link"><span class="md-ellipsis"> ALWAYS: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-code-style" class="md-nav__link"><span class="md-ellipsis"> 📝 Code Style </span></a><nav class="md-nav" aria-label="📝 Code Style"><ul class="md-nav__list"><li class="md-nav__item"><a href="#general" class="md-nav__link"><span class="md-ellipsis"> General: </span></a></li><li class="md-nav__item"><a href="#language-specific" class="md-nav__link"><span class="md-ellipsis"> Language Specific: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#design-document-structure" class="md-nav__link"><span class="md-ellipsis"> Design Document Structure </span></a></li><li class="md-nav__item"><a href="#required-diagrams-mermaid" class="md-nav__link"><span class="md-ellipsis"> Required Diagrams (Mermaid) </span></a></li><li class="md-nav__item"><a href="#design-review-checklist" class="md-nav__link"><span class="md-ellipsis"> Design Review Checklist </span></a></li><li class="md-nav__item"><a href="#handoff_2" class="md-nav__link"><span class="md-ellipsis"> Handoff </span></a></li><li class="md-nav__item"><a href="#task-tracking" class="md-nav__link"><span class="md-ellipsis"> Task Tracking </span></a></li><li class="md-nav__item"><a href="#code-requirements" class="md-nav__link"><span class="md-ellipsis"> Code Requirements </span></a><nav class="md-nav" aria-label="Code Requirements"><ul class="md-nav__list"><li class="md-nav__item"><a href="#every-file-must-have" class="md-nav__link"><span class="md-ellipsis"> Every File MUST Have: </span></a></li><li class="md-nav__item"><a href="#every-function-must" class="md-nav__link"><span class="md-ellipsis"> Every Function MUST: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#testing-requirements" class="md-nav__link"><span class="md-ellipsis"> Testing Requirements </span></a></li><li class="md-nav__item"><a href="#pr-template-usage" class="md-nav__link"><span class="md-ellipsis"> PR Template Usage </span></a><nav class="md-nav" aria-label="PR Template Usage"><ul class="md-nav__list"><li class="md-nav__item"><a href="#02-breakdown-tasksmd" class="md-nav__link"><span class="md-ellipsis"> 02-breakdown-tasks.md </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#constraints" class="md-nav__link"><span class="md-ellipsis"> Constraints </span></a></li><li class="md-nav__item"><a href="#-implementation-patterns-and-best-practices" class="md-nav__link"><span class="md-ellipsis"> 📊 Implementation Patterns and Best Practices </span></a><nav class="md-nav" aria-label="📊 Implementation Patterns and Best Practices"><ul class="md-nav__list"><li class="md-nav__item"><a href="#pattern-1-staged-approval-flow" class="md-nav__link"><span class="md-ellipsis"> Pattern 1: Staged Approval Flow </span></a></li><li class="md-nav__item"><a href="#pattern-2-automatic-validation-loop" class="md-nav__link"><span class="md-ellipsis"> Pattern 2: Automatic Validation Loop </span></a></li><li class="md-nav__item"><a href="#pattern-3-agent-collaboration" class="md-nav__link"><span class="md-ellipsis"> Pattern 3: Agent Collaboration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-implementation-procedure-sprint-1-checklist" class="md-nav__link"><span class="md-ellipsis"> 🚀 Implementation Procedure (Sprint 1 Checklist) </span></a><nav class="md-nav" aria-label="🚀 Implementation Procedure (Sprint 1 Checklist)"><ul class="md-nav__list"><li class="md-nav__item"><a href="#week-1-foundation-setup" class="md-nav__link"><span class="md-ellipsis"> Week 1: Foundation Setup </span></a></li><li class="md-nav__item"><a href="#week-2-process-establishment" class="md-nav__link"><span class="md-ellipsis"> Week 2: Process Establishment </span></a></li><li class="md-nav__item"><a href="#week-3-improvement-and-scale" class="md-nav__link"><span class="md-ellipsis"> Week 3: Improvement and Scale </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-effectiveness-measurement" class="md-nav__link"><span class="md-ellipsis"> 📈 Effectiveness Measurement </span></a><nav class="md-nav" aria-label="📈 Effectiveness Measurement"><ul class="md-nav__list"><li class="md-nav__item"><a href="#beforeafter-comparison-metrics" class="md-nav__link"><span class="md-ellipsis"> Before/After Comparison Metrics </span></a></li><li class="md-nav__item"><a href="#roi-calculation-example" class="md-nav__link"><span class="md-ellipsis"> ROI Calculation Example </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-troubleshooting" class="md-nav__link"><span class="md-ellipsis"> 🎓 Troubleshooting </span></a><nav class="md-nav" aria-label="🎓 Troubleshooting"><ul class="md-nav__list"><li class="md-nav__item"><a href="#common-issues-and-solutions" class="md-nav__link"><span class="md-ellipsis"> Common Issues and Solutions </span></a><nav class="md-nav" aria-label="Common Issues and Solutions"><ul class="md-nav__list"><li class="md-nav__item"><a href="#issue-1-hooks-not-working" class="md-nav__link"><span class="md-ellipsis"> Issue 1: Hooks Not Working </span></a></li><li class="md-nav__item"><a href="#issue-2-copilot-ignoring-instructions" class="md-nav__link"><span class="md-ellipsis"> Issue 2: Copilot Ignoring Instructions </span></a></li><li class="md-nav__item"><a href="#issue-3-approval-flag-management" class="md-nav__link"><span class="md-ellipsis"> Issue 3: Approval Flag Management </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#-future-outlook" class="md-nav__link"><span class="md-ellipsis"> 🔮 Future Outlook </span></a><nav class="md-nav" aria-label="🔮 Future Outlook"><ul class="md-nav__list"><li class="md-nav__item"><a href="#next-generation-features" class="md-nav__link"><span class="md-ellipsis"> Next-Generation Features </span></a></li><li class="md-nav__item"><a href="#planned-tool-integrations" class="md-nav__link"><span class="md-ellipsis"> Planned Tool Integrations </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-summary" class="md-nav__link"><span class="md-ellipsis"> 📚 Summary </span></a><nav class="md-nav" aria-label="📚 Summary"><ul class="md-nav__list"><li class="md-nav__item"><a href="#core-value" class="md-nav__link"><span class="md-ellipsis"> Core Value </span></a></li><li class="md-nav__item"><a href="#implementation-priority" class="md-nav__link"><span class="md-ellipsis"> Implementation Priority </span></a></li><li class="md-nav__item"><a href="#next-action" class="md-nav__link"><span class="md-ellipsis"> Next Action </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-related-resources" class="md-nav__link"><span class="md-ellipsis"> 🔗 Related Resources </span></a></li></ul></nav></li><li class="md-nav__item"><a href="../github-actions-automated-testing-claude-code-2025/" class="md-nav__link"><span class="md-ellipsis"> GitHub Actions Automated Testing </span></a></li><li class="md-nav__item"><a href="../../blog/spec-connect-not-keep-ai-agent/" class="md-nav__link"><span class="md-ellipsis"> Don't Keep Specs—Connect Them </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span></a></li><li class="md-nav__item"><a href="../../tags/" class="md-nav__link"><span class="md-ellipsis"> 🏷️ Tags </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#-overall-design-spec-based-development-enforcement-architecture" class="md-nav__link"><span class="md-ellipsis"> 🎯 Overall Design: Spec-Based Development Enforcement Architecture </span></a><nav class="md-nav" aria-label="🎯 Overall Design: Spec-Based Development Enforcement Architecture"><ul class="md-nav__list"><li class="md-nav__item"><a href="#phase-gate-approach" class="md-nav__link"><span class="md-ellipsis"> Phase Gate Approach </span></a></li><li class="md-nav__item"><a href="#enforcement-mechanism-comparison" class="md-nav__link"><span class="md-ellipsis"> Enforcement Mechanism Comparison </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-claude-code-complete-control-implementation" class="md-nav__link"><span class="md-ellipsis"> 🔒 Claude Code: Complete Control Implementation </span></a><nav class="md-nav" aria-label="🔒 Claude Code: Complete Control Implementation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-claudemd---memory-and-behavioral-rules" class="md-nav__link"><span class="md-ellipsis"> 1. CLAUDE.md - Memory and Behavioral Rules </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-definition-of-done" class="md-nav__link"><span class="md-ellipsis"> 📋 Definition of Done </span></a><nav class="md-nav" aria-label="📋 Definition of Done"><ul class="md-nav__list"><li class="md-nav__item"><a href="#3-hooks---gatekeeper-implementation" class="md-nav__link"><span class="md-ellipsis"> 3. Hooks - Gatekeeper Implementation </span></a><nav class="md-nav" aria-label="3. Hooks - Gatekeeper Implementation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#claudehooksconfigjson" class="md-nav__link"><span class="md-ellipsis"> .claude/hooks/config.json </span></a></li><li class="md-nav__item"><a href="#claudehooksgatekeeperpy" class="md-nav__link"><span class="md-ellipsis"> .claude/hooks/gatekeeper.py </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#4-subagents---role-separation" class="md-nav__link"><span class="md-ellipsis"> 4. Subagents - Role Separation </span></a><nav class="md-nav" aria-label="4. Subagents - Role Separation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#claudeagentsspecifiermd" class="md-nav__link"><span class="md-ellipsis"> .claude/agents/specifier.md </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#handoff" class="md-nav__link"><span class="md-ellipsis"> Handoff: </span></a></li><li class="md-nav__item"><a href="#handoff_1" class="md-nav__link"><span class="md-ellipsis"> Handoff: </span></a><nav class="md-nav" aria-label="Handoff:"><ul class="md-nav__list"><li class="md-nav__item"><a href="#definition-of-done" class="md-nav__link"><span class="md-ellipsis"> Definition of Done </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-security-rules" class="md-nav__link"><span class="md-ellipsis"> 🛡️ Security Rules </span></a><nav class="md-nav" aria-label="🛡️ Security Rules"><ul class="md-nav__list"><li class="md-nav__item"><a href="#never" class="md-nav__link"><span class="md-ellipsis"> NEVER: </span></a></li><li class="md-nav__item"><a href="#always" class="md-nav__link"><span class="md-ellipsis"> ALWAYS: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-code-style" class="md-nav__link"><span class="md-ellipsis"> 📝 Code Style </span></a><nav class="md-nav" aria-label="📝 Code Style"><ul class="md-nav__list"><li class="md-nav__item"><a href="#general" class="md-nav__link"><span class="md-ellipsis"> General: </span></a></li><li class="md-nav__item"><a href="#language-specific" class="md-nav__link"><span class="md-ellipsis"> Language Specific: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#design-document-structure" class="md-nav__link"><span class="md-ellipsis"> Design Document Structure </span></a></li><li class="md-nav__item"><a href="#required-diagrams-mermaid" class="md-nav__link"><span class="md-ellipsis"> Required Diagrams (Mermaid) </span></a></li><li class="md-nav__item"><a href="#design-review-checklist" class="md-nav__link"><span class="md-ellipsis"> Design Review Checklist </span></a></li><li class="md-nav__item"><a href="#handoff_2" class="md-nav__link"><span class="md-ellipsis"> Handoff </span></a></li><li class="md-nav__item"><a href="#task-tracking" class="md-nav__link"><span class="md-ellipsis"> Task Tracking </span></a></li><li class="md-nav__item"><a href="#code-requirements" class="md-nav__link"><span class="md-ellipsis"> Code Requirements </span></a><nav class="md-nav" aria-label="Code Requirements"><ul class="md-nav__list"><li class="md-nav__item"><a href="#every-file-must-have" class="md-nav__link"><span class="md-ellipsis"> Every File MUST Have: </span></a></li><li class="md-nav__item"><a href="#every-function-must" class="md-nav__link"><span class="md-ellipsis"> Every Function MUST: </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#testing-requirements" class="md-nav__link"><span class="md-ellipsis"> Testing Requirements </span></a></li><li class="md-nav__item"><a href="#pr-template-usage" class="md-nav__link"><span class="md-ellipsis"> PR Template Usage </span></a><nav class="md-nav" aria-label="PR Template Usage"><ul class="md-nav__list"><li class="md-nav__item"><a href="#02-breakdown-tasksmd" class="md-nav__link"><span class="md-ellipsis"> 02-breakdown-tasks.md </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#constraints" class="md-nav__link"><span class="md-ellipsis"> Constraints </span></a></li><li class="md-nav__item"><a href="#-implementation-patterns-and-best-practices" class="md-nav__link"><span class="md-ellipsis"> 📊 Implementation Patterns and Best Practices </span></a><nav class="md-nav" aria-label="📊 Implementation Patterns and Best Practices"><ul class="md-nav__list"><li class="md-nav__item"><a href="#pattern-1-staged-approval-flow" class="md-nav__link"><span class="md-ellipsis"> Pattern 1: Staged Approval Flow </span></a></li><li class="md-nav__item"><a href="#pattern-2-automatic-validation-loop" class="md-nav__link"><span class="md-ellipsis"> Pattern 2: Automatic Validation Loop </span></a></li><li class="md-nav__item"><a href="#pattern-3-agent-collaboration" class="md-nav__link"><span class="md-ellipsis"> Pattern 3: Agent Collaboration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-implementation-procedure-sprint-1-checklist" class="md-nav__link"><span class="md-ellipsis"> 🚀 Implementation Procedure (Sprint 1 Checklist) </span></a><nav class="md-nav" aria-label="🚀 Implementation Procedure (Sprint 1 Checklist)"><ul class="md-nav__list"><li class="md-nav__item"><a href="#week-1-foundation-setup" class="md-nav__link"><span class="md-ellipsis"> Week 1: Foundation Setup </span></a></li><li class="md-nav__item"><a href="#week-2-process-establishment" class="md-nav__link"><span class="md-ellipsis"> Week 2: Process Establishment </span></a></li><li class="md-nav__item"><a href="#week-3-improvement-and-scale" class="md-nav__link"><span class="md-ellipsis"> Week 3: Improvement and Scale </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-effectiveness-measurement" class="md-nav__link"><span class="md-ellipsis"> 📈 Effectiveness Measurement </span></a><nav class="md-nav" aria-label="📈 Effectiveness Measurement"><ul class="md-nav__list"><li class="md-nav__item"><a href="#beforeafter-comparison-metrics" class="md-nav__link"><span class="md-ellipsis"> Before/After Comparison Metrics </span></a></li><li class="md-nav__item"><a href="#roi-calculation-example" class="md-nav__link"><span class="md-ellipsis"> ROI Calculation Example </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-troubleshooting" class="md-nav__link"><span class="md-ellipsis"> 🎓 Troubleshooting </span></a><nav class="md-nav" aria-label="🎓 Troubleshooting"><ul class="md-nav__list"><li class="md-nav__item"><a href="#common-issues-and-solutions" class="md-nav__link"><span class="md-ellipsis"> Common Issues and Solutions </span></a><nav class="md-nav" aria-label="Common Issues and Solutions"><ul class="md-nav__list"><li class="md-nav__item"><a href="#issue-1-hooks-not-working" class="md-nav__link"><span class="md-ellipsis"> Issue 1: Hooks Not Working </span></a></li><li class="md-nav__item"><a href="#issue-2-copilot-ignoring-instructions" class="md-nav__link"><span class="md-ellipsis"> Issue 2: Copilot Ignoring Instructions </span></a></li><li class="md-nav__item"><a href="#issue-3-approval-flag-management" class="md-nav__link"><span class="md-ellipsis"> Issue 3: Approval Flag Management </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#-future-outlook" class="md-nav__link"><span class="md-ellipsis"> 🔮 Future Outlook </span></a><nav class="md-nav" aria-label="🔮 Future Outlook"><ul class="md-nav__list"><li class="md-nav__item"><a href="#next-generation-features" class="md-nav__link"><span class="md-ellipsis"> Next-Generation Features </span></a></li><li class="md-nav__item"><a href="#planned-tool-integrations" class="md-nav__link"><span class="md-ellipsis"> Planned Tool Integrations </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-summary" class="md-nav__link"><span class="md-ellipsis"> 📚 Summary </span></a><nav class="md-nav" aria-label="📚 Summary"><ul class="md-nav__list"><li class="md-nav__item"><a href="#core-value" class="md-nav__link"><span class="md-ellipsis"> Core Value </span></a></li><li class="md-nav__item"><a href="#implementation-priority" class="md-nav__link"><span class="md-ellipsis"> Implementation Priority </span></a></li><li class="md-nav__item"><a href="#next-action" class="md-nav__link"><span class="md-ellipsis"> Next Action </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-related-resources" class="md-nav__link"><span class="md-ellipsis"> 🔗 Related Resources </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><nav class="md-path" aria-label="Navigation"><ol class="md-path__list"><li class="md-path__item"><a href="../../" class="md-path__link"><span class="md-ellipsis"> Top </span></a></li><li class="md-path__item"><a href="../../" class="md-path__link"><span class="md-ellipsis"> 🏠 Home </span></a></li><li class="md-path__item"><a href="../../pillars/claude-code/" class="md-path__link"><span class="md-ellipsis"> 📚 Guide Collection </span></a></li><li class="md-path__item"><a href="../../pillars/spec-and-testing/" class="md-path__link"><span class="md-ellipsis"> 📐 Spec-Driven / Testing Articles </span></a></li></ol></nav><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../tags/#tag:instructions" class="md-tag">instructions</a><a href="../../tags/#tag:settings-hooks" class="md-tag">settings-hooks</a><a href="../../tags/#tag:spec-first-enforcement" class="md-tag">spec-first-enforcement</a></nav><h1 id="practical-guide-to-enforcing-spec-based-development-with-ai-agents-claude-code--github-copilot-complete-setup-2025-edition">Practical Guide to Enforcing Spec-Based Development with AI Agents: Claude Code &amp; GitHub Copilot Complete Setup [2025 Edition]<a class="headerlink" href="#practical-guide-to-enforcing-spec-based-development-with-ai-agents-claude-code--github-copilot-complete-setup-2025-edition" title="Permanent link">&para;</a></h1><h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2><ul><li><strong>Technically enforce the spec → design → implementation flow</strong> to prevent vibe coding chaos</li><li>Set <strong>gate conditions</strong> in Claude Code and GitHub Copilot to block implementation without approval</li><li>Complete development process control through <strong>instruction files, permissions, and hooks</strong></li><li>Quality assurance through agent role separation and permission restrictions</li></ul><div class="admonition warning"><p class="admonition-title">Important: Why "Enforcement" is Necessary</p><p>AI agents tend to treat instructions as "recommendations." Without <strong>technical enforcement mechanisms</strong>, you'll inevitably revert to vibe coding. This article provides <strong>concrete techniques to block implementation</strong>.</p></div><h2 id="-overall-design-spec-based-development-enforcement-architecture">🎯 Overall Design: Spec-Based Development Enforcement Architecture<a class="headerlink" href="#-overall-design-spec-based-development-enforcement-architecture" title="Permanent link">&para;</a></h2><h3 id="phase-gate-approach">Phase Gate Approach<a class="headerlink" href="#phase-gate-approach" title="Permanent link">&para;</a></h3><pre class="mermaid"><code>graph LR
+    A[📋 SPEC] --&gt;|Approval Flag| B[🏗️ DESIGN]
+    B --&gt;|Approval Flag| C[📝 TASKS]
+    C --&gt;|Approval Flag| D[💻 IMPLEMENTATION]
+    D --&gt;|Auto Validation| E[✅ TEST/PR]
+
+    A -.-&gt;|❌ Blocked| D
+    B -.-&gt;|❌ Blocked| D
+
+    style A fill:#ffe0e0
+    style B fill:#fff0e0
+    style C fill:#e0f0ff
+    style D fill:#e0ffe0
+    style E fill:#f0e0ff</code></pre><h3 id="enforcement-mechanism-comparison">Enforcement Mechanism Comparison<a class="headerlink" href="#enforcement-mechanism-comparison" title="Permanent link">&para;</a></h3><table><thead><tr><th>Tool</th><th>Enforcement Level</th><th>Mechanism</th><th>Effect</th></tr></thead><tbody><tr><td><strong>Claude Code</strong></td><td>⭐⭐⭐⭐⭐</td><td>Hooks + Permissions</td><td>Complete blocking possible</td></tr><tr><td><strong>GitHub Copilot</strong></td><td>⭐⭐⭐⭐</td><td>Instructions + Firewall</td><td>Strong guidance + restrictions</td></tr><tr><td><strong>Traditional Instructions</strong></td><td>⭐⭐</td><td>README/Comments</td><td>Easily ignored</td></tr></tbody></table><h2 id="-claude-code-complete-control-implementation">🔒 Claude Code: Complete Control Implementation<a class="headerlink" href="#-claude-code-complete-control-implementation" title="Permanent link">&para;</a></h2><h3 id="1-claudemd---memory-and-behavioral-rules">1. CLAUDE.md - Memory and Behavioral Rules<a class="headerlink" href="#1-claudemd---memory-and-behavioral-rules" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Project Operating Rules (Spec-first ENFORCED)</span>
+
+<span class="gu">## ⚠️ CRITICAL: Phase Gates</span>
+
+<span class="gu">### Phase 1: SPECIFICATION</span>
+<span class="k">-</span><span class="w"> </span>Location: <span class="sb">`docs/spec/requirements.md`</span>
+<span class="k">-</span><span class="w"> </span>Approval Flag: <span class="sb">`docs/spec/.approved`</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**BLOCKED ACTIONS**</span>: Edit, Write, Bash (except spec-related)
+
+<span class="gu">### Phase 2: DESIGN</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**PREREQUISITE**</span>: <span class="sb">`docs/spec/.approved`</span> MUST exist
+<span class="k">-</span><span class="w"> </span>Location: <span class="sb">`docs/design/architecture.md`</span>
+<span class="k">-</span><span class="w"> </span>Approval Flag: <span class="sb">`docs/design/.approved`</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**BLOCKED ACTIONS**</span>: Code editing, test execution
+
+<span class="gu">### Phase 3: TASKING</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**PREREQUISITE**</span>: <span class="sb">`docs/design/.approved`</span> MUST exist
+<span class="k">-</span><span class="w"> </span>Location: <span class="sb">`docs/tasks/todo.yaml`</span>
+<span class="k">-</span><span class="w"> </span>Format: YAML with status field (todo/in-progress/done)
+
+<span class="gu">### Phase 4: IMPLEMENTATION</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**PREREQUISITE**</span>: All above flags MUST exist
+<span class="k">-</span><span class="w"> </span><span class="gs">**NOW ALLOWED**</span>: Edit, Write source files
+<span class="k">-</span><span class="w"> </span><span class="gs">**STILL BLOCKED**</span>: Direct deployment, production access
+
+<span class="gu">## 🛡️ Enforcement Rules</span>
+
+```yaml
+enforcement:
+  spec_not_approved:
+    message: &quot;❌ SPEC not approved. Cannot proceed to design.&quot;
+    allowed_tools: [Read, Grep]
+    blocked_tools: [Edit, Write, Bash, TodoWrite]
+
+  design_not_approved:
+    message: &quot;❌ DESIGN not approved. Cannot implement.&quot;
+    allowed_tools: [Read, Grep, TodoWrite]
+    blocked_tools: [Edit, Write, Bash]
+</code></pre></div><h2 id="-definition-of-done">📋 Definition of Done<a class="headerlink" href="#-definition-of-done" title="Permanent link">&para;</a></h2><ol><li>✅ Spec approved by stakeholder</li><li>✅ Design reviewed and approved</li><li>✅ All tasks completed in todo.yaml</li><li>✅ Unit tests written and passing</li><li>✅ Integration tests passing</li><li>✅ Security scan clean</li><li>✅ Documentation updated</li><li>✅ PR links to spec &amp; design docs <div class="highlight"><pre><span></span><code>### 2. .claude/settings.json - Permission Control
+
+```json
+{
+  &quot;permissions&quot;: {
+    &quot;deny&quot;: [
+      &quot;Read(./.env*)&quot;,
+      &quot;Read(./secrets/**)&quot;,
+      &quot;Read(./credentials/**)&quot;,
+      &quot;Bash(rm -rf *)&quot;,
+      &quot;Bash(curl *)&quot;,
+      &quot;Bash(wget *)&quot;
+    ],
+    &quot;ask&quot;: [
+      &quot;Edit(**/*.py)&quot;,
+      &quot;Edit(**/*.js)&quot;,
+      &quot;Edit(**/*.ts)&quot;,
+      &quot;Write(**/*.py)&quot;,
+      &quot;Write(**/*.js)&quot;,
+      &quot;Write(**/*.ts)&quot;,
+      &quot;Bash(npm install *)&quot;,
+      &quot;Bash(pip install *)&quot;,
+      &quot;Bash(go get *)&quot;
+    ],
+    &quot;allow&quot;: [
+      &quot;Read(docs/**)&quot;,
+      &quot;Read(README.md)&quot;,
+      &quot;Grep(**)&quot;,
+      &quot;LS(**)&quot;
+    ]
+  },
+  &quot;tools&quot;: {
+    &quot;disabled_by_default&quot;: [&quot;NotebookEdit&quot;, &quot;WebFetch&quot;],
+    &quot;require_confirmation&quot;: [&quot;MultiEdit&quot;, &quot;Write&quot;]
+  }
+}
+</code></pre></div></li></ol><h3 id="3-hooks---gatekeeper-implementation">3. Hooks - Gatekeeper Implementation<a class="headerlink" href="#3-hooks---gatekeeper-implementation" title="Permanent link">&para;</a></h3><h4 id="claudehooksconfigjson">.claude/hooks/config.json<a class="headerlink" href="#claudehooksconfigjson" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;PreToolUse&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Spec Gate Keeper&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;matcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Edit|Write|MultiEdit&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python3 .claude/hooks/gatekeeper.py&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;fail_on_error&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;PostToolUse&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Auto Format &amp; Test&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;matcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Edit|Write&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python3 .claude/hooks/auto_format.py&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="claudehooksgatekeeperpy">.claude/hooks/gatekeeper.py<a class="headerlink" href="#claudehooksgatekeeperpy" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Phase Gate Keeper - Enforces spec-first development</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_phase_gates</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if current phase allows the requested action&quot;&quot;&quot;</span>
+
+    <span class="c1"># Phase 1: Check SPEC approval</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;docs/spec/.approved&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ BLOCKED: Specification not approved&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Required: Review and approve docs/spec/requirements.md first&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run: touch docs/spec/.approved (after human review)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Phase 2: Check DESIGN approval</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;docs/design/.approved&#39;</span><span class="p">):</span>
+        <span class="c1"># Allow spec and design editing only</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;docs/spec&#39;</span><span class="p">,</span> <span class="s1">&#39;docs/design&#39;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ BLOCKED: Design not approved&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Required: Review and approve docs/design/architecture.md&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run: touch docs/design/.approved (after human review)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Phase 3: Check task planning</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;docs/tasks/todo.yaml&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ WARNING: No task breakdown found&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recommended: Create docs/tasks/todo.yaml first&quot;</span><span class="p">)</span>
+        <span class="c1"># Warning only, not blocking</span>
+
+    <span class="c1"># Phase 4: Implementation allowed</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ All gates passed - implementation allowed&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Get the tool being used from environment or args</span>
+    <span class="n">tool</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CLAUDE_TOOL&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Read-only operations always allowed</span>
+    <span class="k">if</span> <span class="n">tool</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Read&#39;</span><span class="p">,</span> <span class="s1">&#39;Grep&#39;</span><span class="p">,</span> <span class="s1">&#39;LS&#39;</span><span class="p">,</span> <span class="s1">&#39;BashOutput&#39;</span><span class="p">]:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Check phase gates for write operations</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">check_phase_gates</span><span class="p">():</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Block the operation</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Allow the operation</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div><h3 id="4-subagents---role-separation">4. Subagents - Role Separation<a class="headerlink" href="#4-subagents---role-separation" title="Permanent link">&para;</a></h3><h4 id="claudeagentsspecifiermd">.claude/agents/specifier.md<a class="headerlink" href="#claudeagentsspecifiermd" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code>---
+name: specifier
+description: Requirements analyst who creates and refines specifications
+tools: [Read, Write, Grep, TodoWrite]
+restrictions:
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Can only write to docs/spec/*
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Cannot edit source code
+<span class="gu">  - Must produce requirements.md with clear acceptance criteria</span>
+<span class="gu">---</span>
+
+<span class="gh"># Specifier Agent Instructions</span>
+
+You are responsible for the SPECIFICATION phase only.
+
+<span class="gu">## Your Tasks:</span>
+<span class="k">1.</span> Interview stakeholders (via user interaction)
+<span class="k">2.</span> Document requirements in <span class="sb">`docs/spec/requirements.md`</span>
+<span class="k">3.</span> Define clear acceptance criteria
+<span class="k">4.</span> Create user stories with testable outcomes
+
+<span class="gu">## Output Format:</span>
+```markdown
+<span class="gh"># Requirements Specification</span>
+
+<span class="gu">## User Stories</span>
+<span class="k">-</span><span class="w"> </span>As a [user type]
+<span class="k">-</span><span class="w"> </span>I want [functionality]
+<span class="k">-</span><span class="w"> </span>So that [business value]
+
+<span class="gu">## Acceptance Criteria</span>
+<span class="k">- [ ]</span> Criterion 1 (testable)
+<span class="k">- [ ]</span> Criterion 2 (measurable)
+<span class="k">- [ ]</span> Criterion 3 (observable)
+
+<span class="gu">## Non-Functional Requirements</span>
+<span class="k">-</span><span class="w"> </span>Performance: [metrics]
+<span class="k">-</span><span class="w"> </span>Security: [requirements]
+<span class="k">-</span><span class="w"> </span>Scalability: [targets]
+</code></pre></div><h2 id="handoff">Handoff:<a class="headerlink" href="#handoff" title="Permanent link">&para;</a></h2><p>After approval, create <code>docs/spec/.approved</code> flag file. <div class="highlight"><pre><span></span><code>#### .claude/agents/designer.md
+
+```markdown
+---
+name: designer
+description: System architect who creates technical designs from specifications
+tools: [Read, Write, Grep]
+prerequisites:
+  - docs/spec/.approved must exist
+restrictions:
+  - Can only write to docs/design/*
+  - Cannot edit source code
+  - Must reference approved specifications
+---
+
+# Designer Agent Instructions
+
+You transform approved specifications into technical architecture.
+
+## Your Tasks:
+1. Read approved `docs/spec/requirements.md`
+2. Create `docs/design/architecture.md`
+3. Define system components and interfaces
+4. Create sequence/flow diagrams (mermaid)
+
+## Output Format:
+```markdown
+# Technical Design
+
+## Architecture Overview
+[C4 Level 2 diagram]
+
+## Components
+- Component A: [responsibility]
+  - Interface: [API spec]
+  - Dependencies: [list]
+
+## Data Flow
+[Sequence diagram]
+
+## Technology Stack
+- Language: [choice + rationale]
+- Framework: [choice + rationale]
+- Database: [choice + rationale]
+</code></pre></div></p><h2 id="handoff_1">Handoff:<a class="headerlink" href="#handoff_1" title="Permanent link">&para;</a></h2><p>After review, create <code>docs/design/.approved</code> flag file. <div class="highlight"><pre><span></span><code>## 🎮 GitHub Copilot: Instruction-Based Control
+
+### 1. .github/copilot-instructions.md - Repository-Wide Rules
+
+```markdown
+# Repository-Wide Copilot Instructions
+
+## 🚨 MANDATORY WORKFLOW (All developers &amp; agents)
+
+### Phase Gates
+1. **SPEC** → 2. **DESIGN** → 3. **TASKS** → 4. **IMPLEMENTATION** → 5. **TEST/PR**
+
+**Absolute Rule**: Never proceed to next phase without prior phase approval
+
+### Approval Flags
+- ✅ Spec Approved: `docs/spec/.approved`
+- ✅ Design Approved: `docs/design/.approved`
+- ✅ Tasks Defined: `docs/tasks/todo.yaml`
+
+### Build &amp; Test Commands (Required)
+```bash
+# Build
+make build    # or: npm run build, go build ./...
+
+# Test  
+make test     # or: npm test, go test ./...
+
+# Lint
+make lint     # or: npm run lint, golangci-lint run
+
+# Security
+make security # or: npm audit, gosec ./...
+</code></pre></div></p><h3 id="definition-of-done">Definition of Done<a class="headerlink" href="#definition-of-done" title="Permanent link">&para;</a></h3><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> All acceptance criteria met</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Unit tests added (coverage &gt; 80%)</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Integration tests passing</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Security scan clean</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Documentation updated</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> PR description links to spec &amp; design</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Code review approved</li></ul><h2 id="-security-rules">🛡️ Security Rules<a class="headerlink" href="#-security-rules" title="Permanent link">&para;</a></h2><h3 id="never">NEVER:<a class="headerlink" href="#never" title="Permanent link">&para;</a></h3><ul><li>Hardcode credentials or secrets</li><li>Commit .env files</li><li>Use eval() or exec() with user input</li><li>Disable security features</li><li>Skip input validation</li></ul><h3 id="always">ALWAYS:<a class="headerlink" href="#always" title="Permanent link">&para;</a></h3><ul><li>Use environment variables for config</li><li>Validate and sanitize all inputs</li><li>Use parameterized queries</li><li>Enable security headers</li><li>Log security events</li></ul><h2 id="-code-style">📝 Code Style<a class="headerlink" href="#-code-style" title="Permanent link">&para;</a></h2><h3 id="general">General:<a class="headerlink" href="#general" title="Permanent link">&para;</a></h3><ul><li>Clear variable names (no abbreviations)</li><li>Functions &lt; 20 lines</li><li>Files &lt; 200 lines</li><li>Cyclomatic complexity &lt; 10</li></ul><h3 id="language-specific">Language Specific:<a class="headerlink" href="#language-specific" title="Permanent link">&para;</a></h3><ul><li>Python: PEP 8, Type hints required</li><li>JavaScript/TypeScript: ESLint + Prettier</li><li>Go: gofmt + golangci-lint <div class="highlight"><pre><span></span><code>### 2. .github/instructions/ - Phase-Specific Instructions
+
+#### design.instructions.md
+
+```markdown
+---
+description: Design phase specific rules
+applyTo: &quot;docs/design/**&quot;
+---
+
+# Design Phase Instructions
+
+## Prerequisites Check
+```bash
+# This must pass before you start:
+test -f docs/spec/.approved || echo &quot;ERROR: Spec not approved!&quot;
+</code></pre></div></li></ul><h2 id="design-document-structure">Design Document Structure<a class="headerlink" href="#design-document-structure" title="Permanent link">&para;</a></h2><ol><li><strong>Architecture Overview</strong> (C4 model)</li><li><strong>Component Specifications</strong></li><li><strong>Interface Definitions</strong> (OpenAPI/GraphQL/Proto)</li><li><strong>Data Models</strong> (ER diagrams)</li><li><strong>Security Architecture</strong></li><li><strong>Deployment Architecture</strong></li></ol><h2 id="required-diagrams-mermaid">Required Diagrams (Mermaid)<a class="headerlink" href="#required-diagrams-mermaid" title="Permanent link">&para;</a></h2><ul><li>System Context (C4 Level 1)</li><li>Container Diagram (C4 Level 2)</li><li>Sequence Diagrams (key flows)</li><li>State Machines (if applicable)</li></ul><h2 id="design-review-checklist">Design Review Checklist<a class="headerlink" href="#design-review-checklist" title="Permanent link">&para;</a></h2><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Addresses all requirements from spec</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Scalability considered</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Security threats analyzed (STRIDE)</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Cost estimation provided</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Technology choices justified</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Interfaces fully specified</li></ul><h2 id="handoff_2">Handoff<a class="headerlink" href="#handoff_2" title="Permanent link">&para;</a></h2><p>After approval, create: <code>touch docs/design/.approved</code><div class="highlight"><pre><span></span><code>#### implementation.instructions.md
+
+```markdown
+---
+description: Implementation phase rules
+applyTo: [&quot;src/**&quot;, &quot;lib/**&quot;, &quot;pkg/**&quot;]
+---
+
+# Implementation Phase Instructions
+
+## Pre-Implementation Checklist
+```bash
+# All must exist:
+test -f docs/spec/.approved || exit 1
+test -f docs/design/.approved || exit 1
+test -f docs/tasks/todo.yaml || exit 1
+</code></pre></div></p><h2 id="task-tracking">Task Tracking<a class="headerlink" href="#task-tracking" title="Permanent link">&para;</a></h2><p>Before implementing any feature: 1. Check task exists in <code>docs/tasks/todo.yaml</code> 2. Update status: <code>todo</code> → <code>in-progress</code> 3. Create feature branch: <code>feature/TASK-ID-description</code></p><h2 id="code-requirements">Code Requirements<a class="headerlink" href="#code-requirements" title="Permanent link">&para;</a></h2><h3 id="every-file-must-have">Every File MUST Have:<a class="headerlink" href="#every-file-must-have" title="Permanent link">&para;</a></h3><ul><li>Header comment with purpose</li><li>Unit tests in same directory (<em>_test.</em> file)</li><li>Error handling (no silent failures)</li><li>Logging (structured, with context)</li></ul><h3 id="every-function-must">Every Function MUST:<a class="headerlink" href="#every-function-must" title="Permanent link">&para;</a></h3><ul><li>Have JSDoc/docstring</li><li>Validate inputs</li><li>Handle edge cases</li><li>Return errors (not throw, where applicable)</li></ul><h2 id="testing-requirements">Testing Requirements<a class="headerlink" href="#testing-requirements" title="Permanent link">&para;</a></h2><div class="highlight"><pre><span></span><code><span class="c1"># Before ANY commit:</span>
+make<span class="w"> </span><span class="nb">test</span><span class="w">        </span><span class="c1"># Must pass</span>
+make<span class="w"> </span>lint<span class="w">        </span><span class="c1"># Must pass</span>
+make<span class="w"> </span>security<span class="w">    </span><span class="c1"># Must pass</span>
+
+<span class="c1"># Coverage requirement:</span>
+<span class="c1"># New code: &gt;= 80%</span>
+<span class="c1"># Modified code: &gt;= 70%</span>
+</code></pre></div><h2 id="pr-template-usage">PR Template Usage<a class="headerlink" href="#pr-template-usage" title="Permanent link">&para;</a></h2><p><div class="highlight"><pre><span></span><code><span class="gu">## Changes</span>
+<span class="k">- [ ]</span> Implements TASK-[ID] from todo.yaml
+
+<span class="gu">## Links</span>
+<span class="k">-</span><span class="w"> </span>Spec: [<span class="nt">docs/spec/requirements.md</span>](<span class="na">link</span>)
+<span class="k">-</span><span class="w"> </span>Design: [<span class="nt">docs/design/architecture.md</span>](<span class="na">link</span>)
+<span class="k">-</span><span class="w"> </span>Task: [<span class="nt">TASK-ID in todo.yaml</span>](<span class="na">link</span>)
+
+<span class="gu">## Testing</span>
+<span class="k">- [ ]</span> Unit tests added
+<span class="k">- [ ]</span> Integration tests updated
+<span class="k">- [ ]</span> Manual testing completed
+
+<span class="gu">## Checklist</span>
+<span class="k">- [ ]</span> Code follows style guide
+<span class="k">- [ ]</span> Documentation updated
+<span class="k">- [ ]</span> No security issues
+<span class="k">- [ ]</span> Performance acceptable
+</code></pre></div><div class="highlight"><pre><span></span><code>### 3. .github/prompts/ - Reusable Prompts
+
+#### 01-create-design.md
+
+```markdown
+---
+mode: agent
+description: Create technical design from approved spec
+---
+
+# Design Creation Task
+
+## Input
+Read the approved specification from `docs/spec/requirements.md`
+
+## Process
+1. Analyze functional requirements
+2. Identify non-functional requirements  
+3. Propose architecture using C4 model
+4. Define component interfaces
+5. Specify data models
+6. Plan deployment architecture
+
+## Output
+Create `docs/design/architecture.md` with:
+- Architecture overview (C4 Level 1 &amp; 2)
+- Component specifications
+- Interface definitions (OpenAPI/Proto)
+- Data models (ER diagram)
+- Deployment diagram
+- Security considerations
+
+## Constraints
+- Do NOT edit any source code
+- Reference specific requirements by ID
+- Include mermaid diagrams
+- Provide rationale for all decisions
+
+## Completion
+Request human review for `docs/design/.approved`
+</code></pre></div></p><h4 id="02-breakdown-tasksmd">02-breakdown-tasks.md<a class="headerlink" href="#02-breakdown-tasksmd" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code>---
+mode: agent
+<span class="gu">description: Break down design into implementation tasks</span>
+<span class="gu">---</span>
+
+<span class="gh"># Task Breakdown</span>
+
+<span class="gu">## Input</span>
+<span class="k">-</span><span class="w"> </span>Approved spec: <span class="sb">`docs/spec/requirements.md`</span>
+<span class="k">-</span><span class="w"> </span>Approved design: <span class="sb">`docs/design/architecture.md`</span>
+
+<span class="gu">## Process</span>
+<span class="k">1.</span> Identify all components from design
+<span class="k">2.</span> Break each component into tasks
+<span class="k">3.</span> Estimate effort (S/M/L/XL)
+<span class="k">4.</span> Define dependencies
+<span class="k">5.</span> Assign priorities (P0/P1/P2)
+
+<span class="gu">## Output Format (docs/tasks/todo.yaml)</span>
+```yaml
+tasks:
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>id: TASK-001
+    title: &quot;Implement user authentication&quot;
+    component: &quot;auth-service&quot;
+    effort: M
+    priority: P0
+    status: todo
+    dependencies: []
+    acceptance:
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;JWT tokens issued&quot;
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;Refresh token flow works&quot;
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;Rate limiting active&quot;
+
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>id: TASK-002
+    title: &quot;Create user profile API&quot;
+    component: &quot;user-service&quot;
+    effort: S
+    priority: P1
+    status: todo
+    dependencies: [TASK-001]
+    acceptance:
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;CRUD operations work&quot;
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;Validation in place&quot;
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>&quot;Tests pass&quot;
+</code></pre></div><h2 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h2><ul><li>Each task should be completable in 1-2 days</li><li>Include clear acceptance criteria</li><li>Define dependencies explicitly <div class="highlight"><pre><span></span><code>### 4. Coding Agent Configuration
+
+#### .github/copilot/firewall.json
+
+```json
+{
+  &quot;firewall&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;rules&quot;: [
+      {
+        &quot;name&quot;: &quot;Block all by default&quot;,
+        &quot;action&quot;: &quot;block&quot;,
+        &quot;pattern&quot;: &quot;*&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Allow npm registry&quot;,
+        &quot;action&quot;: &quot;allow&quot;,
+        &quot;pattern&quot;: &quot;registry.npmjs.org&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Allow company registry&quot;,
+        &quot;action&quot;: &quot;allow&quot;,
+        &quot;pattern&quot;: &quot;registry.company.com&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Allow GitHub&quot;,
+        &quot;action&quot;: &quot;allow&quot;,
+        &quot;pattern&quot;: &quot;github.com&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Allow documentation sites&quot;,
+        &quot;action&quot;: &quot;allow&quot;,
+        &quot;pattern&quot;: &quot;*.readthedocs.io&quot;
+      }
+    ],
+    &quot;blocked_commands&quot;: [
+      &quot;curl&quot;,
+      &quot;wget&quot;,
+      &quot;nc&quot;,
+      &quot;telnet&quot;
+    ]
+  }
+}
+</code></pre></div></li></ul><h2 id="-implementation-patterns-and-best-practices">📊 Implementation Patterns and Best Practices<a class="headerlink" href="#-implementation-patterns-and-best-practices" title="Permanent link">&para;</a></h2><h3 id="pattern-1-staged-approval-flow">Pattern 1: Staged Approval Flow<a class="headerlink" href="#pattern-1-staged-approval-flow" title="Permanent link">&para;</a></h3><pre class="mermaid"><code>sequenceDiagram
+    participant Dev as Developer
+    participant AI as AI Agent
+    participant Gate as Gate Keeper
+    participant Review as Reviewer
+
+    Dev-&gt;&gt;AI: Start new feature
+    AI-&gt;&gt;Gate: Check phase gates
+    Gate--&gt;&gt;AI: ❌ Spec not approved
+    AI-&gt;&gt;Dev: Create spec first
+
+    Dev-&gt;&gt;AI: Write specification
+    AI-&gt;&gt;Dev: docs/spec/requirements.md created
+
+    Review-&gt;&gt;Review: Review spec
+    Review-&gt;&gt;Gate: Approve (create .approved)
+
+    Dev-&gt;&gt;AI: Create design
+    AI-&gt;&gt;Gate: Check phase gates
+    Gate--&gt;&gt;AI: ✅ Spec approved
+    AI-&gt;&gt;Dev: docs/design/architecture.md created</code></pre><h3 id="pattern-2-automatic-validation-loop">Pattern 2: Automatic Validation Loop<a class="headerlink" href="#pattern-2-automatic-validation-loop" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .claude/hooks/auto_validator.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_implementation</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Automatically validate implementation against spec&quot;&quot;&quot;</span>
+
+    <span class="n">validations</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># 1. Check if tests exist</span>
+    <span class="n">test_file</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;_test.py&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_file</span><span class="p">):</span>
+        <span class="n">validations</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;No test file found for </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">})</span>
+
+    <span class="c1"># 2. Run linter</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;pylint&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">validations</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Linting issues found&#39;</span>
+        <span class="p">})</span>
+
+    <span class="c1"># 3. Check coverage</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;coverage&#39;</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;pytest&#39;</span><span class="p">,</span> <span class="n">test_file</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="c1"># Parse coverage and check threshold</span>
+
+    <span class="k">return</span> <span class="n">validations</span>
+</code></pre></div><h3 id="pattern-3-agent-collaboration">Pattern 3: Agent Collaboration<a class="headerlink" href="#pattern-3-agent-collaboration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .claude/workflows/feature_development.yaml</span>
+<span class="nt">workflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Feature</span><span class="nv"> </span><span class="s">Development&quot;</span>
+<span class="w">  </span><span class="nt">stages</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">specification</span>
+<span class="w">      </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">specifier</span>
+<span class="w">      </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/spec/requirements.md</span>
+<span class="w">      </span><span class="nt">approval_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">design</span>
+<span class="w">      </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">designer</span>
+<span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/spec/requirements.md</span>
+<span class="w">      </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/design/architecture.md</span>
+<span class="w">      </span><span class="nt">approval_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tasking</span>
+<span class="w">      </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tasker</span>
+<span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/spec/requirements.md</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/design/architecture.md</span>
+<span class="w">      </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/tasks/todo.yaml</span>
+<span class="w">      </span><span class="nt">approval_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implementation</span>
+<span class="w">      </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implementer</span>
+<span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/tasks/todo.yaml</span>
+<span class="w">      </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/**</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tests/**</span>
+<span class="w">      </span><span class="nt">validation</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make test</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make lint</span>
+</code></pre></div><h2 id="-implementation-procedure-sprint-1-checklist">🚀 Implementation Procedure (Sprint 1 Checklist)<a class="headerlink" href="#-implementation-procedure-sprint-1-checklist" title="Permanent link">&para;</a></h2><h3 id="week-1-foundation-setup">Week 1: Foundation Setup<a class="headerlink" href="#week-1-foundation-setup" title="Permanent link">&para;</a></h3><ul class="task-list"><li class="task-list-item"><p><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Create directory structure <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>docs/<span class="o">{</span>spec,design,tasks<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.claude/<span class="o">{</span>hooks,agents<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.github/<span class="o">{</span>instructions,prompts,copilot<span class="o">}</span>
+</code></pre></div></p></li><li class="task-list-item"><p><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Configure Claude Code <div class="highlight"><pre><span></span><code><span class="c1"># Create CLAUDE.md</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>CLAUDE.md<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">[CLAUDE.md content from above]</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Place settings.json</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>.claude/settings.json<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">[settings.json content from above]</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Setup Hooks</span>
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pyyaml
+<span class="o">[</span>Place<span class="w"> </span>gatekeeper.py<span class="o">]</span>
+</code></pre></div></p></li><li class="task-list-item"><p><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Configure GitHub Copilot <div class="highlight"><pre><span></span><code><span class="c1"># Place Instructions</span>
+<span class="o">[</span>Create<span class="w"> </span>copilot-instructions.md<span class="o">]</span>
+<span class="o">[</span>Create<span class="w"> </span>instructions/*.instructions.md<span class="o">]</span>
+<span class="o">[</span>Create<span class="w"> </span>prompts/*<span class="o">]</span>
+</code></pre></div></p></li></ul><h3 id="week-2-process-establishment">Week 2: Process Establishment<a class="headerlink" href="#week-2-process-establishment" title="Permanent link">&para;</a></h3><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Validate flow with first feature</li><li>Define requirements with Specifier agent</li><li>Execute approval process</li><li>Create design with Designer agent</li><li>Break down tasks</li><li><p>Implement with gates</p></li><li class="task-list-item"><p><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Start metrics collection</p></li><li>Gate violation count</li><li>Time to approval</li><li>Implementation quality score</li></ul><h3 id="week-3-improvement-and-scale">Week 3: Improvement and Scale<a class="headerlink" href="#week-3-improvement-and-scale" title="Permanent link">&para;</a></h3><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Collect feedback</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Adjust Hooks/Instructions</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Roll out to entire team</li></ul><h2 id="-effectiveness-measurement">📈 Effectiveness Measurement<a class="headerlink" href="#-effectiveness-measurement" title="Permanent link">&para;</a></h2><h3 id="beforeafter-comparison-metrics">Before/After Comparison Metrics<a class="headerlink" href="#beforeafter-comparison-metrics" title="Permanent link">&para;</a></h3><table><thead><tr><th>Metric</th><th>Before</th><th>After (Target)</th><th>Measurement Method</th></tr></thead><tbody><tr><td>Implementation without spec rate</td><td>73%</td><td>&lt; 5%</td><td>Git log analysis</td></tr><tr><td>Design review execution rate</td><td>31%</td><td>100%</td><td>Approval flags</td></tr><tr><td>Test coverage</td><td>42%</td><td>&gt; 80%</td><td>Coverage.py</td></tr><tr><td>Production incident rate</td><td>8.2%</td><td>&lt; 2%</td><td>Incident management</td></tr><tr><td>Rework effort</td><td>35%</td><td>&lt; 10%</td><td>Task tracking</td></tr></tbody></table><h3 id="roi-calculation-example">ROI Calculation Example<a class="headerlink" href="#roi-calculation-example" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Annual cost reduction calculation</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_roi</span><span class="p">():</span>
+    <span class="c1"># Assumptions</span>
+    <span class="n">team_size</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">avg_salary</span> <span class="o">=</span> <span class="mi">80_000</span>  <span class="c1"># USD/year</span>
+
+    <span class="c1"># Improvement effects</span>
+    <span class="n">rework_reduction</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># 25% rework reduction</span>
+    <span class="n">incident_reduction</span> <span class="o">=</span> <span class="mf">0.06</span>  <span class="c1"># 6% incident reduction</span>
+
+    <span class="c1"># Cost savings</span>
+    <span class="n">rework_savings</span> <span class="o">=</span> <span class="n">team_size</span> <span class="o">*</span> <span class="n">avg_salary</span> <span class="o">*</span> <span class="n">rework_reduction</span>
+    <span class="n">incident_savings</span> <span class="o">=</span> <span class="mi">50_000</span> <span class="o">*</span> <span class="n">incident_reduction</span>  <span class="c1"># $50k per incident</span>
+
+    <span class="c1"># Implementation cost</span>
+    <span class="n">setup_cost</span> <span class="o">=</span> <span class="mi">20_000</span>  <span class="c1"># Initial setup</span>
+    <span class="n">training_cost</span> <span class="o">=</span> <span class="mi">10_000</span>  <span class="c1"># Training</span>
+
+    <span class="c1"># ROI</span>
+    <span class="n">annual_savings</span> <span class="o">=</span> <span class="n">rework_savings</span> <span class="o">+</span> <span class="n">incident_savings</span>
+    <span class="n">roi</span> <span class="o">=</span> <span class="p">(</span><span class="n">annual_savings</span> <span class="o">-</span> <span class="p">(</span><span class="n">setup_cost</span> <span class="o">+</span> <span class="n">training_cost</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">setup_cost</span> <span class="o">+</span> <span class="n">training_cost</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;annual_savings&#39;</span><span class="p">:</span> <span class="n">annual_savings</span><span class="p">,</span>
+        <span class="s1">&#39;roi_percentage&#39;</span><span class="p">:</span> <span class="n">roi</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s1">&#39;payback_months&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">setup_cost</span> <span class="o">+</span> <span class="n">training_cost</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">annual_savings</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div><h2 id="-troubleshooting">🎓 Troubleshooting<a class="headerlink" href="#-troubleshooting" title="Permanent link">&para;</a></h2><h3 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h3><h4 id="issue-1-hooks-not-working">Issue 1: Hooks Not Working<a class="headerlink" href="#issue-1-hooks-not-working" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="c1"># Check permissions</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>.claude/hooks/*.py
+
+<span class="c1"># Check Python environment</span>
+python3<span class="w"> </span>--version
+
+<span class="c1"># Verify Hook configuration</span>
+cat<span class="w"> </span>.claude/hooks/config.json
+
+<span class="c1"># Debug mode</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_DEBUG</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div><h4 id="issue-2-copilot-ignoring-instructions">Issue 2: Copilot Ignoring Instructions<a class="headerlink" href="#issue-2-copilot-ignoring-instructions" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="gh"># Add to top of .github/copilot-instructions.md</span>
+<span class="gu">## ⚠️ CRITICAL RULES - MUST FOLLOW</span>
+
+These rules override all other considerations:
+<span class="k">1.</span> NEVER skip phase gates
+<span class="k">2.</span> ALWAYS check approval flags
+<span class="k">3.</span> MUST run tests before commit
+</code></pre></div><h4 id="issue-3-approval-flag-management">Issue 3: Approval Flag Management<a class="headerlink" href="#issue-3-approval-flag-management" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="c1"># Create approval script</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>approve.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">case $1 in</span>
+<span class="s">  spec)</span>
+<span class="s">    touch docs/spec/.approved</span>
+<span class="s">    echo &quot;✅ Spec approved&quot;</span>
+<span class="s">    ;;</span>
+<span class="s">  design)</span>
+<span class="s">    touch docs/design/.approved</span>
+<span class="s">    echo &quot;✅ Design approved&quot;</span>
+<span class="s">    ;;</span>
+<span class="s">  *)</span>
+<span class="s">    echo &quot;Usage: ./approve.sh [spec|design]&quot;</span>
+<span class="s">    ;;</span>
+<span class="s">esac</span>
+<span class="s">EOF</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>approve.sh
+</code></pre></div><h2 id="-future-outlook">🔮 Future Outlook<a class="headerlink" href="#-future-outlook" title="Permanent link">&para;</a></h2><h3 id="next-generation-features">Next-Generation Features<a class="headerlink" href="#next-generation-features" title="Permanent link">&para;</a></h3><ol><li><strong>AI Auditor</strong>: Automate part of the approval process</li><li><strong>Quality Prediction</strong>: Predict quality issues before implementation</li><li><strong>Auto Refactoring</strong>: Automatically suggest design improvements</li><li><strong>Multi-Agent Collaboration</strong>: Automatic coordination of multiple AIs</li></ol><h3 id="planned-tool-integrations">Planned Tool Integrations<a class="headerlink" href="#planned-tool-integrations" title="Permanent link">&para;</a></h3><ul><li><strong>Amazon Kiro</strong>: Native integration</li><li><strong>MCP (Model Context Protocol)</strong>: External system integration</li><li><strong>GitHub Issues</strong>: Automatic task generation</li><li><strong>Jira/Linear</strong>: Task synchronization</li></ul><h2 id="-summary">📚 Summary<a class="headerlink" href="#-summary" title="Permanent link">&para;</a></h2><h3 id="core-value">Core Value<a class="headerlink" href="#core-value" title="Permanent link">&para;</a></h3><p>✅ <strong>From "recommended" to "enforced" spec-driven development</strong> ✅ <strong>Quality assurance through technical guardrails</strong> ✅ <strong>Complete control of agent behavior</strong> ✅ <strong>Auditable development process</strong></p><h3 id="implementation-priority">Implementation Priority<a class="headerlink" href="#implementation-priority" title="Permanent link">&para;</a></h3><ol><li><strong>Essential</strong>: CLAUDE.md + settings.json (Claude) / copilot-instructions.md (Copilot)</li><li><strong>Recommended</strong>: Hooks/Gates + Instructions files</li><li><strong>Optional</strong>: Subagents + Prompts + Firewall</li></ol><h3 id="next-action">Next Action<a class="headerlink" href="#next-action" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Quick start</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/spec-first-template
+<span class="nb">cd</span><span class="w"> </span>spec-first-template
+./setup.sh
+</code></pre></div><div class="admonition tip"><p class="admonition-title">Key to Success</p><p>Start with a small project first, observe team reactions, and gradually roll out in stages—that's the path to success.</p></div><h2 id="-related-resources">🔗 Related Resources<a class="headerlink" href="#-related-resources" title="Permanent link">&para;</a></h2><ul><li><a href="https://docs.anthropic.com/en/docs/claude-code">Claude Code Official Documentation</a></li><li><a href="https://docs.github.com/copilot/customizing-copilot">GitHub Copilot Instructions</a></li><li><a href="../spec-driven-development-kiro-2025/">Our Spec-Based Development Article</a></li><li><a href="../../generative-ai/amazon-kiro/amazon-kiro-agentic-ide-2025/">Amazon Kiro Complete Guide</a></li></ul><hr><p><strong>Tags</strong>: #SpecFirst #ClaudeCode #GitHubCopilot #Hooks #Instructions #Gatekeeper #QualityGates #AgenticCoding #DevOps #SDLC</p><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="February 17, 2026 23:29:52 JST">February 17, 2026 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 520" width="680" height="520" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Session ≠ Context Window: Separation of Concerns</title>
+  <desc id="desc">Left: session log retains all events durably. Right: context window is a transient slice transformed by the harness</desc>
+
+  <text x="340" y="30" text-anchor="middle" fill="#5F5E5A" font-size="15" font-weight="700">Durability (session) and transformation freedom (harness) are separate concerns</text>
+
+  <!-- Left: Session log -->
+  <rect x="30" y="60" width="260" height="400" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="2"/>
+  <text x="160" y="86" text-anchor="middle" fill="#8A5210" font-size="14" font-weight="700">Session Log (Full, Durable)</text>
+  <text x="160" y="104" text-anchor="middle" fill="#8A5210" font-size="12" opacity="0.85">Guarantees full retention of what happened</text>
+
+  <g font-family="monospace" font-size="11">
+    <rect x="50"  y="120" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="139" fill="#8A5210">1  user_input</text>
+    <rect x="50"  y="152" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="171" fill="#8A5210">2  tool_call  read_file</text>
+    <rect x="50"  y="184" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="203" fill="#8A5210">3  tool_result</text>
+    <rect x="50"  y="216" width="220" height="28" rx="4" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.8"/><text x="62" y="235" fill="#463F9F" font-weight="700">4  plan_update</text>
+    <rect x="50"  y="248" width="220" height="28" rx="4" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.8"/><text x="62" y="267" fill="#463F9F" font-weight="700">5  tool_call  edit</text>
+    <rect x="50"  y="280" width="220" height="28" rx="4" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.8"/><text x="62" y="299" fill="#463F9F" font-weight="700">6  tool_result</text>
+    <rect x="50"  y="312" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="331" fill="#8A5210">7  assistant_msg</text>
+    <rect x="50"  y="344" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="363" fill="#8A5210">8  tool_call  run</text>
+    <rect x="50"  y="376" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="62" y="395" fill="#8A5210">9  …</text>
+  </g>
+  <text x="160" y="432" text-anchor="middle" fill="#8A5210" font-size="12" opacity="0.85">Append-only — never rewritten</text>
+  <text x="160" y="448" text-anchor="middle" fill="#8A5210" font-size="12" opacity="0.85">Reversible (unlike traditional compaction)</text>
+
+  <!-- Arrow -->
+  <g>
+    <line x1="296" y1="260" x2="376" y2="260" stroke="#888780" stroke-width="1.4" marker-end="url(#arr2)"/>
+    <text x="336" y="248" text-anchor="middle" fill="#5F5E5A" font-size="11" font-family="monospace">getEvents(4..6)</text>
+    <text x="336" y="278" text-anchor="middle" fill="#5F5E5A" font-size="10" opacity="0.85">Arbitrary slice</text>
+  </g>
+
+  <!-- Right: Context window -->
+  <rect x="382" y="160" width="260" height="240" rx="12" fill="#EEEDFE" stroke="#7F77DD" stroke-width="2"/>
+  <text x="512" y="186" text-anchor="middle" fill="#463F9F" font-size="14" font-weight="700">Context Window</text>
+  <text x="512" y="204" text-anchor="middle" fill="#463F9F" font-size="12" opacity="0.85">Transformed / compressed slice by harness</text>
+
+  <g font-family="monospace" font-size="11">
+    <rect x="402" y="220" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#7F77DD"/><text x="414" y="239" fill="#463F9F">4' plan (summarized)</text>
+    <rect x="402" y="252" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#7F77DD"/><text x="414" y="271" fill="#463F9F">5' edit diff (excerpt)</text>
+    <rect x="402" y="284" width="220" height="28" rx="4" fill="#FFFFFF" stroke="#7F77DD"/><text x="414" y="303" fill="#463F9F">6' result (hash)</text>
+  </g>
+  <text x="512" y="334" text-anchor="middle" fill="#463F9F" font-size="12" opacity="0.85">Transformation method chosen by harness</text>
+  <text x="512" y="350" text-anchor="middle" fill="#463F9F" font-size="12" opacity="0.85">Future models may need different methods</text>
+  <text x="512" y="366" text-anchor="middle" fill="#463F9F" font-size="12" opacity="0.85">→ This layer is not locked down</text>
+  <text x="512" y="386" text-anchor="middle" fill="#463F9F" font-size="12" opacity="0.85">Rewind / regenerate with new method OK</text>
+
+  <!-- Bottom keys -->
+  <rect x="30" y="480" width="620" height="30" rx="6" fill="#F1EFE8" stroke="#888780" stroke-width="0.8"/>
+  <text x="50" y="500" fill="#8A5210" font-size="13" font-weight="700">Session:</text>
+  <text x="118" y="500" fill="#5F5E5A" font-size="13">Full retention of events (durability concern)</text>
+  <text x="380" y="500" fill="#463F9F" font-size="13" font-weight="700">Harness:</text>
+  <text x="450" y="500" fill="#5F5E5A" font-size="13">Free to change how context is built (future-proof)</text>
+
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#888780" stroke-width="1.4"/>
+    </marker>
+  </defs>
+</svg>

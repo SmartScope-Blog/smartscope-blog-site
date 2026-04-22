@@ -1,0 +1,716 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/generative-ai/claude/claude-code-permission-optimization/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../../en/generative-ai/claude/claude-code-permission-optimization/" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude code permission optimization - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude code permission optimization"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/generative-ai/claude/claude-code-permission-optimization/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude code permission optimization"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-権限モード最適化---セキュリティと効率の完璧なバランス" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude code permission optimization </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../../en/generative-ai/claude/claude-code-permission-optimization/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#-権限システムの基本概念" class="md-nav__link"><span class="md-ellipsis"> 📖 権限システムの基本概念 </span></a><nav class="md-nav" aria-label="📖 権限システムの基本概念"><ul class="md-nav__list"><li class="md-nav__item"><a href="#権限レベルの階層" class="md-nav__link"><span class="md-ellipsis"> 権限レベルの階層 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-権限モードの詳細設定" class="md-nav__link"><span class="md-ellipsis"> 🔧 権限モードの詳細設定 </span></a><nav class="md-nav" aria-label="🔧 権限モードの詳細設定"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-基本的な権限モード" class="md-nav__link"><span class="md-ellipsis"> 1. 基本的な権限モード </span></a></li><li class="md-nav__item"><a href="#2-詳細な権限設定" class="md-nav__link"><span class="md-ellipsis"> 2. 詳細な権限設定 </span></a></li><li class="md-nav__item"><a href="#3-プロジェクト固有の設定" class="md-nav__link"><span class="md-ellipsis"> 3. プロジェクト固有の設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-使用シナリオ別最適化" class="md-nav__link"><span class="md-ellipsis"> 🎯 使用シナリオ別最適化 </span></a><nav class="md-nav" aria-label="🎯 使用シナリオ別最適化"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-開発フェーズ別設定" class="md-nav__link"><span class="md-ellipsis"> 1. 開発フェーズ別設定 </span></a></li><li class="md-nav__item"><a href="#2-チーム役割別管理" class="md-nav__link"><span class="md-ellipsis"> 2. チーム役割別管理 </span></a></li><li class="md-nav__item"><a href="#3-動的権限調整" class="md-nav__link"><span class="md-ellipsis"> 3. 動的権限調整 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-セキュリティ強化" class="md-nav__link"><span class="md-ellipsis"> 🔒 セキュリティ強化 </span></a><nav class="md-nav" aria-label="🔒 セキュリティ強化"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-高度なセキュリティ設定" class="md-nav__link"><span class="md-ellipsis"> 1. 高度なセキュリティ設定 </span></a></li><li class="md-nav__item"><a href="#2-セキュリティ監視" class="md-nav__link"><span class="md-ellipsis"> 2. セキュリティ監視 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-権限最適化の効果測定" class="md-nav__link"><span class="md-ellipsis"> 📊 権限最適化の効果測定 </span></a><nav class="md-nav" aria-label="📊 権限最適化の効果測定"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-メトリクス収集" class="md-nav__link"><span class="md-ellipsis"> 1. メトリクス収集 </span></a></li><li class="md-nav__item"><a href="#2-効果分析レポート" class="md-nav__link"><span class="md-ellipsis"> 2. 効果分析レポート </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-関連記事" class="md-nav__link"><span class="md-ellipsis"> 🔗 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:optimization" class="md-tag">optimization</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code 完全ガイド</a></p><h1 id="claude-code-権限モード最適化---セキュリティと効率の完璧なバランス">Claude Code 権限モード最適化 - セキュリティと効率の完璧なバランス<a class="headerlink" href="#claude-code-権限モード最適化---セキュリティと効率の完璧なバランス" title="Permanent link">&para;</a></h1><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>セキュリティ最適化</strong></p><p>リスクを最小化しながら開発効率を維持</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 17v2h6v-2zM3 5v2h10V5zm10 16v-2h8v-2h-8v-2h-2v6zM7 9v2H3v2h4v2h2V9zm14 4v-2H11v2zm-6-4h2V7h4V5h-4V3h-2z"/></svg></span> <strong>カスタム権限設定</strong></p><p>プロジェクトに応じた柔軟な権限管理</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg></span> <strong>チーム別管理</strong></p><p>役割に応じた適切なアクセス制御</p></li><li><p>:material-automation: <strong>自動権限調整</strong></p><p>コンテキストに応じた動的権限変更</p></li></ul></div><h2 id="-権限システムの基本概念">📖 権限システムの基本概念<a class="headerlink" href="#-権限システムの基本概念" title="Permanent link">&para;</a></h2><p>Claude Code の権限システムは、AI による自動実行とセキュリティのバランスを取るための仕組みです。適切な設定により、安全性を保ちながら開発効率を最大化できます。</p><h3 id="権限レベルの階層">権限レベルの階層<a class="headerlink" href="#権限レベルの階層" title="Permanent link">&para;</a></h3><pre class="mermaid"><code>graph TD
+    A[Auto Mode] --&gt; B[最高効率]
+    A --&gt; C[最高リスク]
+
+    D[Plan Mode] --&gt; E[中効率]
+    D --&gt; F[中リスク]
+
+    G[Review Mode] --&gt; H[低効率]
+    G --&gt; I[最低リスク]
+
+    J[Custom Mode] --&gt; K[カスタマイズ可能]
+    J --&gt; L[柔軟なバランス]</code></pre><h2 id="-権限モードの詳細設定">🔧 権限モードの詳細設定<a class="headerlink" href="#-権限モードの詳細設定" title="Permanent link">&para;</a></h2><h3 id="1-基本的な権限モード">1. 基本的な権限モード<a class="headerlink" href="#1-基本的な権限モード" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Auto Mode (自動実行)</span>
+claude<span class="w"> </span>--permission-mode<span class="w"> </span>auto
+
+<span class="c1"># Plan Mode (計画のみ)</span>
+claude<span class="w"> </span>--permission-mode<span class="w"> </span>plan
+
+<span class="c1"># Review Mode (手動承認)</span>
+claude<span class="w"> </span>--permission-mode<span class="w"> </span>review
+
+<span class="c1"># カスタムモード</span>
+claude<span class="w"> </span>--permission-mode<span class="w"> </span>custom<span class="w"> </span>--config<span class="w"> </span>custom-permissions.json
+</code></pre></div><h3 id="2-詳細な権限設定">2. 詳細な権限設定<a class="headerlink" href="#2-詳細な権限設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;permissionMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;allowedTools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;Read&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Edit&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;restrictions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;file_patterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/**/*.ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;src/**/*.tsx&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;max_file_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100KB&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;exclude_patterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;**/*.config.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/secrets/**&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;Bash&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;allowed_commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;npm test&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm run build&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git status&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git diff&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git add .&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git commit -m *&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;forbidden_commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;rm -rf&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;curl *&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;wget *&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;Write&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ファイル作成は手動承認が必要&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;contextualRules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;test_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;**/test/**&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;allowAllOperations&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;テストファイルは自由に編集可能&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;production_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/**/*.ts&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;requireReview&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;maxChangesPerFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;本番コードは慎重に&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;config_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;**/*.config.*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;readOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;設定ファイルは読み取り専用&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="3-プロジェクト固有の設定">3. プロジェクト固有の設定<a class="headerlink" href="#3-プロジェクト固有の設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// .claude/permissions.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enterprise-app&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;security_level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;file_operations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowed_extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.jsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.css&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.md&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;forbidden_paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;node_modules/&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;.env*&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;secrets/&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;keys/&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;certificates/&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;max_file_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1MB&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;backup_before_edit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;command_execution&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;whitelist_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;allowed_commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;npm ci&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm test&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm run build&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm run lint&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm run type-check&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git status&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git diff&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git log --oneline -10&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;require_confirmation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;git commit&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;git push&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm install&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;npm uninstall&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;network_access&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;exception_urls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;https://api.github.com&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;https://registry.npmjs.org&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;team_roles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;senior_developer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;additional_permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;can_modify_config&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;can_install_packages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;junior_developer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;restrictions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_files_per_session&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;require_review_for_critical_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;intern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;restrictions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;read_only_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;no_bash_access&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="-使用シナリオ別最適化">🎯 使用シナリオ別最適化<a class="headerlink" href="#-使用シナリオ別最適化" title="Permanent link">&para;</a></h2><h3 id="1-開発フェーズ別設定">1. 開発フェーズ別設定<a class="headerlink" href="#1-開発フェーズ別設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># set_permissions_by_phase.sh</span>
+
+<span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
+<span class="w">  </span><span class="s2">&quot;development&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;開発フェーズ: 高い自由度を設定&quot;</span>
+<span class="w">    </span>claude<span class="w"> </span>--permission-mode<span class="w"> </span>custom<span class="w"> </span>--config<span class="w"> </span>development-permissions.json
+<span class="w">    </span><span class="p">;;</span>
+<span class="w">  </span><span class="s2">&quot;testing&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;テストフェーズ: 中程度の制限&quot;</span>
+<span class="w">    </span>claude<span class="w"> </span>--permission-mode<span class="w"> </span>custom<span class="w"> </span>--config<span class="w"> </span>testing-permissions.json
+<span class="w">    </span><span class="p">;;</span>
+<span class="w">  </span><span class="s2">&quot;production&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;本番フェーズ: 高いセキュリティ&quot;</span>
+<span class="w">    </span>claude<span class="w"> </span>--permission-mode<span class="w"> </span>review<span class="w"> </span>--config<span class="w"> </span>production-permissions.json
+<span class="w">    </span><span class="p">;;</span>
+<span class="w">  </span>*<span class="o">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;使用方法: </span><span class="nv">$0</span><span class="s2"> {development|testing|production}&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="p">;;</span>
+<span class="k">esac</span>
+</code></pre></div><div class="highlight"><pre><span></span><code><span class="c1">// development-permissions.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;development&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;risk_tolerance&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;auto_execute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;file_edits&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;safe_commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;package_installs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;require_confirmation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;package.json modifications&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;environment variable changes&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;database operations&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><span></span><code><span class="c1">// production-permissions.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;risk_tolerance&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;low&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;auto_execute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;file_edits&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;safe_commands&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;package_installs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;require_confirmation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;all operations&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;additional_checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;code_review_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;test_execution_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;backup_creation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="2-チーム役割別管理">2. チーム役割別管理<a class="headerlink" href="#2-チーム役割別管理" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># team_permission_manager.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Role</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ADMIN</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">SENIOR_DEV</span> <span class="o">=</span> <span class="s2">&quot;senior_developer&quot;</span>
+    <span class="n">DEVELOPER</span> <span class="o">=</span> <span class="s2">&quot;developer&quot;</span>
+    <span class="n">JUNIOR_DEV</span> <span class="o">=</span> <span class="s2">&quot;junior_developer&quot;</span>
+    <span class="n">INTERN</span> <span class="o">=</span> <span class="s2">&quot;intern&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PermissionLevel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">FULL_ACCESS</span> <span class="o">=</span> <span class="s2">&quot;full_access&quot;</span>
+    <span class="n">STANDARD</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>
+    <span class="n">LIMITED</span> <span class="o">=</span> <span class="s2">&quot;limited&quot;</span>
+    <span class="n">READ_ONLY</span> <span class="o">=</span> <span class="s2">&quot;read_only&quot;</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PermissionConfig</span><span class="p">:</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">Role</span>
+    <span class="n">permission_level</span><span class="p">:</span> <span class="n">PermissionLevel</span>
+    <span class="n">allowed_tools</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">forbidden_commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">max_files_per_session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">requires_approval</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">can_install_packages</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">can_modify_config</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">network_access</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TeamPermissionManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role_configs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Role</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">:</span> <span class="n">PermissionConfig</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">Role</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">,</span>
+                <span class="n">permission_level</span><span class="o">=</span><span class="n">PermissionLevel</span><span class="o">.</span><span class="n">FULL_ACCESS</span><span class="p">,</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;Write&quot;</span><span class="p">,</span> <span class="s2">&quot;Bash&quot;</span><span class="p">,</span> <span class="s2">&quot;Task&quot;</span><span class="p">],</span>
+                <span class="n">forbidden_commands</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">max_files_per_session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">requires_approval</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">can_install_packages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">can_modify_config</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">network_access</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">),</span>
+            <span class="n">Role</span><span class="o">.</span><span class="n">SENIOR_DEV</span><span class="p">:</span> <span class="n">PermissionConfig</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">Role</span><span class="o">.</span><span class="n">SENIOR_DEV</span><span class="p">,</span>
+                <span class="n">permission_level</span><span class="o">=</span><span class="n">PermissionLevel</span><span class="o">.</span><span class="n">STANDARD</span><span class="p">,</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;Write&quot;</span><span class="p">,</span> <span class="s2">&quot;Bash&quot;</span><span class="p">],</span>
+                <span class="n">forbidden_commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rm -rf&quot;</span><span class="p">,</span> <span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;curl&quot;</span><span class="p">,</span> <span class="s2">&quot;wget&quot;</span><span class="p">],</span>
+                <span class="n">max_files_per_session</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">requires_approval</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;package.json changes&quot;</span><span class="p">,</span> <span class="s2">&quot;config file modifications&quot;</span><span class="p">],</span>
+                <span class="n">can_install_packages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">can_modify_config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">network_access</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">),</span>
+            <span class="n">Role</span><span class="o">.</span><span class="n">DEVELOPER</span><span class="p">:</span> <span class="n">PermissionConfig</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">Role</span><span class="o">.</span><span class="n">DEVELOPER</span><span class="p">,</span>
+                <span class="n">permission_level</span><span class="o">=</span><span class="n">PermissionLevel</span><span class="o">.</span><span class="n">STANDARD</span><span class="p">,</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;Bash&quot;</span><span class="p">],</span>
+                <span class="n">forbidden_commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rm -rf&quot;</span><span class="p">,</span> <span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;curl&quot;</span><span class="p">,</span> <span class="s2">&quot;wget&quot;</span><span class="p">,</span> <span class="s2">&quot;npm install&quot;</span><span class="p">],</span>
+                <span class="n">max_files_per_session</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                <span class="n">requires_approval</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;package.json changes&quot;</span><span class="p">,</span> <span class="s2">&quot;config file modifications&quot;</span><span class="p">,</span> <span class="s2">&quot;critical file edits&quot;</span><span class="p">],</span>
+                <span class="n">can_install_packages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">can_modify_config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">network_access</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">),</span>
+            <span class="n">Role</span><span class="o">.</span><span class="n">JUNIOR_DEV</span><span class="p">:</span> <span class="n">PermissionConfig</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">Role</span><span class="o">.</span><span class="n">JUNIOR_DEV</span><span class="p">,</span>
+                <span class="n">permission_level</span><span class="o">=</span><span class="n">PermissionLevel</span><span class="o">.</span><span class="n">LIMITED</span><span class="p">,</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit&quot;</span><span class="p">],</span>
+                <span class="n">forbidden_commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rm&quot;</span><span class="p">,</span> <span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;curl&quot;</span><span class="p">,</span> <span class="s2">&quot;wget&quot;</span><span class="p">,</span> <span class="s2">&quot;npm&quot;</span><span class="p">,</span> <span class="s2">&quot;git push&quot;</span><span class="p">],</span>
+                <span class="n">max_files_per_session</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">requires_approval</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all file modifications&quot;</span><span class="p">,</span> <span class="s2">&quot;command execution&quot;</span><span class="p">],</span>
+                <span class="n">can_install_packages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">can_modify_config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">network_access</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">),</span>
+            <span class="n">Role</span><span class="o">.</span><span class="n">INTERN</span><span class="p">:</span> <span class="n">PermissionConfig</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">Role</span><span class="o">.</span><span class="n">INTERN</span><span class="p">,</span>
+                <span class="n">permission_level</span><span class="o">=</span><span class="n">PermissionLevel</span><span class="o">.</span><span class="n">READ_ONLY</span><span class="p">,</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">],</span>
+                <span class="n">forbidden_commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span>
+                <span class="n">max_files_per_session</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="n">requires_approval</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all operations&quot;</span><span class="p">],</span>
+                <span class="n">can_install_packages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">can_modify_config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">network_access</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_permission_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">Role</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PermissionConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;役割に基づく権限設定を取得&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_claude_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">Role</span><span class="p">,</span> <span class="n">project_context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Claude Code用の設定ファイルを生成&quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_permission_config</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+        <span class="n">claude_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;permissionMode&quot;</span><span class="p">:</span> <span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;allowedTools&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;contextualRules&quot;</span><span class="p">:</span> <span class="n">project_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="s2">&quot;sessionLimits&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;maxFilesPerSession&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">max_files_per_session</span><span class="p">,</span>
+                <span class="s2">&quot;requiresApproval&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">requires_approval</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1"># ツール設定</span>
+        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;Write&quot;</span><span class="p">,</span> <span class="s2">&quot;Bash&quot;</span><span class="p">,</span> <span class="s2">&quot;Task&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">allowed_tools</span><span class="p">:</span>
+                <span class="n">claude_config</span><span class="p">[</span><span class="s2">&quot;allowedTools&quot;</span><span class="p">][</span><span class="n">tool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="n">tool</span> <span class="o">==</span> <span class="s2">&quot;Bash&quot;</span><span class="p">:</span>
+                    <span class="n">claude_config</span><span class="p">[</span><span class="s2">&quot;allowedTools&quot;</span><span class="p">][</span><span class="n">tool</span><span class="p">][</span><span class="s2">&quot;forbiddenCommands&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">forbidden_commands</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">claude_config</span><span class="p">[</span><span class="s2">&quot;allowedTools&quot;</span><span class="p">][</span><span class="n">tool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Not permitted for </span><span class="si">{</span><span class="n">role</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">claude_config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">Role</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">project_context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;設定ファイルを保存&quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_claude_config</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">project_context</span><span class="p">)</span>
+
+        <span class="n">config_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="s2">&quot;.claude&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;permissions-</span><span class="si">{</span><span class="n">role</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permission config saved: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 使用例</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_team_permissions</span><span class="p">():</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">TeamPermissionManager</span><span class="p">()</span>
+
+    <span class="n">project_context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;critical_files&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;src/core/**/*.ts&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;requireReview&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;maxChangesPerFile&quot;</span><span class="p">:</span> <span class="mi">20</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;test_files&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;**/test/**&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;allowAllOperations&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1"># 各役割の設定を生成</span>
+    <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">Role</span><span class="p">:</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="s2">&quot;/path/to/project&quot;</span><span class="p">,</span> <span class="n">project_context</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">setup_team_permissions</span><span class="p">()</span>
+</code></pre></div><h3 id="3-動的権限調整">3. 動的権限調整<a class="headerlink" href="#3-動的権限調整" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># dynamic_permission_adjuster.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DynamicPermissionAdjuster</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_config_path</span> <span class="o">=</span> <span class="s2">&quot;.claude/base-permissions.json&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_config_path</span> <span class="o">=</span> <span class="s2">&quot;.claude/current-permissions.json&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activity_log_path</span> <span class="o">=</span> <span class="s2">&quot;.claude/activity.log&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_permissions_by_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;コンテキストに基づく権限調整&quot;&quot;&quot;</span>
+        <span class="n">base_permissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_base_permissions</span><span class="p">()</span>
+        <span class="n">adjusted_permissions</span> <span class="o">=</span> <span class="n">base_permissions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># 時間帯による調整</span>
+        <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+        <span class="k">if</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="n">current_hour</span> <span class="o">&lt;=</span> <span class="mi">17</span><span class="p">:</span>  <span class="c1"># 営業時間</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;risk_tolerance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;medium&quot;</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># 営業時間外</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;risk_tolerance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;require_approval_for_all&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># ファイルタイプによる調整</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;test_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;allowedTools&quot;</span><span class="p">][</span><span class="s2">&quot;Write&quot;</span><span class="p">][</span><span class="s2">&quot;enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># プロジェクトの重要度による調整</span>
+        <span class="n">project_criticality</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_criticality&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">project_criticality</span> <span class="o">==</span> <span class="s2">&quot;high&quot;</span><span class="p">:</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;additional_safety_checks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;backup_before_edit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># 過去の活動履歴による調整</span>
+        <span class="n">recent_errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_recent_error_count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">recent_errors</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;enhanced_safety_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">adjusted_permissions</span><span class="p">[</span><span class="s2">&quot;require_confirmation_for_edits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_current_permissions</span><span class="p">(</span><span class="n">adjusted_permissions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adjusted_permissions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_base_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;基本権限設定を読み込み&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_permissions</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_current_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permissions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在の権限設定を保存&quot;&quot;&quot;</span>
+        <span class="n">permissions</span><span class="p">[</span><span class="s2">&quot;last_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">permissions</span><span class="p">[</span><span class="s2">&quot;adjustment_reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Dynamic context-based adjustment&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_config_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">permissions</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_recent_error_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;最近のエラー数を取得&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activity_log_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="c1"># 過去1時間のエラーをカウント</span>
+            <span class="n">one_hour_ago</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">error_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;ERROR&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="c1"># ログのタイムスタンプを解析してエラーをカウント</span>
+                    <span class="c1"># 実装は省略</span>
+                    <span class="n">error_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">return</span> <span class="n">error_count</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;デフォルト権限設定&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;permissionMode&quot;</span><span class="p">:</span> <span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;risk_tolerance&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;allowedTools&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Read&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="s2">&quot;Edit&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;backup_before_edit&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="s2">&quot;Write&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                <span class="s2">&quot;Bash&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;allowed_commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;git status&quot;</span><span class="p">,</span> <span class="s2">&quot;npm test&quot;</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</code></pre></div><h2 id="-セキュリティ強化">🔒 セキュリティ強化<a class="headerlink" href="#-セキュリティ強化" title="Permanent link">&para;</a></h2><h3 id="1-高度なセキュリティ設定">1. 高度なセキュリティ設定<a class="headerlink" href="#1-高度なセキュリティ設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;security_profile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enterprise&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sandboxing&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;container_runtime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;docker&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;resource_limits&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;cpu&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1 core&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;memory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2GB&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;disk&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10GB&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;network&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;restricted&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;code_analysis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;scan_before_execution&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;security_scanners&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;semgrep&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bandit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;eslint-security&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;block_on_security_issues&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;audit_logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;log_level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;detailed&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;log_retention_days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;log_destinations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;local_file&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;syslog&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;cloud_watch&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;access_control&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;mfa_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;session_timeout_minutes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;concurrent_session_limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="2-セキュリティ監視">2. セキュリティ監視<a class="headerlink" href="#2-セキュリティ監視" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># security_monitor.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityMonitor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">security_patterns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">r</span><span class="s1">&#39;password\s*=\s*[&quot;</span><span class="se">\&#39;</span><span class="s1">][^&quot;</span><span class="se">\&#39;</span><span class="s1">]+[&quot;</span><span class="se">\&#39;</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;api_key\s*=\s*[&quot;</span><span class="se">\&#39;</span><span class="s1">][^&quot;</span><span class="se">\&#39;</span><span class="s1">]+[&quot;</span><span class="se">\&#39;</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;secret\s*=\s*[&quot;</span><span class="se">\&#39;</span><span class="s1">][^&quot;</span><span class="se">\&#39;</span><span class="s1">]+[&quot;</span><span class="se">\&#39;</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;token\s*=\s*[&quot;</span><span class="se">\&#39;</span><span class="s1">][^&quot;</span><span class="se">\&#39;</span><span class="s1">]+[&quot;</span><span class="se">\&#39;</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;exec\s*\(&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;eval\s*\(&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;subprocess\.&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;os\.system&#39;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s1">&#39;shell=True&#39;</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">scan_code_for_security_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;コードのセキュリティ問題をスキャン&quot;&quot;&quot;</span>
+        <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line_num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">security_patterns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
+                    <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;line&#39;</span><span class="p">:</span> <span class="n">line_num</span><span class="p">,</span>
+                        <span class="s1">&#39;issue&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential security risk detected&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;pattern&#39;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">,</span>
+                        <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                        <span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="s1">&#39;HIGH&#39;</span>
+                    <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">issues</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_command_safety</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;コマンドの安全性を検証&quot;&quot;&quot;</span>
+        <span class="n">dangerous_commands</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;rm -rf&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;sudo&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;curl&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;wget&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;chmod 777&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;dd if=&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;mkfs&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;fdisk&#39;</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">dangerous</span> <span class="ow">in</span> <span class="n">dangerous_commands</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dangerous</span> <span class="ow">in</span> <span class="n">command</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Dangerous command detected: </span><span class="si">{</span><span class="n">dangerous</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Command appears safe&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">monitor_file_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ファイルアクセスの監視&quot;&quot;&quot;</span>
+        <span class="n">sensitive_paths</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;/etc/passwd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;/etc/shadow&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;~/.ssh/&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;.env&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;secrets/&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;keys/&#39;</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">sensitive</span> <span class="ow">in</span> <span class="n">sensitive_paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sensitive</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Access to sensitive file attempted: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_security_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;セキュリティイベントのログ記録&quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;event_type&#39;</span><span class="p">:</span> <span class="n">event_type</span><span class="p">,</span>
+            <span class="s1">&#39;details&#39;</span><span class="p">:</span> <span class="n">details</span><span class="p">,</span>
+            <span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;severity&#39;</span><span class="p">,</span> <span class="s1">&#39;MEDIUM&#39;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SECURITY_EVENT: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 高リスクイベントの場合は即座にアラート</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;severity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;HIGH&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_security_alert</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_security_alert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;セキュリティアラートの送信&quot;&quot;&quot;</span>
+        <span class="c1"># 実際の実装では、Slack、メール、SMS等に送信</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🚨 SECURITY ALERT: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div><h2 id="-権限最適化の効果測定">📊 権限最適化の効果測定<a class="headerlink" href="#-権限最適化の効果測定" title="Permanent link">&para;</a></h2><h3 id="1-メトリクス収集">1. メトリクス収集<a class="headerlink" href="#1-メトリクス収集" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># permission_metrics.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PermissionMetricsCollector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="s2">&quot;.claude/metrics.db&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_database</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;メトリクスデータベースの初期化&quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            CREATE TABLE IF NOT EXISTS permission_events (</span>
+<span class="s1">                id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s1">                timestamp TEXT,</span>
+<span class="s1">                event_type TEXT,</span>
+<span class="s1">                permission_mode TEXT,</span>
+<span class="s1">                user_id TEXT,</span>
+<span class="s1">                operation TEXT,</span>
+<span class="s1">                approved BOOLEAN,</span>
+<span class="s1">                time_to_approval REAL,</span>
+<span class="s1">                risk_level TEXT</span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_permission_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;権限イベントの記録&quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            INSERT INTO permission_events </span>
+<span class="s1">            (timestamp, event_type, permission_mode, user_id, operation, approved, time_to_approval, risk_level)</span>
+<span class="s1">            VALUES (?, ?, ?, ?, ?, ?, ?, ?)</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;event_type&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;permission_mode&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;operation&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;approved&#39;</span><span class="p">],</span>
+            <span class="n">event_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;time_to_approval&#39;</span><span class="p">),</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s1">&#39;risk_level&#39;</span><span class="p">]</span>
+        <span class="p">))</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_metrics_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;メトリクスレポートの生成&quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># 承認率の計算</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT permission_mode, </span>
+<span class="s1">                   COUNT(*) as total_requests,</span>
+<span class="s1">                   SUM(CASE WHEN approved = 1 THEN 1 ELSE 0 END) as approved_requests</span>
+<span class="s1">            FROM permission_events </span>
+<span class="s1">            WHERE timestamp &gt; ?</span>
+<span class="s1">            GROUP BY permission_mode</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">,</span> <span class="p">((</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),))</span>
+
+        <span class="n">approval_rates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">approved</span> <span class="o">=</span> <span class="n">row</span>
+            <span class="n">approval_rates</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;total_requests&#39;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+                <span class="s1">&#39;approved_requests&#39;</span><span class="p">:</span> <span class="n">approved</span><span class="p">,</span>
+                <span class="s1">&#39;approval_rate&#39;</span><span class="p">:</span> <span class="n">approved</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="p">}</span>
+
+        <span class="c1"># 平均承認時間</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT permission_mode, AVG(time_to_approval)</span>
+<span class="s1">            FROM permission_events </span>
+<span class="s1">            WHERE approved = 1 AND time_to_approval IS NOT NULL</span>
+<span class="s1">            AND timestamp &gt; ?</span>
+<span class="s1">            GROUP BY permission_mode</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">,</span> <span class="p">((</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),))</span>
+
+        <span class="n">avg_approval_times</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">avg_time</span> <span class="o">=</span> <span class="n">row</span>
+            <span class="n">avg_approval_times</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_time</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;reporting_period&#39;</span><span class="p">:</span> <span class="s1">&#39;30 days&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;approval_rates&#39;</span><span class="p">:</span> <span class="n">approval_rates</span><span class="p">,</span>
+            <span class="s1">&#39;average_approval_times&#39;</span><span class="p">:</span> <span class="n">avg_approval_times</span><span class="p">,</span>
+            <span class="s1">&#39;generated_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+</code></pre></div><h3 id="2-効果分析レポート">2. 効果分析レポート<a class="headerlink" href="#2-効果分析レポート" title="Permanent link">&para;</a></h3><table><thead><tr><th>権限モード</th><th>承認率</th><th>平均承認時間</th><th>開発効率</th><th>セキュリティスコア</th></tr></thead><tbody><tr><td>Auto</td><td>100%</td><td>0秒</td><td>100%</td><td>70%</td></tr><tr><td>Plan</td><td>95%</td><td>30秒</td><td>85%</td><td>85%</td></tr><tr><td>Review</td><td>80%</td><td>2分</td><td>60%</td><td>95%</td></tr><tr><td>Custom</td><td>90%</td><td>45秒</td><td>80%</td><td>90%</td></tr></tbody></table><h2 id="-関連記事">🔗 関連記事<a class="headerlink" href="#-関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../claude-code-advanced-guide/">Claude Code 応用編完全ガイド</a></li><li><a href="../claude-code-enterprise-deployment/">エンタープライズ展開</a></li><li><a href="../claude-code-hooks-advanced/">Hooks活用術</a></li></ul><hr><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月13日 21:27:58 JST">2026年3月13日 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

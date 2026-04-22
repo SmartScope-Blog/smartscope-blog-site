@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 740" width="1080" height="740" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Mythos capability boundary: confirmed strengths and remaining limits</title>
+  <desc id="desc">A two-column comparison of where Claude Mythos Preview appears strong and where important limits still remain.</desc>
+
+  <rect x="24" y="20" width="1032" height="700" rx="18" fill="#F8F5EF" stroke="#D4CCBE"/>
+  <text x="540" y="58" text-anchor="middle" fill="#111827" font-size="28" font-weight="700">Claude Mythos Capability Boundary</text>
+  <text x="540" y="90" text-anchor="middle" fill="#374151" font-size="16">Powerful, but not unconstrained</text>
+
+  <rect x="56" y="132" width="452" height="454" rx="18" fill="#E8F7F0" stroke="#1F9D73" stroke-width="2.5"/>
+  <text x="282" y="174" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">Confirmed Strengths</text>
+  <text x="282" y="202" text-anchor="middle" fill="#374151" font-size="14">The part that makes it valuable on defense</text>
+
+  <rect x="96" y="236" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="282" y="268" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Reported to find zero-days in major</text>
+  <text x="282" y="290" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">operating systems and web browsers</text>
+
+  <rect x="96" y="346" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="282" y="378" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Completed a private cyber range</text>
+  <text x="282" y="400" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">end-to-end</text>
+
+  <rect x="96" y="456" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="282" y="488" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Finished a corporate network attack</text>
+  <text x="282" y="510" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">simulation</text>
+
+  <rect x="572" y="132" width="452" height="454" rx="18" fill="#FFF1EA" stroke="#E0592A" stroke-width="2.5"/>
+  <text x="798" y="174" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">Limits That Still Matter</text>
+  <text x="798" y="202" text-anchor="middle" fill="#374151" font-size="14">Leaving these out turns analysis into mythmaking</text>
+
+  <rect x="612" y="236" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="798" y="268" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Did not solve a separate OT-style</text>
+  <text x="798" y="290" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">cyber range</text>
+
+  <rect x="612" y="346" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="798" y="378" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Did not find novel exploits in a</text>
+  <text x="798" y="400" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">modern patched sandbox</text>
+
+  <rect x="612" y="456" width="372" height="90" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="798" y="488" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Many examples remain undisclosed</text>
+  <text x="798" y="510" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">because responsible disclosure is ongoing</text>
+
+  <line x1="540" y1="228" x2="540" y2="560" stroke="#C7C0B1" stroke-width="1.2" stroke-dasharray="6 6"/>
+
+  <rect x="120" y="618" width="840" height="66" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+  <text x="540" y="648" text-anchor="middle" fill="#111827" font-size="17" font-weight="700">Bottom line: highly useful on defense, but still dangerous enough to withhold from broad release</text>
+  <text x="540" y="672" text-anchor="middle" fill="#374151" font-size="13">The main story is not just capability growth, but a change in distribution policy</text>
+</svg>

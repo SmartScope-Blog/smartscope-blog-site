@@ -1,0 +1,137 @@
+/* ===== モバイル表示の完全修正 ===== */
+
+/* 768px以下のモバイル端末用 */
+@media screen and (max-width: 76.1875em) {
+  /* ナビゲーショントグルボタンを非表示 */
+  .md-header__button.md-icon--menu {
+    display: none !important;
+  }
+  
+  /* 左側のドロワー（ナビゲーション）を完全に削除 */
+  .md-nav__toggle ~ .md-nav {
+    display: none !important;
+  }
+  
+  /* プライマリナビゲーションを完全に非表示 */
+  .md-nav--primary,
+  .md-nav__source {
+    display: none !important;
+  }
+  
+  /* セカンダリナビゲーション（TOC）も非表示 */
+  .md-nav--secondary {
+    display: none !important;
+  }
+  
+  /* サイドバー自体を完全に削除 */
+  .md-sidebar {
+    display: none !important;
+    width: 0 !important;
+  }
+  
+  .md-sidebar--primary,
+  .md-sidebar--secondary {
+    display: none !important;
+    width: 0 !important;
+  }
+  
+  /* メインコンテンツを全幅に */
+  .md-main__inner {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* コンテンツエリアの調整 */
+  .md-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 0.8rem !important;
+  }
+  
+  .md-content__inner {
+    margin: 0 !important;
+    padding: 0.8rem !important;
+  }
+  
+  /* タイポグラフィの調整 */
+  .md-typeset {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* ヘッダーの簡素化 */
+  .md-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 3rem !important;
+  }
+  
+  /* ヘッダー内のボタンエリアを整理 */
+  .md-header__button {
+    padding: 0.4rem !important;
+  }
+  
+  /* メイン領域の上部マージン（ヘッダー分） */
+  .md-main {
+    margin-top: 3rem !important;
+  }
+  
+  /* グリッドを1カラムに強制 */
+  .md-grid {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  /* コンテナの幅制限 */
+  .md-container {
+    padding: 0 !important;
+  }
+  
+  /* 画像とメディアの制限 */
+  img, video, iframe {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* テーブルのレスポンシブ対応 */
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+  
+  /* コードブロックの調整 */
+  pre {
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+  
+  /* すべての要素のボックスサイジング */
+  * {
+    box-sizing: border-box !important;
+  }
+  
+  /* 横スクロール防止 */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+}
+
+/* さらに小さい画面（480px以下） */
+@media screen and (max-width: 30em) {
+  .md-content {
+    padding: 0 0.5rem !important;
+  }
+  
+  .md-content__inner {
+    padding: 0.5rem !important;
+  }
+  
+  .md-typeset {
+    font-size: 0.9rem !important;
+  }
+}

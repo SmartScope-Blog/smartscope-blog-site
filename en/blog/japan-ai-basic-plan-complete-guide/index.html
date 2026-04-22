@@ -1,0 +1,391 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/blog/japan-ai-basic-plan-complete-guide/"><link rel="alternate" href="../../../blog/japan-ai-basic-plan-complete-guide/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Japan ai basic plan complete guide - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="website"><meta property="og:title" content="Japan ai basic plan complete guide"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/blog/japan-ai-basic-plan-complete-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Japan ai basic plan complete guide"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#japan-ai-basic-plan-complete-guide" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Japan ai basic plan complete guide </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../blog/japan-ai-basic-plan-complete-guide/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><ul><li>AI Basic Plan</li><li>Artificial Intelligence Strategy</li><li>Digital Agency</li><li>AI Act - pillar-ai - type-reference date: 2025-11-13</li></ul><hr><h1 id="japan-ai-basic-plan-complete-guide">Japan AI Basic Plan Complete Guide<a class="headerlink" href="#japan-ai-basic-plan-complete-guide" title="Permanent link">&para;</a></h1><div markdown="0" class="ai-plan-dashboard-wrapper"><style>
+.ai-plan-dashboard-wrapper * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.ai-plan-dashboard-wrapper {
+    font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo', sans-serif;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    min-height: 100vh;
+    color: #333;
+    padding: 20px;
+    margin: 0;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.header {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, #0f2027, #2c5364);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.header .tagline {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.5);
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.tab-button:hover {
+    background: rgba(255,255,255,0.7);
+    transform: translateY(-2px);
+}
+
+.tab-button.active {
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.tab-content {
+    display: none;
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 30px;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-height: calc(100vh - 350px);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#tab1 h2 { border-color: #e74c3c; color: #e74c3c; }
+#tab2 h2 { border-color: #3498db; color: #3498db; }
+#tab3 h2 { border-color: #27ae60; color: #27ae60; }
+#tab4 h2 { border-color: #f39c12; color: #f39c12; }
+
+.crisis-banner {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(231,76,60,0.4);
+}
+
+.crisis-banner h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.comparison-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.comparison-card.japan {
+    border: 4px solid #e74c3c;
+    background: linear-gradient(to bottom, #fff 0%, #ffebee 100%);
+}
+
+.comparison-card.usa {
+    border: 4px solid #3498db;
+    background: linear-gradient(to bottom, #fff 0%, #e3f2fd 100%);
+}
+
+.comparison-card.china {
+    border: 4px solid #f39c12;
+    background: linear-gradient(to bottom, #fff 0%, #fff3e0 100%);
+}
+
+.country-flag {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.country-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.investment-amount {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.comparison-card.japan .investment-amount { color: #e74c3c; }
+.comparison-card.usa .investment-amount { color: #3498db; }
+.comparison-card.china .investment-amount { color: #f39c12; }
+
+.usage-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.usage-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.usage-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.usage-bar {
+    margin: 10px 0;
+}
+
+.usage-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.bar-container {
+    background: #ecf0f1;
+    border-radius: 10px;
+    height: 25px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: width 0.5s ease;
+}
+
+.bar-fill.japan { background: #e74c3c; }
+.bar-fill.usa { background: #3498db; }
+.bar-fill.china { background: #f39c12; }
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.pillar-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-left: 6px solid;
+}
+
+.pillar-card:nth-child(1) { border-color: #e74c3c; }
+.pillar-card:nth-child(2) { border-color: #3498db; }
+.pillar-card:nth-child(3) { border-color: #27ae60; }
+.pillar-card:nth-child(4) { border-color: #f39c12; }
+
+.pillar-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.pillar-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pillar-card:nth-child(1) .pillar-title { color: #e74c3c; }
+.pillar-card:nth-child(2) .pillar-title { color: #3498db; }
+.pillar-card:nth-child(3) .pillar-title { color: #27ae60; }
+.pillar-card:nth-child(4) .pillar-title { color: #f39c12; }
+
+.strategy-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.strategy-item {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: start;
+}
+
+.timeline-date {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.timeline-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border-left: 4px solid #667eea;
+}
+
+.law-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.law-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-top: 5px solid;
+}
+
+.law-card.hard { border-color: #e74c3c; }
+.law-card.soft { border-color: #27ae60; }
+
+.highlight-box {
+    background: #ffeaa7;
+    border-left: 5px solid #fdcb6e;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+ul {
+    line-height: 1.8;
+    margin: 10px 0 10px 20px;
+}
+
+@media (max-width: 1024px) {
+    .comparison-grid,
+    .pillars-grid,
+    .law-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .usage-stats,
+    .strategy-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .tabs {
+        flex-wrap: wrap;
+    }
+}
+</style><div class="container"><div class="header"><h1>🇯🇵 Japan's AI Basic Plan Complete Guide</h1><p class="tagline">Cabinet Office AI Strategy 2025 - Becoming the world's most AI-friendly nation</p></div><div class="tabs"><button class="tab-button active" onclick="switchTab('tab1')">⚠️ Current Status</button><button class="tab-button" onclick="switchTab('tab2')">📜 Legal Framework</button><button class="tab-button" onclick="switchTab('tab3')">🎯 Four Pillars</button><button class="tab-button" onclick="switchTab('tab4')">🚀 Strategy & Vision</button></div><div id="tab1" class="tab-content active"><h2>⚠️ Japan's Current Situation</h2><div class="crisis-banner"><h3>🚨 Critical Lag</h3><p style="font-size: 1.2rem; line-height: 1.6;"><strong>Countries worldwide, including the Global South, are competing in AI development</strong><br> Japan lags in AI utilization, with stagnant AI-related investment<br><strong style="font-size: 1.3rem;">"Not using AI" is the biggest risk</strong></p></div><h3 style="font-size: 1.5rem; margin-bottom: 15px;">💰 Private AI Investment (2024)</h3><div class="comparison-grid"><div class="comparison-card usa"><div class="country-flag">🇺🇸</div><div class="country-name">United States</div><div style="font-size: 1.1rem; color: #666; margin-bottom: 10px;">Rank 1</div><div class="investment-amount">$109.1<span style="font-size: 1.5rem;">B</span></div><div style="margin-top: 15px; padding: 10px; background: rgba(52,152,219,0.1); border-radius: 8px;"><strong>121x Japan</strong></div></div><div class="comparison-card china"><div class="country-flag">🇨🇳</div><div class="country-name">China</div><div style="font-size: 1.1rem; color: #666; margin-bottom: 10px;">Rank 2</div><div class="investment-amount">$9.3<span style="font-size: 1.5rem;">B</span></div><div style="margin-top: 15px; padding: 10px; background: rgba(243,156,18,0.1); border-radius: 8px;"><strong>10x Japan</strong></div></div><div class="comparison-card japan"><div class="country-flag">🇯🇵</div><div class="country-name">Japan</div><div style="font-size: 1.1rem; color: #e74c3c; margin-bottom: 10px; font-weight: bold;">Rank 14</div><div class="investment-amount">$0.9<span style="font-size: 1.5rem;">B</span></div><div style="margin-top: 15px; padding: 10px; background: rgba(231,76,60,0.1); border-radius: 8px; font-weight: bold;"> Significantly lower </div></div></div><h3 style="font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px;">📊 Generative AI Adoption Rates (2024)</h3><div class="usage-stats"><div class="usage-card"><div class="usage-title">👤 Individual GenAI Service Experience</div><div class="usage-bar"><div class="usage-label"><span>🇨🇳 China</span><span><strong>81.2%</strong></span></div><div class="bar-container"><div class="bar-fill china" style="width: 81.2%;">81.2%</div></div></div><div class="usage-bar"><div class="usage-label"><span>🇺🇸 USA</span><span><strong>68.8%</strong></span></div><div class="bar-container"><div class="bar-fill usa" style="width: 68.8%;">68.8%</div></div></div><div class="usage-bar"><div class="usage-label"><span>🇯🇵 Japan</span><span><strong style="color: #e74c3c;">26.7%</strong></span></div><div class="bar-container"><div class="bar-fill japan" style="width: 26.7%;">26.7%</div></div></div></div><div class="usage-card"><div class="usage-title">🏢 Business GenAI Usage Rate</div><div class="usage-bar"><div class="usage-label"><span>🇨🇳 China</span><span><strong>95.8%</strong></span></div><div class="bar-container"><div class="bar-fill china" style="width: 95.8%;">95.8%</div></div></div><div class="usage-bar"><div class="usage-label"><span>🇺🇸 USA</span><span><strong>90.6%</strong></span></div><div class="bar-container"><div class="bar-fill usa" style="width: 90.6%;">90.6%</div></div></div><div class="usage-bar"><div class="usage-label"><span>🇯🇵 Japan</span><span><strong style="color: #e74c3c;">55.2%</strong></span></div><div class="bar-container"><div class="bar-fill japan" style="width: 55.2%;">55.2%</div></div></div></div></div><div class="highlight-box" style="background: linear-gradient(120deg, #e74c3c 0%, #c0392b 100%); color: white; border: none;"><h4 style="margin-bottom: 15px; font-size: 1.3rem; text-align: center;">⚡ Urgent Need for AI Investment & Adoption</h4><p style="font-size: 1rem; line-height: 1.8; text-align: center;"> For Japan facing population decline, investment shortage, and wage stagnation,<br><strong>AI is the last chance</strong>. Missing this opportunity means falling behind permanently.<br> The government aims to realize "the world's most AI-friendly nation"<br><strong>AI Basic Plan scheduled for cabinet approval this year</strong></p></div></div><div id="tab2" class="tab-content"><h2>📜 Legal Framework & Governance</h2><h3 style="font-size: 1.5rem; margin-bottom: 15px;">⚖️ Key 2025 Milestones</h3><div class="timeline"><div class="timeline-item"><div class="timeline-date">Feb 4<br>2025</div><div class="timeline-content"><h4 style="margin-bottom: 10px; color: #667eea;">AI Strategy Council & AI Legal Framework Study Group "Interim Report" Published</h4><p>Proposed need for legislation. Organized responses to gaps not covered by existing laws</p></div></div><div class="timeline-item"><div class="timeline-date">May 28<br>2025</div><div class="timeline-content"><h4 style="margin-bottom: 10px; color: #667eea;">AI Act (Law on Promotion of R&D and Utilization of AI-Related Technologies) Passed</h4><p><strong>Japan's first AI-related law</strong>. Basic law character</p></div></div><div class="timeline-item"><div class="timeline-date">Jun 4<br>2025</div><div class="timeline-content"><h4 style="margin-bottom: 10px; color: #667eea;">AI Act Promulgation & Enforcement (in principle)</h4><p>AI Strategy HQ & AI Basic Plan chapters effective within 3 months as specified by Cabinet Order</p></div></div><div class="timeline-item"><div class="timeline-date">Fall 2025<br>(Scheduled)</div><div class="timeline-content"><h4 style="margin-bottom: 10px; color: #f39c12;">AI Basic Plan Cabinet Approval Scheduled</h4><p><strong>First basic plan under AI Act</strong>. Systematizes policies with 4 pillars</p></div></div></div><h3 style="font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px;">🔀 Hard Law vs Soft Law</h3><div class="law-grid"><div class="law-card hard"><h4 style="font-size: 1.3rem; margin-bottom: 15px; color: #e74c3c;">⚖️ Hard Law (Legislation)</h4><div style="background: #fff5f5; padding: 15px; border-radius: 8px; margin: 10px 0;"><strong>AI Act (passed 2025)</strong><ul style="margin-top: 10px;"><li>Establishment of AI Strategy HQ</li><li>AI Basic Plan formulation</li><li>Government survey & information provision authority</li><li>Business guidance & advice</li></ul></div><p style="margin-top: 15px; font-size: 0.95rem; color: #666;"><strong>Characteristics:</strong> Basic law nature. No specific regulations like EU AI Act, prioritizes innovation promotion </p></div><div class="law-card soft"><h4 style="font-size: 1.3rem; margin-bottom: 15px; color: #27ae60;">📋 Soft Law (Guidelines etc.)</h4><div style="background: #e8f8f5; padding: 15px; border-radius: 8px; margin: 10px 0;"><strong>Major Guidelines</strong><ul style="margin-top: 10px;"><li>AI Business Guidelines (MIC & METI)</li><li>AI & Copyright Perspectives (Agency for Cultural Affairs)</li><li>AI-Era IP Rights Study Group Interim Report</li><li>G7 Hiroshima AI Process Code of Conduct</li></ul></div><p style="margin-top: 15px; font-size: 0.95rem; color: #666;"><strong>Characteristics:</strong> Flexible & rapid response possible. Promotes voluntary business initiatives </p></div></div><div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-top: 20px;"><h3 style="font-size: 1.5rem; margin-bottom: 15px;">🎯 Japan's Approach</h3><p style="font-size: 1.1rem; line-height: 1.8;"><strong>"Create framework with law, respond flexibly with guidelines"</strong><br> Neither strict EU-style regulation nor complete laissez-faire,<br> Japan's unique balanced approach aiming for <strong>both innovation promotion and risk management</strong></p></div></div><div id="tab3" class="tab-content"><h2>🎯 AI Basic Plan: Four Pillars</h2><div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 25px;"><h3 style="font-size: 1.4rem; margin-bottom: 10px;">Goal: World's Most AI-Friendly Nation</h3><p style="font-size: 1rem;">Systematic & agile (annual review) plan design</p></div><div class="pillars-grid"><div class="pillar-card"><span class="pillar-icon">🚀</span><div class="pillar-title">Pillar 1: Accelerating AI Utilization</div><p style="color: #666; margin-bottom: 15px; font-weight: bold;">"Using AI"</p><ul style="font-size: 0.95rem;"><li><strong>Government AI:</strong> Thorough usage in government & municipalities</li><li><strong>Industrial AI:</strong> Introduction to healthcare, finance, education, disaster prevention, agriculture, infrastructure</li><li><strong>AI Agents:</strong> Autonomous task execution systems</li><li><strong>Physical AI:</strong> Real-world robot applications</li><li><strong>Defense/Police:</strong> Advanced & efficient operations</li><li><strong>Personal Information Protection Act:</strong> Review for amendments</li></ul><div style="background: #ffebee; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;"><strong>Key:</strong> Government leads by example </div></div><div class="pillar-card"><span class="pillar-icon">🔬</span><div class="pillar-title">Pillar 2: Strategic AI Development</div><p style="color: #666; margin-bottom: 15px; font-weight: bold;">"Creating AI"</p><ul style="font-size: 0.95rem;"><li><strong>Data Infrastructure:</strong> Multimodal data creation & collaboration</li><li><strong>AI Talent:</strong> Secure through improved compensation & living conditions</li><li><strong>High-Performance Models:</strong> Evaluation infrastructure development</li><li><strong>AI for Science:</strong> Scientific research & drug discovery</li><li><strong>Japanese Data:</strong> Expansion</li><li><strong>Computing Resources:</strong> AI data centers, Fugaku NEXT</li><li><strong>Next-Gen Semiconductors:</strong> Development & manufacturing</li></ul><div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;"><strong>Japan's Edge:</strong> Trustworthy AI, Physical AI </div></div><div class="pillar-card"><span class="pillar-icon">🛡️</span><div class="pillar-title">Pillar 3: Leading AI Governance</div><p style="color: #666; margin-bottom: 15px; font-weight: bold;">"Enhancing AI Trust"</p><ul style="font-size: 0.95rem;"><li><strong>AI Act:</strong> Survey & guideline development</li><li><strong>AISI:</strong> Strengthen Safety Institute</li><li><strong>Security:</strong> Cyber attack & fraud countermeasures</li><li><strong>Detection Tech:</strong> Generated content verification</li><li><strong>International Cooperation:</strong> Hiroshima AI Process, Global South support</li><li><strong>Standards Development:</strong> Contribution to international standards</li><li><strong>Military AI:</strong> Humanitarian & security balance debate</li></ul><div style="background: #e8f5e9; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;"><strong>Key:</strong> Position Japan as innovation hub </div></div><div class="pillar-card"><span class="pillar-icon">🌱</span><div class="pillar-title">Pillar 4: Continuous AI Society Transformation</div><p style="color: #666; margin-bottom: 15px; font-weight: bold;">"Collaborating with AI"</p><ul style="font-size: 0.95rem;"><li><strong>Corporate DX:</strong> Promote AI transformation</li><li><strong>Regional Revitalization:</strong> Industry & employment creation</li><li><strong>Startups:</strong> Regulatory sandbox support</li><li><strong>Employment Survey:</strong> Assess AI impact (replacement/augmentation)</li><li><strong>Reskilling:</strong> Engineer & data talent development</li><li><strong>Education Reform:</strong> Improve AI literacy</li><li><strong>Role Allocation:</strong> Human-AI collaboration models</li></ul><div style="background: #fff3e0; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem;"><strong>Key:</strong> Elevate essential worker value </div></div></div><div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 25px; border-radius: 15px; margin-top: 25px; text-align: center;"><h3 style="margin-bottom: 15px; font-size: 1.3rem;">🏛️ Implementation Structure</h3><p style="font-size: 1rem; line-height: 1.8;"><strong>"AI Strategy Headquarters" headed by Prime Minister (all cabinet ministers)</strong><br> Expert advisory council input, collaboration with Digital Agency<br> Agile approach with flexibility, annual reviews </p></div></div><div id="tab4" class="tab-content"><h2>🚀 Japan's Strategy & Vision</h2><h3 style="font-size: 1.5rem; margin-bottom: 15px;">🎯 Japan's "Winning Strategy"</h3><div class="strategy-box"><h4 style="margin-bottom: 20px; font-size: 1.3rem; text-align: center;">💡 Catch-up Opportunity</h4><p style="margin-bottom: 20px; text-align: center; font-size: 1rem;"> Generative AI competitive landscape is changing.<br> Japan can catch up with <strong>AI Agents (autonomous task execution) and Physical AI (real-world robot applications)</strong></p><div class="strategy-grid"><div class="strategy-item"><strong style="display: block; margin-bottom: 10px; font-size: 1.1rem;">🌟 Trustworthy AI</strong><p style="font-size: 0.9rem;">High-quality data use<br>Transparency & explainability</p></div><div class="strategy-item"><strong style="display: block; margin-bottom: 10px; font-size: 1.1rem;">🤖 Physical AI</strong><p style="font-size: 0.9rem;">Accumulated robotics expertise<br>Manufacturing affinity</p></div><div class="strategy-item"><strong style="display: block; margin-bottom: 10px; font-size: 1.1rem;">🎨 Diverse Services</strong><p style="font-size: 0.9rem;">Fine-grained needs response<br>Leveraging Japanese market characteristics</p></div></div></div><h3 style="font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px;">🔴 Major Challenges</h3><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;"><div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #e74c3c;"><h4 style="color: #e74c3c; margin-bottom: 10px;">⏱️ Investment Gap</h4><p style="color: #666; font-size: 0.95rem;"> How to bridge 121x USA, 10x China investment gap? Strategic investment with limited resources required </p></div><div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #e74c3c;"><h4 style="color: #e74c3c; margin-bottom: 10px;">👥 Talent Shortage</h4><p style="color: #666; font-size: 0.95rem;"> Urgent need to develop cross-functional talent who understand not just AI development, but ethics & governance </p></div><div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #e74c3c;"><h4 style="color: #e74c3c; margin-bottom: 10px;">⚡ Speed</h4><p style="color: #666; font-size: 0.95rem;"> How to accelerate policy decision-making & execution amid rapid technological evolution </p></div><div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #e74c3c;"><h4 style="color: #e74c3c; margin-bottom: 10px;">🔄 Continuity</h4><p style="color: #666; font-size: 0.95rem;"> Creating mechanisms to maintain policies through government changes. Bipartisan consensus building </p></div></div><h3 style="font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px;">🔮 Post-2025 Roadmap</h3><div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 20px; margin-bottom: 20px;"><div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;"><div><div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px;"><strong style="display: block; font-size: 1.2rem; margin-bottom: 10px;">Fall 2025</strong><p style="font-size: 0.9rem;">AI Basic Plan<br>Cabinet Approval</p></div></div><div style="font-size: 2rem;">→</div><div><div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px;"><strong style="display: block; font-size: 1.2rem; margin-bottom: 10px;">2026~</strong><p style="font-size: 0.9rem;">Policy<br>Full Deployment</p></div></div><div style="font-size: 2rem;">→</div><div><div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px;"><strong style="display: block; font-size: 1.2rem; margin-bottom: 10px;">2030</strong><p style="font-size: 0.9rem;">Goal Achievement<br>Global Model</p></div></div></div></div><div class="highlight-box" style="background: linear-gradient(120deg, #ffeaa7 0%, #fdcb6e 100%); border: none;"><h4 style="margin-bottom: 15px; font-size: 1.3rem; text-align: center;">💡 Key Messages</h4><p style="font-size: 1rem; line-height: 1.8;"><strong>Value Creation Beyond Efficiency:</strong> AI is not just a cost-reduction tool, but a means to realize new business creation, social challenge solutions, and inclusive growth<br><br><strong>"Try it First" Attitude:</strong> Breaking from traditional caution, government gains public trust by proactively utilizing AI<br><br><strong>Integrated Domestic-International Strategy:</strong> Combining domestic policy with international cooperation, positioning Japan as an innovation hub </p></div><div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-top: 20px;"><h3 style="margin-bottom: 15px; font-size: 1.5rem;">🎯 Key Watch Points</h3><div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;"><div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px;"><strong style="display: block; margin-bottom: 10px;">📅 Basic Plan Details</strong><p style="font-size: 0.9rem;">How detailed will the 4 pillars become?</p></div><div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px;"><strong style="display: block; margin-bottom: 10px;">💰 Budget Allocation</strong><p style="font-size: 0.9rem;">Securing funding to bridge investment gap</p></div><div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px;"><strong style="display: block; margin-bottom: 10px;">🤝 Public-Private Partnership</strong><p style="font-size: 0.9rem;">Progress in ecosystem formation</p></div></div></div></div></div></div><script>
+function switchTab(tabId) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+}
+</script><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="February 17, 2026 23:29:52 JST">February 17, 2026 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

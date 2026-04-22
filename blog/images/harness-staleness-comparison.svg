@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">ハーネスの賞味期限：モデル進化で前提が腐る</title>
+  <desc id="desc">左はSonnet 4.5時代にハーネスで弱点を補っていた状態、右はOpus 4.5でその補完が不要になり邪魔な残骸になった状態を示す</desc>
+
+  <!-- Left: Before -->
+  <rect x="20" y="20" width="340" height="340" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
+  <rect x="20" y="20" width="340" height="36" rx="12" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+  <rect x="20" y="44" width="340" height="2" fill="#1D9E75"/>
+  <text x="190" y="44" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Before：Sonnet 4.5 時代（有効）</text>
+
+  <!-- Model weakness -->
+  <rect x="45" y="76" width="290" height="60" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <text x="190" y="98" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">モデルの弱点</text>
+  <text x="190" y="118" text-anchor="middle" fill="#A6431F" font-size="12">コンテキスト上限が近づくとタスクを途中で切り上げる</text>
+
+  <text x="190" y="155" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+
+  <!-- Harness fix -->
+  <rect x="45" y="168" width="290" height="60" rx="8" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="190" y="190" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">ハーネス側で対策を追加</text>
+  <text x="190" y="210" text-anchor="middle" fill="#0F6E56" font-size="12">「コンテキストリセット」機構を組み込む</text>
+
+  <text x="190" y="247" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+
+  <rect x="45" y="260" width="290" height="48" rx="8" fill="#FFFFFF" stroke="#1D9E75" stroke-width="1"/>
+  <text x="190" y="282" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">結果：問題が解決し、うまく動く</text>
+  <text x="190" y="298" text-anchor="middle" fill="#5F5E5A" font-size="12">この時点では正しい判断だった</text>
+
+  <!-- Center: model evolution arrow -->
+  <rect x="370" y="140" width="60" height="80" rx="30" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
+  <text x="400" y="174" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">モデル</text>
+  <text x="400" y="190" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">進化</text>
+  <polygon points="430,180 450,172 450,188" fill="#378ADD"/>
+
+  <!-- Right: After -->
+  <rect x="440" y="20" width="340" height="340" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
+  <rect x="440" y="20" width="340" height="36" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <rect x="440" y="44" width="340" height="2" fill="#D85A30"/>
+  <text x="610" y="44" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">After：Opus 4.5 時代（問題発生）</text>
+
+  <!-- Model improved -->
+  <rect x="465" y="76" width="290" height="60" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
+  <text x="610" y="98" text-anchor="middle" fill="#1F5C94" font-size="14" font-weight="700">モデル自身が弱点を克服済み</text>
+  <text x="610" y="118" text-anchor="middle" fill="#1F5C94" font-size="12">コンテキスト上限を気にせず最後までタスクを続ける</text>
+
+  <text x="610" y="155" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+
+  <!-- Harness now dead weight -->
+  <rect x="465" y="168" width="290" height="60" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="610" y="190" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">対策コードがそのまま残っている</text>
+  <text x="610" y="210" text-anchor="middle" fill="#A6431F" font-size="12">もう不要なリセット機構が毎回動く</text>
+
+  <text x="610" y="247" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+
+  <rect x="465" y="260" width="290" height="48" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+  <text x="610" y="282" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">結果：不要なコードが邪魔をする負債に</text>
+  <text x="610" y="298" text-anchor="middle" fill="#A6431F" font-size="12">かつての正解が、今は足を引っ張る</text>
+
+  <!-- Bottom message -->
+  <rect x="20" y="384" width="760" height="80" rx="10" fill="#FFFFFF" stroke="#888780" stroke-width="1"/>
+  <text x="400" y="408" text-anchor="middle" fill="#5F5E5A" font-size="14" font-weight="700">要するに：モデルが賢くなるたびに、ハーネスの「対策コード」は見直しが必要になる</text>
+  <text x="400" y="430" text-anchor="middle" fill="#5F5E5A" font-size="13">→ 特定の対策コードに依存するのではなく、対策コードを差し替えやすい「枠組み」を設計するべき</text>
+  <text x="400" y="450" text-anchor="middle" fill="#888780" font-size="10" opacity="0.85">（Bitter Lesson：手作りの工夫はモデルの進化に長期では負ける — Rich Sutton）</text>
+</svg>

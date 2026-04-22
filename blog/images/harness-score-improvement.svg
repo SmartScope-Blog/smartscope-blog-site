@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" width="800" height="280" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">ハーネス変更だけで起きたスコア改善：Can.ac と LangChain の事例</title>
+  <desc id="desc">Can.acの実験ではGrok Code Fast 1のスコアが6.7%から68.3%へ約10.2倍。LangChainの実験ではTerminal Bench 2.0で30位から5位、同一モデルで+13.7ポイント改善した</desc>
+
+  <!-- Title -->
+  <text x="20" y="24" fill="#2C2C2A" font-size="14" font-weight="700">ハーネス変更だけで起きたスコア改善</text>
+
+  <!-- Card 1: Can.ac -->
+  <rect x="20" y="40" width="370" height="200" rx="12" fill="#FFFFFF" stroke="#0F6E56" stroke-width="2"/>
+  <text x="36" y="62" fill="#0F6E56" font-size="13" font-weight="700">Can.ac 実験：Grok Code Fast 1</text>
+  <text x="36" y="78" fill="#5F5E5A" font-size="10">モデルの重み変更なし。ツール形式（エディット方式）のみ変更</text>
+
+  <!-- Before bar -->
+  <text x="36" y="106" fill="#5F5E5A" font-size="11">Before</text>
+  <rect x="100" y="93" width="22" height="18" rx="3" fill="#9E9D98"/>
+  <text x="111" y="106" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700">6.7%</text>
+
+  <!-- After bar -->
+  <text x="36" y="138" fill="#1D9E75" font-size="11" font-weight="700">After</text>
+  <rect x="100" y="125" width="220" height="18" rx="3" fill="#1D9E75"/>
+  <text x="210" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">68.3%</text>
+
+  <!-- Multiplier badge -->
+  <rect x="280" y="158" width="86" height="40" rx="20" fill="#E1F5EE" stroke="#0F6E56" stroke-width="2"/>
+  <text x="323" y="183" text-anchor="middle" fill="#0F6E56" font-size="20" font-weight="700">×10.2</text>
+
+  <text x="36" y="172" fill="#5F5E5A" font-size="10">+ 出力トークン約20%削減</text>
+  <text x="36" y="188" fill="#5F5E5A" font-size="10">16モデル中多数で改善を確認</text>
+  <text x="36" y="220" fill="#0F6E56" font-size="10" font-style="italic">出典：Can.ac, "I Improved 15 LLMs..."</text>
+
+  <!-- Card 2: LangChain -->
+  <rect x="410" y="40" width="370" height="200" rx="12" fill="#FFFFFF" stroke="#185FA5" stroke-width="2"/>
+  <text x="426" y="62" fill="#185FA5" font-size="13" font-weight="700">LangChain 実験：Terminal Bench 2.0</text>
+  <text x="426" y="78" fill="#5F5E5A" font-size="10">同一モデル。ハーネス改善のみで +13.7pt</text>
+
+  <!-- Before bar -->
+  <text x="426" y="106" fill="#5F5E5A" font-size="11">Before</text>
+  <rect x="490" y="93" width="36" height="18" rx="3" fill="#9E9D98"/>
+  <text x="508" y="106" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700">30位</text>
+
+  <!-- After bar -->
+  <text x="426" y="138" fill="#185FA5" font-size="11" font-weight="700">After</text>
+  <rect x="490" y="125" width="220" height="18" rx="3" fill="#185FA5"/>
+  <text x="600" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">5位</text>
+
+  <!-- Multiplier badge -->
+  <rect x="670" y="158" width="96" height="40" rx="20" fill="#E6F1FB" stroke="#185FA5" stroke-width="2"/>
+  <text x="718" y="183" text-anchor="middle" fill="#185FA5" font-size="18" font-weight="700">+13.7pt</text>
+
+  <text x="426" y="172" fill="#5F5E5A" font-size="10">ランキング 30位 → 5位</text>
+  <text x="426" y="188" fill="#5F5E5A" font-size="10">同一モデルで達成</text>
+  <text x="426" y="220" fill="#185FA5" font-size="10" font-style="italic">出典：LangChain Blog, "Improving Deep Agents..."</text>
+
+  <!-- Common caption -->
+  <text x="400" y="266" text-anchor="middle" fill="#2C2C2A" font-size="12" font-weight="700">モデル選定の前に、ハーネス設計を見直す方が投資対効果が高い</text>
+</svg>

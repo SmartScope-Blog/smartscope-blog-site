@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" width="800" height="560" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Codex Major Update Overview</title>
+  <desc id="desc">Timeline from the Codex app launch to the April 16 major expansion, showing the shift from a coding agent to a workflow center.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A6A63"/>
+    </marker>
+  </defs>
+
+  <rect x="18" y="18" width="764" height="524" rx="18" fill="#FCFBF7" stroke="#D7D1C6" stroke-width="1.5"/>
+
+  <text x="400" y="54" text-anchor="middle" fill="#1E5B8F" font-size="28" font-weight="700">Codex Major Update Overview</text>
+  <text x="400" y="76" text-anchor="middle" fill="#5F5B53" font-size="14">The February launch and April expansion were separate events. April 16 widened the work surface.</text>
+
+  <line x1="120" y1="138" x2="680" y2="138" stroke="#B8B1A5" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="150" cy="138" r="14" fill="#FFFFFF" stroke="#C86A34" stroke-width="4"/>
+  <circle cx="400" cy="138" r="14" fill="#FFFFFF" stroke="#2E86D1" stroke-width="4"/>
+  <circle cx="650" cy="138" r="14" fill="#FFFFFF" stroke="#0F8C63" stroke-width="4"/>
+
+  <text x="150" y="104" text-anchor="middle" fill="#8A461F" font-size="16" font-weight="700">2026-02-02</text>
+  <text x="150" y="180" text-anchor="middle" fill="#8A461F" font-size="18" font-weight="700">macOS App Launch</text>
+  <text x="150" y="202" text-anchor="middle" fill="#8A461F" font-size="13">Multi-agent / skills / automations</text>
+
+  <text x="400" y="104" text-anchor="middle" fill="#185FA5" font-size="16" font-weight="700">2026-03-04</text>
+  <text x="400" y="180" text-anchor="middle" fill="#185FA5" font-size="18" font-weight="700">Windows Support</text>
+  <text x="400" y="202" text-anchor="middle" fill="#185FA5" font-size="13">Desktop app expands to Windows</text>
+
+  <text x="650" y="104" text-anchor="middle" fill="#0F6E56" font-size="16" font-weight="700">2026-04-16</text>
+  <text x="650" y="180" text-anchor="middle" fill="#0F6E56" font-size="18" font-weight="700">Major Update</text>
+  <text x="650" y="202" text-anchor="middle" fill="#0F6E56" font-size="13">Computer Use / Browser / 90+ plugins</text>
+
+  <rect x="34" y="226" width="214" height="264" rx="16" fill="#FAE9DF" stroke="#C86A34" stroke-width="2.5"/>
+  <text x="54" y="262" fill="#8A461F" font-size="24" font-weight="700">Before</text>
+  <text x="54" y="290" fill="#8A461F" font-size="18" font-weight="700">Code Agent</text>
+  <text x="54" y="312" fill="#8A461F" font-size="13">Focus: repo / CLI</text>
+
+  <rect x="54" y="334" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="359" fill="#7A3915" font-size="15" font-weight="700">Value</text>
+  <text x="132" y="359" fill="#7A3915" font-size="12">Gen / edit</text>
+
+  <rect x="54" y="388" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="413" fill="#7A3915" font-size="15" font-weight="700">Context</text>
+  <text x="132" y="413" fill="#7A3915" font-size="13">repo / CLI</text>
+
+  <rect x="54" y="442" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="467" fill="#7A3915" font-size="15" font-weight="700">Time</text>
+  <text x="128" y="467" fill="#7A3915" font-size="11">Weak long runs</text>
+
+  <line x1="270" y1="348" x2="308" y2="348" stroke="#6A6A63" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="286" y="320" text-anchor="middle" fill="#6A6A63" font-size="15" font-weight="700">Role Shift</text>
+
+  <rect x="326" y="226" width="430" height="264" rx="16" fill="#E8F6F0" stroke="#0F8C63" stroke-width="2.5"/>
+  <text x="346" y="262" fill="#0F6E56" font-size="24" font-weight="700">After</text>
+  <text x="346" y="290" fill="#0F6E56" font-size="18" font-weight="700">Workflow Center</text>
+  <text x="346" y="312" fill="#0F6E56" font-size="13">Bring work, tools, and continuity together</text>
+
+  <rect x="346" y="334" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="359" fill="#0F6E56" font-size="15" font-weight="700">1. Work</text>
+  <text x="442" y="359" fill="#0F6E56" font-size="14">Computer Use / Browser</text>
+
+  <rect x="346" y="388" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="413" fill="#0F6E56" font-size="15" font-weight="700">2. Integrations</text>
+  <text x="490" y="413" fill="#0F6E56" font-size="14">90+ plugins / PR comments / SSH</text>
+
+  <rect x="346" y="442" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="467" fill="#0F6E56" font-size="15" font-weight="700">3. Continuity</text>
+  <text x="490" y="467" fill="#0F6E56" font-size="14">Memory / scheduling</text>
+
+  <text x="400" y="522" text-anchor="middle" fill="#1E5B8F" font-size="18" font-weight="700">The shift is workflow integration, not just a better model</text>
+</svg>

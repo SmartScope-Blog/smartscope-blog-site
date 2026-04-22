@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect x="240" y="16" width="280" height="64" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1"/>
+  <text x="380" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#44433f">セッション実行中</text>
+  <text x="380" y="64" text-anchor="middle" font-size="13" fill="#888780">自動承認セッションが動作中</text>
+
+  <line x1="380" y1="80" x2="380" y2="112" stroke="#888780" stroke-width="1"/>
+  <path d="M380 112 l-6 8 M380 112 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="226" y="124" width="308" height="62" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+  <text x="380" y="149" text-anchor="middle" font-size="18" font-weight="700" fill="#BA7517">問題を検知</text>
+  <text x="380" y="171" text-anchor="middle" font-size="13" fill="#8a6a2c">シグナルを見て、対応する復旧手順を選ぶ</text>
+
+  <line x1="250" y1="186" x2="132" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M132 220 l2 -10 M132 220 l9 -2" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="380" y1="186" x2="380" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M380 220 l-6 8 M380 220 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="510" y1="186" x2="628" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M628 220 l-9 -2 M628 220 l-2 -10" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="28" y="232" width="208" height="84" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+  <text x="132" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#D85A30">re-connecting...</text>
+  <text x="132" y="280" text-anchor="middle" font-size="13" fill="#7d6c67">ストリームが再接続を繰り返し</text>
+  <text x="132" y="298" text-anchor="middle" font-size="13" fill="#7d6c67">同じ処理を再送している</text>
+
+  <rect x="276" y="232" width="208" height="84" rx="12" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+  <text x="380" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#534AB7">Context overflow</text>
+  <text x="380" y="280" text-anchor="middle" font-size="13" fill="#6c6890">プロンプトや transcript が膨らみ</text>
+  <text x="380" y="298" text-anchor="middle" font-size="13" fill="#6c6890">許容量を超えている</text>
+
+  <rect x="524" y="232" width="208" height="84" rx="12" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1"/>
+  <text x="628" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#E24B4A">承認プロンプト復活</text>
+  <text x="628" y="280" text-anchor="middle" font-size="13" fill="#8d6a6a">自動実行中なのに確認が</text>
+  <text x="628" y="298" text-anchor="middle" font-size="13" fill="#8d6a6a">再び出るようになった</text>
+
+  <line x1="132" y1="316" x2="132" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M132 336 l-6 8 M132 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="380" y1="316" x2="380" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M380 336 l-6 8 M380 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="628" y1="316" x2="628" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M628 336 l-6 8 M628 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="28" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="132" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">/status + セッション再起動</text>
+  <text x="132" y="388" text-anchor="middle" font-size="12" fill="#54766a">再接続ガイドへ</text>
+
+  <rect x="276" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="380" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">タスク分割 + transcript整理</text>
+  <text x="380" y="388" text-anchor="middle" font-size="12" fill="#54766a">文脈エラー対策へ</text>
+
+  <rect x="524" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="628" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">終了して -a on-request で再実行</text>
+  <text x="628" y="388" text-anchor="middle" font-size="12" fill="#54766a">危険な手順だけ切り出す</text>
+</svg>

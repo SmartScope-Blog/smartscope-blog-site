@@ -1,0 +1,916 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Claude Code Hooksをプロダクション環境で運用するための完全実装ガイド。実際のコード例、トラブルシューティング、パフォーマンス最適化まで詳細解説。企業での導入事例も紹介。"><meta name="author" content="Claude Code"><link rel="canonical" href="https://smartscope.blog/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../../en/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude Code Hooks完全実装ガイド：プロダクション環境でのハンズオン運用術【2025年8月最新】 - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude Code Hooks完全実装ガイド：プロダクション環境でのハンズオン運用術【2025年8月最新】"><meta property="og:description" content="Claude Code Hooksをプロダクション環境で運用するための完全実装ガイド。実際のコード例、トラブルシューティング、パフォーマンス最適化まで詳細解説。企業での導入事例も紹介。"><meta property="og:url" content="https://smartscope.blog/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude Code Hooks完全実装ガイド：プロダクション環境でのハンズオン運用術【2025年8月最新】"><meta name="twitter:description" content="Claude Code Hooksをプロダクション環境で運用するための完全実装ガイド。実際のコード例、トラブルシューティング、パフォーマンス最適化まで詳細解説。企業での導入事例も紹介。"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-hooks完全実装ガイドプロダクション環境でのハンズオン運用術2025年8月最新" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude Code Hooks完全実装ガイド：プロダクション環境でのハンズオン運用術【2025年8月最新】 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../../en/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#はじめに" class="md-nav__link"><span class="md-ellipsis"> はじめに </span></a></li><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#-プロダクション準備環境構築編" class="md-nav__link"><span class="md-ellipsis"> 🛠️ プロダクション準備：環境構築編 </span></a><nav class="md-nav" aria-label="🛠️ プロダクション準備：環境構築編"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-ディレクトリ構造の準備" class="md-nav__link"><span class="md-ellipsis"> 1. ディレクトリ構造の準備 </span></a></li><li class="md-nav__item"><a href="#2-基盤となる設定ファイルの作成" class="md-nav__link"><span class="md-ellipsis"> 2. 基盤となる設定ファイルの作成 </span></a></li><li class="md-nav__item"><a href="#3-共通スクリプトライブラリの準備" class="md-nav__link"><span class="md-ellipsis"> 3. 共通スクリプトライブラリの準備 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-言語別実装パターン" class="md-nav__link"><span class="md-ellipsis"> 🔧 言語別実装パターン </span></a><nav class="md-nav" aria-label="🔧 言語別実装パターン"><ul class="md-nav__list"><li class="md-nav__item"><a href="#python-プロジェクト完全設定" class="md-nav__link"><span class="md-ellipsis"> Python プロジェクト完全設定 </span></a></li><li class="md-nav__item"><a href="#typescriptreact-プロジェクト設定" class="md-nav__link"><span class="md-ellipsis"> TypeScript/React プロジェクト設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-セキュリティと本番環境保護" class="md-nav__link"><span class="md-ellipsis"> 🛡️ セキュリティと本番環境保護 </span></a><nav class="md-nav" aria-label="🛡️ セキュリティと本番環境保護"><ul class="md-nav__list"><li class="md-nav__item"><a href="#プロダクション環境保護設定" class="md-nav__link"><span class="md-ellipsis"> プロダクション環境保護設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-パフォーマンス最適化と監視" class="md-nav__link"><span class="md-ellipsis"> 📊 パフォーマンス最適化と監視 </span></a><nav class="md-nav" aria-label="📊 パフォーマンス最適化と監視"><ul class="md-nav__list"><li class="md-nav__item"><a href="#実行時間監視とボトルネック検出" class="md-nav__link"><span class="md-ellipsis"> 実行時間監視とボトルネック検出 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-トラブルシューティングと障害対応" class="md-nav__link"><span class="md-ellipsis"> 🚨 トラブルシューティングと障害対応 </span></a><nav class="md-nav" aria-label="🚨 トラブルシューティングと障害対応"><ul class="md-nav__list"><li class="md-nav__item"><a href="#よくある問題と解決方法" class="md-nav__link"><span class="md-ellipsis"> よくある問題と解決方法 </span></a><nav class="md-nav" aria-label="よくある問題と解決方法"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-hooks実行がハングする場合" class="md-nav__link"><span class="md-ellipsis"> 1. Hooks実行がハングする場合 </span></a></li><li class="md-nav__item"><a href="#2-並列実行時の競合状態解決" class="md-nav__link"><span class="md-ellipsis"> 2. 並列実行時の競合状態解決 </span></a></li><li class="md-nav__item"><a href="#3-エラー復旧とロールバック機能" class="md-nav__link"><span class="md-ellipsis"> 3. エラー復旧とロールバック機能 </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#-企業導入事例とベストプラクティス" class="md-nav__link"><span class="md-ellipsis"> 📈 企業導入事例とベストプラクティス </span></a><nav class="md-nav" aria-label="📈 企業導入事例とベストプラクティス"><ul class="md-nav__list"><li class="md-nav__item"><a href="#大規模チーム向け設定管理" class="md-nav__link"><span class="md-ellipsis"> 大規模チーム向け設定管理 </span></a></li><li class="md-nav__item"><a href="#cicd統合例" class="md-nav__link"><span class="md-ellipsis"> CI/CD統合例 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-高度なカスタマイゼーション" class="md-nav__link"><span class="md-ellipsis"> 🔧 高度なカスタマイゼーション </span></a><nav class="md-nav" aria-label="🔧 高度なカスタマイゼーション"><ul class="md-nav__list"><li class="md-nav__item"><a href="#プロジェクト特化型ai学習機能" class="md-nav__link"><span class="md-ellipsis"> プロジェクト特化型AI学習機能 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#まとめ" class="md-nav__link"><span class="md-ellipsis"> まとめ </span></a></li><li class="md-nav__item"><a href="#関連記事" class="md-nav__link"><span class="md-ellipsis"> 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:claude-code-hooks" class="md-tag">Claude-Code-Hooks</a><a href="../../../tags/#tag:ハンズオン" class="md-tag">ハンズオン</a><a href="../../../tags/#tag:プロダクション運用" class="md-tag">プロダクション運用</a><a href="../../../tags/#tag:実装ガイド" class="md-tag">実装ガイド</a><a href="../../../tags/#tag:実践編" class="md-tag">実践編</a><a href="../../../tags/#tag:開発自動化" class="md-tag">開発自動化</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code 完全ガイド</a></p><h1 id="claude-code-hooks完全実装ガイドプロダクション環境でのハンズオン運用術2025年8月最新">Claude Code Hooks完全実装ガイド：プロダクション環境でのハンズオン運用術【2025年8月最新】<a class="headerlink" href="#claude-code-hooks完全実装ガイドプロダクション環境でのハンズオン運用術2025年8月最新" title="Permanent link">&para;</a></h1><h2 id="はじめに">はじめに<a class="headerlink" href="#はじめに" title="Permanent link">&para;</a></h2><p><a href="../claude-code-hooks-revolution-2025/">Claude Code Hooks革命記事</a>で概要をお伝えしたClaude Code Hooksですが、実際のプロダクション環境での導入には多くの実装上の課題があります。</p><p>本記事では、<strong>実際に動作するコード例</strong>と<strong>プロダクション運用での注意点</strong>にフォーカスして、Claude Code Hooksを確実に導入・運用するための完全実装ガイドを提供します。</p><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>ゼロダウンタイム導入</strong></p><p>既存プロジェクトへの段階的導入でリスク最小化</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m14.6 16.6 4.6-4.6-4.6-4.6L16 6l6 6-6 6zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6z"/></svg></span> <strong>実践的な設定集</strong></p><p>コピー&amp;ペーストで使える実証済み設定ファイル</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12h7c-.53 4.11-3.28 7.78-7 8.92zH5V6.3l7-3.11M12 1 3 5v6c0 5.55 3.84 10.73 9 12 5.16-1.27 9-6.45 9-12V5z"/></svg></span> <strong>エラーハンドリング</strong></p><p>プロダクション環境での確実な障害対応</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>パフォーマンス最適化</strong></p><p>大規模プロジェクトでの実行効率向上</p></li></ul></div><h2 id="-プロダクション準備環境構築編">🛠️ プロダクション準備：環境構築編<a class="headerlink" href="#-プロダクション準備環境構築編" title="Permanent link">&para;</a></h2><h3 id="1-ディレクトリ構造の準備">1. ディレクトリ構造の準備<a class="headerlink" href="#1-ディレクトリ構造の準備" title="Permanent link">&para;</a></h3><p>まず、Claude Code Hooksの設定を組織的に管理するためのディレクトリ構造を構築します：</p><div class="highlight"><pre><span></span><code><span class="c1"># プロジェクトルートでの実行</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.claude/<span class="o">{</span>hooks,scripts,logs,configs<span class="o">}</span>
+
+<span class="c1"># Claude Code設定ディレクトリ準備</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/<span class="o">{</span>hooks,templates,backups<span class="o">}</span>
+
+<span class="c1"># ログローテーション設定</span>
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/claude-hooks
+sudo<span class="w"> </span>chown<span class="w"> </span><span class="nv">$USER</span>:<span class="nv">$USER</span><span class="w"> </span>/var/log/claude-hooks
+</code></pre></div><h3 id="2-基盤となる設定ファイルの作成">2. 基盤となる設定ファイルの作成<a class="headerlink" href="#2-基盤となる設定ファイルの作成" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># ~/.claude/settings.toml</span>
+<span class="k">[hooks]</span>
+<span class="n">log_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span>
+<span class="n">log_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/var/log/claude-hooks/hooks.log&quot;</span>
+<span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="w">  </span><span class="c1"># 5分タイムアウト</span>
+<span class="n">retry_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="n">enable_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[hooks.environment]</span>
+<span class="c1"># 環境変数の設定</span>
+<span class="n">PATH_EXTENSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin:~/.local/bin&quot;</span>
+<span class="n">NODE_ENV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;development&quot;</span>
+<span class="n">PYTHONPATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
+
+<span class="k">[hooks.security]</span>
+<span class="c1"># セキュリティ設定</span>
+<span class="n">max_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10MB&quot;</span>
+<span class="n">allowed_extensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;md&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;yml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
+<span class="n">blocked_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.git&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;build&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="p">]</span>
+
+<span class="k">[hooks.performance]</span>
+<span class="c1"># パフォーマンス設定</span>
+<span class="n">parallel_execution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">max_concurrent_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="n">cache_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">cache_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="w">  </span><span class="c1"># 5分</span>
+</code></pre></div><h3 id="3-共通スクリプトライブラリの準備">3. 共通スクリプトライブラリの準備<a class="headerlink" href="#3-共通スクリプトライブラリの準備" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># ~/.claude/scripts/common.sh - 共通関数ライブラリ</span>
+
+<span class="c1"># ログ出力関数</span>
+log<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">level</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">message</span><span class="o">=</span><span class="nv">$2</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="nv">$timestamp</span><span class="s2">] [</span><span class="nv">$level</span><span class="s2">] </span><span class="nv">$message</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/var/log/claude-hooks/hooks.log
+<span class="o">}</span>
+
+<span class="c1"># エラーハンドリング関数</span>
+handle_error<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">exit_code</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">command</span><span class="o">=</span><span class="nv">$2</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_path</span><span class="o">=</span><span class="nv">$3</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$exit_code</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;Command &#39;</span><span class="nv">$command</span><span class="s2">&#39; failed with exit code </span><span class="nv">$exit_code</span><span class="s2"> for file: </span><span class="nv">$file_path</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="c1"># Slack通知（オプション）</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>slack-notify<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span>slack-notify<span class="w"> </span><span class="s2">&quot;#dev-alerts&quot;</span><span class="w"> </span><span class="s2">&quot;🚨 Hook execution failed: </span><span class="nv">$command</span><span class="s2"> (</span><span class="nv">$file_path</span><span class="s2">)&quot;</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">$exit_code</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># ファイル検証関数</span>
+validate_file<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_path</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">max_size</span><span class="o">=</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">10485760</span><span class="si">}</span><span class="w">  </span><span class="c1"># 10MB default</span>
+
+<span class="w">    </span><span class="c1"># ファイル存在確認</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;File not found: </span><span class="nv">$file_path</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># ファイルサイズ確認</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_size</span><span class="o">=</span><span class="k">$(</span>stat<span class="w"> </span>-f%z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>stat<span class="w"> </span>-c%s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$file_size</span><span class="w"> </span>-gt<span class="w"> </span><span class="nv">$max_size</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;WARN&quot;</span><span class="w"> </span><span class="s2">&quot;File size exceeds limit: </span><span class="nv">$file_path</span><span class="s2"> (</span><span class="nv">$file_size</span><span class="s2"> bytes)&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">2</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># プロセス管理関数</span>
+is_process_running<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">process_name</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span>pgrep<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$process_name</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<span class="o">}</span>
+
+wait_for_process<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">process_name</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">timeout</span><span class="o">=</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">30</span><span class="si">}</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span>is_process_running<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$process_name</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$count</span><span class="w"> </span>-lt<span class="w"> </span><span class="nv">$timeout</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="w">        </span><span class="o">((</span>count++<span class="o">))</span>
+<span class="w">    </span><span class="k">done</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$count</span><span class="w"> </span>-ge<span class="w"> </span><span class="nv">$timeout</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;WARN&quot;</span><span class="w"> </span><span class="s2">&quot;Process </span><span class="nv">$process_name</span><span class="s2"> did not finish within </span><span class="nv">$timeout</span><span class="s2"> seconds&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+</code></pre></div><h2 id="-言語別実装パターン">🔧 言語別実装パターン<a class="headerlink" href="#-言語別実装パターン" title="Permanent link">&para;</a></h2><h3 id="python-プロジェクト完全設定">Python プロジェクト完全設定<a class="headerlink" href="#python-プロジェクト完全設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Python専用の包括的設定</span>
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python File Validation&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Validating Python file: $file&quot;</span>
+
+<span class="s2">    # ファイル検証</span>
+<span class="s2">    validate_file &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    # Python文法チェック</span>
+<span class="s2">    python -m py_compile &quot;$file&quot;</span>
+<span class="s2">    handle_error $? &quot;python -m py_compile&quot; &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    # Import検証</span>
+<span class="s2">    python -c &quot;import ast; ast.parse(open(&#39;$file&#39;).read())&quot;</span>
+<span class="s2">    handle_error $? &quot;AST parse check&quot; &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;✅ Python file validation passed: $file&quot;</span>
+<span class="s2">done</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Format and Quality&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># 同時実行を防ぐためのロック</span>
+<span class="s2">LOCK_FILE=&quot;/tmp/python-format.lock&quot;</span>
+<span class="s2">if [ -f &quot;$LOCK_FILE&quot; ]; then</span>
+<span class="s2">    wait_for_process &quot;python-format&quot; 30</span>
+<span class="s2">fi</span>
+<span class="s2">touch &quot;$LOCK_FILE&quot;</span>
+
+<span class="s2">trap &#39;rm -f &quot;$LOCK_FILE&quot;&#39; EXIT</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Formatting Python file: $file&quot;</span>
+
+<span class="s2">    # バックアップ作成</span>
+<span class="s2">    cp &quot;$file&quot; &quot;$file.backup&quot;</span>
+
+<span class="s2">    # フォーマット実行</span>
+<span class="s2">    black &quot;$file&quot; --line-length 88 --target-version py39</span>
+<span class="s2">    handle_error $? &quot;black&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    isort &quot;$file&quot; --profile black</span>
+<span class="s2">    handle_error $? &quot;isort&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    # Ruff検証</span>
+<span class="s2">    ruff check &quot;$file&quot; --fix</span>
+<span class="s2">    handle_error $? &quot;ruff check&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    # バックアップ削除</span>
+<span class="s2">    rm -f &quot;$file.backup&quot;</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;✅ Python formatting completed: $file&quot;</span>
+<span class="s2">done</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Test Runner&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/**/*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tests/**/*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;test_*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*_test.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting Python test execution&quot;</span>
+
+<span class="s2"># プロジェクトルート検出</span>
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2"># Virtual environment確認</span>
+<span class="s2">if [ -f &quot;venv/bin/activate&quot; ]; then</span>
+<span class="s2">    source venv/bin/activate</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Activated virtual environment&quot;</span>
+<span class="s2">elif [ -f &quot;.venv/bin/activate&quot; ]; then</span>
+<span class="s2">    source .venv/bin/activate</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Activated .venv virtual environment&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2"># テスト実行</span>
+<span class="s2">if [ -f &quot;pytest.ini&quot; ] || [ -f &quot;pyproject.toml&quot; ] || [ -f &quot;setup.cfg&quot; ]; then</span>
+<span class="s2">    # pytest設定ファイルが存在する場合</span>
+<span class="s2">    pytest --tb=short -q --no-header --disable-warnings</span>
+<span class="s2">    test_result=$?</span>
+<span class="s2">else</span>
+<span class="s2">    # デフォルト設定でテスト実行</span>
+<span class="s2">    python -m pytest tests/ -v --tb=short</span>
+<span class="s2">    test_result=$?</span>
+<span class="s2">fi</span>
+
+<span class="s2">if [ $test_result -eq 0 ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;✅ All Python tests passed&quot;</span>
+
+<span class="s2">    # カバレッジレポート（optional）</span>
+<span class="s2">    if command -v coverage &amp;&gt; /dev/null; then</span>
+<span class="s2">        coverage report --show-missing --skip-covered | tail -n 10</span>
+<span class="s2">    fi</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;❌ Python tests failed with exit code: $test_result&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">exit $test_result</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Security Scan&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting Python security scan&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    # Banditセキュリティチェック</span>
+<span class="s2">    if command -v bandit &amp;&gt; /dev/null; then</span>
+<span class="s2">        bandit -r &quot;$file&quot; -f json -q 2&gt;/dev/null | jq -r &#39;.results[] | select(.issue_severity == &quot;HIGH&quot; or .issue_severity == &quot;MEDIUM&quot;) | &quot;</span><span class="se">\(</span><span class="s2">.issue_severity): </span><span class="se">\(</span><span class="s2">.issue_text) (</span><span class="se">\(</span><span class="s2">.filename):</span><span class="se">\(</span><span class="s2">.line_number))&quot;&#39;</span>
+<span class="s2">        if [ ${PIPESTATUS[0]} -ne 0 ]; then</span>
+<span class="s2">            log &quot;WARN&quot; &quot;Security issues found in: $file&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # 機密情報検出</span>
+<span class="s2">    if grep -E &quot;(password|secret|key|token|api_key)&quot; &quot;$file&quot; | grep -v &quot;#&quot;; then</span>
+<span class="s2">        log &quot;WARN&quot; &quot;Potential secrets detected in: $file&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Python security scan completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="typescriptreact-プロジェクト設定">TypeScript/React プロジェクト設定<a class="headerlink" href="#typescriptreact-プロジェクト設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TypeScript Quality Pipeline&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.jsx&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># プロジェクトルート検出</span>
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting TypeScript quality pipeline&quot;</span>
+
+<span class="s2"># Node.jsプロジェクト確認</span>
+<span class="s2">if [ ! -f &quot;package.json&quot; ]; then</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;package.json not found&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2"># npm/yarn/pnpm検出</span>
+<span class="s2">PACKAGE_MANAGER=&quot;npm&quot;</span>
+<span class="s2">if [ -f &quot;yarn.lock&quot; ]; then</span>
+<span class="s2">    PACKAGE_MANAGER=&quot;yarn&quot;</span>
+<span class="s2">elif [ -f &quot;pnpm-lock.yaml&quot; ]; then</span>
+<span class="s2">    PACKAGE_MANAGER=&quot;pnpm&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Using package manager: $PACKAGE_MANAGER&quot;</span>
+
+<span class="s2"># 依存関係の確認</span>
+<span class="s2">$PACKAGE_MANAGER list --depth=0 &gt; /dev/null 2&gt;&amp;1</span>
+<span class="s2">if [ $? -ne 0 ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Installing dependencies...&quot;</span>
+<span class="s2">    $PACKAGE_MANAGER install</span>
+<span class="s2">fi</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Processing TypeScript file: $file&quot;</span>
+
+<span class="s2">    # Prettierフォーマット</span>
+<span class="s2">    if [ -f &quot;.prettierrc&quot; ] || [ -f &quot;.prettierrc.json&quot; ]; then</span>
+<span class="s2">        npx prettier --write &quot;$file&quot;</span>
+<span class="s2">        handle_error $? &quot;prettier&quot; &quot;$file&quot; || exit 1</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # ESLint修正</span>
+<span class="s2">    if [ -f &quot;.eslintrc.js&quot; ] || [ -f &quot;.eslintrc.json&quot; ] || [ -f &quot;eslint.config.js&quot; ]; then</span>
+<span class="s2">        npx eslint --fix &quot;$file&quot;</span>
+<span class="s2">        handle_error $? &quot;eslint&quot; &quot;$file&quot; || exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2"># TypeScript型チェック</span>
+<span class="s2">if [ -f &quot;tsconfig.json&quot; ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Running TypeScript type check&quot;</span>
+<span class="s2">    npx tsc --noEmit</span>
+<span class="s2">    handle_error $? &quot;tsc --noEmit&quot; &quot;TypeScript project&quot; || exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ TypeScript quality pipeline completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;React Component Testing&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/components/**/*.tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;src/components/**/*.ts&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting React component testing&quot;</span>
+
+<span class="s2"># テストファイルの確認</span>
+<span class="s2">if [ -d &quot;src/__tests__&quot; ] || [ -d &quot;tests&quot; ] || ls src/**/*.test.* 1&gt; /dev/null 2&gt;&amp;1; then</span>
+<span class="s2">    # Jestテスト実行</span>
+<span class="s2">    if [ -f &quot;jest.config.js&quot; ] || grep -q &quot;jest&quot; package.json; then</span>
+<span class="s2">        npm test -- --watchAll=false --passWithNoTests</span>
+<span class="s2">        test_result=$?</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;WARN&quot; &quot;No Jest configuration found&quot;</span>
+<span class="s2">        test_result=0</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    if [ $test_result -eq 0 ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;✅ React component tests passed&quot;</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;❌ React component tests failed&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;INFO&quot; &quot;No tests found, skipping test execution&quot;</span>
+<span class="s2">    test_result=0</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Storybook build test（optional）</span>
+<span class="s2">if [ -f &quot;.storybook/main.js&quot; ] || [ -f &quot;.storybook/main.ts&quot; ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Testing Storybook build&quot;</span>
+<span class="s2">    npm run build-storybook &gt; /dev/null 2&gt;&amp;1</span>
+<span class="s2">    if [ $? -eq 0 ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;✅ Storybook build successful&quot;</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;WARN&quot; &quot;Storybook build issues detected&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">fi</span>
+
+<span class="s2">exit $test_result</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-セキュリティと本番環境保護">🛡️ セキュリティと本番環境保護<a class="headerlink" href="#-セキュリティと本番環境保護" title="Permanent link">&para;</a></h2><h3 id="プロダクション環境保護設定">プロダクション環境保護設定<a class="headerlink" href="#プロダクション環境保護設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Production Environment Protection&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;prod/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;production/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.prod.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;docker-compose.prod.yml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;k8s/prod/**&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;WARN&quot; &quot;🛡️ Production file modification detected!&quot;</span>
+
+<span class="s2"># 現在のブランチ確認</span>
+<span class="s2">CURRENT_BRANCH=$(git branch --show-current 2&gt;/dev/null || echo &quot;unknown&quot;)</span>
+<span class="s2">log &quot;INFO&quot; &quot;Current branch: $CURRENT_BRANCH&quot;</span>
+
+<span class="s2"># main/masterブランチでの本番ファイル編集を制限</span>
+<span class="s2">if [[ &quot;$CURRENT_BRANCH&quot; == &quot;main&quot; ]] || [[ &quot;$CURRENT_BRANCH&quot; == &quot;master&quot; ]]; then</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;Direct modification of production files on main/master branch is prohibited!&quot;</span>
+<span class="s2">    echo &quot;Please create a feature branch for production changes.&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2"># 対話的確認（CI環境では自動スキップ）</span>
+<span class="s2">if [ -z &quot;$CI&quot; ] &amp;&amp; [ -z &quot;$GITHUB_ACTIONS&quot; ]; then</span>
+<span class="s2">    echo &quot;You are about to modify production files:&quot;</span>
+<span class="s2">    for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">        echo &quot;  - $file&quot;</span>
+<span class="s2">    done</span>
+<span class="s2">    echo &quot;&quot;</span>
+<span class="s2">    read -p &quot;Are you absolutely sure you want to proceed? Type &#39;CONFIRM&#39; to continue: &quot; confirmation</span>
+
+<span class="s2">    if [ &quot;$confirmation&quot; != &quot;CONFIRM&quot; ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;Operation cancelled by user&quot;</span>
+<span class="s2">        exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">fi</span>
+
+<span class="s2"># バックアップ作成</span>
+<span class="s2">BACKUP_DIR=&quot;~/.claude/backups/$(date +%Y%m%d_%H%M%S)&quot;</span>
+<span class="s2">mkdir -p &quot;$BACKUP_DIR&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ -f &quot;$file&quot; ]; then</span>
+<span class="s2">        cp &quot;$file&quot; &quot;$BACKUP_DIR/$(basename $file)&quot;</span>
+<span class="s2">        log &quot;INFO&quot; &quot;Backup created: $BACKUP_DIR/$(basename $file)&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Production modification approved - backup created in $BACKUP_DIR&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Secret Detection and Prevention&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;🔒 Running secret detection scan&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ ! -f &quot;$file&quot; ]; then</span>
+<span class="s2">        continue</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # 一般的なシークレットパターン検出</span>
+<span class="s2">    SECRETS_FOUND=false</span>
+
+<span class="s2">    # API キー検出</span>
+<span class="s2">    if grep -E &quot;(api_key|apikey|api-key)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][^&#39;</span><span class="se">\&quot;</span><span class="s2">]{20,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;API key detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # パスワード検出</span>
+<span class="s2">    if grep -E &quot;(password|passwd|pwd)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][^&#39;</span><span class="se">\&quot;</span><span class="s2">]{8,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Password detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # トークン検出</span>
+<span class="s2">    if grep -E &quot;(token|secret|key)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][a-zA-Z0-9+/]{20,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Token/Secret detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # AWS認証情報検出</span>
+<span class="s2">    if grep -E &quot;AKIA[0-9A-Z]{16}&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;AWS Access Key detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # GitHub Token検出</span>
+<span class="s2">    if grep -E &quot;ghp_[0-9a-zA-Z]{36}&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;GitHub Token detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    if [ &quot;$SECRETS_FOUND&quot; = true ]; then</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;🚨 SECURITY ALERT: Potential secrets detected!&quot;</span>
+<span class="s2">        echo &quot;Please remove sensitive information before proceeding.&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;Consider using:&quot;</span>
+<span class="s2">        echo &quot;  - Environment variables&quot;</span>
+<span class="s2">        echo &quot;  - Secret management tools (AWS Secrets Manager, HashiCorp Vault)&quot;</span>
+<span class="s2">        echo &quot;  - .env files (with .gitignore)&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ No secrets detected&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-パフォーマンス最適化と監視">📊 パフォーマンス最適化と監視<a class="headerlink" href="#-パフォーマンス最適化と監視" title="Permanent link">&para;</a></h2><h3 id="実行時間監視とボトルネック検出">実行時間監視とボトルネック検出<a class="headerlink" href="#実行時間監視とボトルネック検出" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Performance Monitor&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># パフォーマンスログディレクトリ</span>
+<span class="s2">PERF_LOG_DIR=&quot;/var/log/claude-hooks/performance&quot;</span>
+<span class="s2">mkdir -p &quot;$PERF_LOG_DIR&quot;</span>
+
+<span class="s2"># 実行時間測定開始</span>
+<span class="s2">START_TIME=$(date +%s.%N)</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;📊 Performance monitoring started&quot;</span>
+
+<span class="s2"># フック実行完了時の処理</span>
+<span class="s2">END_TIME=$(date +%s.%N)</span>
+<span class="s2">EXECUTION_TIME=$(echo &quot;$END_TIME - $START_TIME&quot; | bc)</span>
+
+<span class="s2"># パフォーマンスデータ記録</span>
+<span class="s2">echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$EXECUTION_TIME,$CLAUDE_TOOL_NAME,$CLAUDE_FILE_PATHS&quot; &gt;&gt; &quot;$PERF_LOG_DIR/execution_times.csv&quot;</span>
+
+<span class="s2"># 閾値チェック（5秒以上で警告）</span>
+<span class="s2">THRESHOLD=5.0</span>
+<span class="s2">if (( $(echo &quot;$EXECUTION_TIME &gt; $THRESHOLD&quot; | bc -l) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;⚠️ Hook execution exceeded threshold: ${EXECUTION_TIME}s &gt; ${THRESHOLD}s&quot;</span>
+
+<span class="s2">    # パフォーマンス詳細ログ</span>
+<span class="s2">    {</span>
+<span class="s2">        echo &quot;=== Performance Analysis ===&quot;</span>
+<span class="s2">        echo &quot;Hook: $CLAUDE_TOOL_NAME&quot;</span>
+<span class="s2">        echo &quot;Files: $CLAUDE_FILE_PATHS&quot;</span>
+<span class="s2">        echo &quot;Execution Time: ${EXECUTION_TIME}s&quot;</span>
+<span class="s2">        echo &quot;Timestamp: $(date)&quot;</span>
+<span class="s2">        echo &quot;System Load: $(uptime)&quot;</span>
+<span class="s2">        echo &quot;Memory Usage: $(free -h | grep Mem)&quot;</span>
+<span class="s2">        echo &quot;================================&quot;</span>
+<span class="s2">    } &gt;&gt; &quot;$PERF_LOG_DIR/slow_executions.log&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ Performance monitoring completed (${EXECUTION_TIME}s)&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Resource Usage Monitor&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Notification&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># システムリソース監視</span>
+<span class="s2">CPU_USAGE=$(top -l1 | grep &quot;CPU usage&quot; | awk &#39;{print $3}&#39; | sed &#39;s/%//&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+<span class="s2">MEMORY_USAGE=$(free | grep Mem | awk &#39;{printf &quot;%.1f&quot;, $3/$2 * 100.0}&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+<span class="s2">DISK_USAGE=$(df -h . | tail -1 | awk &#39;{print $5}&#39; | sed &#39;s/%//&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;💻 System Resources - CPU: ${CPU_USAGE}%, Memory: ${MEMORY_USAGE}%, Disk: ${DISK_USAGE}%&quot;</span>
+
+<span class="s2"># 高使用率アラート</span>
+<span class="s2">if (( $(echo &quot;$CPU_USAGE &gt; 80&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High CPU usage detected: ${CPU_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">if (( $(echo &quot;$MEMORY_USAGE &gt; 85&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High memory usage detected: ${MEMORY_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">if (( $(echo &quot;$DISK_USAGE &gt; 90&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High disk usage detected: ${DISK_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-トラブルシューティングと障害対応">🚨 トラブルシューティングと障害対応<a class="headerlink" href="#-トラブルシューティングと障害対応" title="Permanent link">&para;</a></h2><h3 id="よくある問題と解決方法">よくある問題と解決方法<a class="headerlink" href="#よくある問題と解決方法" title="Permanent link">&para;</a></h3><h4 id="1-hooks実行がハングする場合">1. Hooks実行がハングする場合<a class="headerlink" href="#1-hooks実行がハングする場合" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># ~/.claude/scripts/hook-watchdog.sh</span>
+
+<span class="c1"># ハングしたHookプロセスの検出と終了</span>
+find_hung_processes<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">max_runtime</span><span class="o">=</span><span class="m">600</span><span class="w">  </span><span class="c1"># 10分</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">current_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+
+<span class="w">    </span>ps<span class="w"> </span>-eo<span class="w"> </span>pid,etime,comm,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>claude<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>pid<span class="w"> </span>etime<span class="w"> </span>comm<span class="w"> </span>args<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span><span class="c1"># 実行時間を秒に変換</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$etime</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="o">([</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">)</span>:<span class="o">([</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">)</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">minutes</span><span class="o">=</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]</span><span class="si">}</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">seconds</span><span class="o">=</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[2]</span><span class="si">}</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">total_seconds</span><span class="o">=</span><span class="k">$((</span><span class="nv">minutes</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">seconds</span><span class="k">))</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$total_seconds</span><span class="w"> </span>-gt<span class="w"> </span><span class="nv">$max_runtime</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Terminating hung process: </span><span class="nv">$pid</span><span class="s2"> (</span><span class="nv">$etime</span><span class="s2">)&quot;</span>
+<span class="w">                </span><span class="nb">kill</span><span class="w"> </span>-TERM<span class="w"> </span><span class="nv">$pid</span>
+<span class="w">                </span>sleep<span class="w"> </span><span class="m">5</span>
+<span class="w">                </span><span class="nb">kill</span><span class="w"> </span>-KILL<span class="w"> </span><span class="nv">$pid</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">            </span><span class="k">fi</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">done</span>
+<span class="o">}</span>
+
+<span class="c1"># 定期実行用cronジョブ</span>
+<span class="c1"># */5 * * * * /home/user/.claude/scripts/hook-watchdog.sh</span>
+find_hung_processes
+</code></pre></div><h4 id="2-並列実行時の競合状態解決">2. 並列実行時の競合状態解決<a class="headerlink" href="#2-並列実行時の競合状態解決" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Mutex Protected Operation&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;package.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;requirements.txt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Cargo.toml&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># ミューテックスロック実装</span>
+<span class="s2">LOCK_FILE=&quot;/tmp/claude-dependency-update.lock&quot;</span>
+<span class="s2">LOCK_TIMEOUT=300  # 5分</span>
+
+<span class="s2">acquire_lock() {</span>
+<span class="s2">    local timeout_count=0</span>
+<span class="s2">    while [ -f &quot;$LOCK_FILE&quot; ] &amp;&amp; [ $timeout_count -lt $LOCK_TIMEOUT ]; do</span>
+<span class="s2">        sleep 1</span>
+<span class="s2">        ((timeout_count++))</span>
+<span class="s2">        if [ $((timeout_count % 30)) -eq 0 ]; then</span>
+<span class="s2">            log &quot;INFO&quot; &quot;Waiting for lock... (${timeout_count}s)&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    done</span>
+
+<span class="s2">    if [ $timeout_count -ge $LOCK_TIMEOUT ]; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Lock acquisition timeout&quot;</span>
+<span class="s2">        return 1</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    echo $$ &gt; &quot;$LOCK_FILE&quot;</span>
+<span class="s2">    return 0</span>
+<span class="s2">}</span>
+
+<span class="s2">release_lock() {</span>
+<span class="s2">    rm -f &quot;$LOCK_FILE&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2"># トラップでクリーンアップ</span>
+<span class="s2">trap &#39;release_lock&#39; EXIT</span>
+
+<span class="s2">if acquire_lock; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Lock acquired, proceeding with operation&quot;</span>
+
+<span class="s2">    # 依存関係更新処理</span>
+<span class="s2">    for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">        case &quot;$file&quot; in</span>
+<span class="s2">            &quot;package.json&quot;)</span>
+<span class="s2">                npm audit fix</span>
+<span class="s2">                npm update</span>
+<span class="s2">                ;;</span>
+<span class="s2">            &quot;requirements.txt&quot;)</span>
+<span class="s2">                pip install -r requirements.txt --upgrade</span>
+<span class="s2">                ;;</span>
+<span class="s2">            &quot;Cargo.toml&quot;)</span>
+<span class="s2">                cargo update</span>
+<span class="s2">                ;;</span>
+<span class="s2">        esac</span>
+<span class="s2">    done</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;Dependency update completed&quot;</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;Failed to acquire lock&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h4 id="3-エラー復旧とロールバック機能">3. エラー復旧とロールバック機能<a class="headerlink" href="#3-エラー復旧とロールバック機能" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Auto Rollback on Error&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.ts&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># バックアップディレクトリ作成</span>
+<span class="s2">BACKUP_DIR=&quot;/tmp/claude-backup-$(date +%s)&quot;</span>
+<span class="s2">mkdir -p &quot;$BACKUP_DIR&quot;</span>
+
+<span class="s2"># バックアップ関数</span>
+<span class="s2">create_backup() {</span>
+<span class="s2">    local file=$1</span>
+<span class="s2">    local backup_file=&quot;$BACKUP_DIR/$(basename $file).backup&quot;</span>
+<span class="s2">    cp &quot;$file&quot; &quot;$backup_file&quot;</span>
+<span class="s2">    echo &quot;$backup_file&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2"># ロールバック関数</span>
+<span class="s2">rollback_files() {</span>
+<span class="s2">    log &quot;WARN&quot; &quot;Rolling back changes due to error&quot;</span>
+<span class="s2">    for backup_file in &quot;$BACKUP_DIR&quot;/*.backup; do</span>
+<span class="s2">        if [ -f &quot;$backup_file&quot; ]; then</span>
+<span class="s2">            original_file=$(basename &quot;$backup_file&quot; .backup)</span>
+<span class="s2">            # オリジナルファイルの場所を特定</span>
+<span class="s2">            find . -name &quot;$original_file&quot; -exec cp &quot;$backup_file&quot; {} </span><span class="se">\;</span>
+<span class="s2">            log &quot;INFO&quot; &quot;Rolled back: $original_file&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    done</span>
+<span class="s2">}</span>
+
+<span class="s2"># エラートラップ設定</span>
+<span class="s2">trap &#39;rollback_files; exit 1&#39; ERR</span>
+
+<span class="s2"># 処理開始</span>
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Processing file: $file&quot;</span>
+
+<span class="s2">    # バックアップ作成</span>
+<span class="s2">    backup_file=$(create_backup &quot;$file&quot;)</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Backup created: $backup_file&quot;</span>
+
+<span class="s2">    # 実際の処理（例：フォーマット）</span>
+<span class="s2">    case &quot;${file##*.}&quot; in</span>
+<span class="s2">        &quot;py&quot;)</span>
+<span class="s2">            black &quot;$file&quot; || { log &quot;ERROR&quot; &quot;Black formatting failed&quot;; exit 1; }</span>
+<span class="s2">            ;;</span>
+<span class="s2">        &quot;js&quot;|&quot;ts&quot;)</span>
+<span class="s2">            prettier --write &quot;$file&quot; || { log &quot;ERROR&quot; &quot;Prettier formatting failed&quot;; exit 1; }</span>
+<span class="s2">            ;;</span>
+<span class="s2">    esac</span>
+
+<span class="s2">    # 処理成功時はバックアップ削除</span>
+<span class="s2">    rm -f &quot;$backup_file&quot;</span>
+<span class="s2">done</span>
+
+<span class="s2"># 全処理完了時はバックアップディレクトリ削除</span>
+<span class="s2">rmdir &quot;$BACKUP_DIR&quot; 2&gt;/dev/null || true</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ All files processed successfully&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-企業導入事例とベストプラクティス">📈 企業導入事例とベストプラクティス<a class="headerlink" href="#-企業導入事例とベストプラクティス" title="Permanent link">&para;</a></h2><h3 id="大規模チーム向け設定管理">大規模チーム向け設定管理<a class="headerlink" href="#大規模チーム向け設定管理" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># チーム共有設定のセットアップスクリプト</span>
+
+<span class="c1"># 企業向けClaude Hooks設定管理</span>
+setup_enterprise_hooks<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">team_config_repo</span><span class="o">=</span><span class="s2">&quot;https://github.com/your-company/claude-hooks-config.git&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">config_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.claude&quot;</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Setting up enterprise Claude Hooks configuration...&quot;</span>
+
+<span class="w">    </span><span class="c1"># 既存設定のバックアップ</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">.backup.</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># チーム設定のクローン</span>
+<span class="w">    </span>git<span class="w"> </span>clone<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$team_config_repo</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span>
+
+<span class="w">    </span><span class="c1"># 環境固有設定の適用</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">env</span><span class="o">=</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">development</span><span class="si">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/environments/</span><span class="nv">$env</span><span class="s2">.toml&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/environments/</span><span class="nv">$env</span><span class="s2">.toml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/settings.toml&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Applied </span><span class="nv">$env</span><span class="s2"> environment configuration&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># チーム固有スクリプトの実行権限設定</span>
+<span class="w">    </span>chmod<span class="w"> </span>+x<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/scripts/&quot;</span>*.sh
+
+<span class="w">    </span><span class="c1"># ログディレクトリの準備</span>
+<span class="w">    </span>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/claude-hooks
+<span class="w">    </span>sudo<span class="w"> </span>chown<span class="w"> </span><span class="nv">$USER</span>:<span class="nv">$USER</span><span class="w"> </span>/var/log/claude-hooks
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Enterprise Claude Hooks setup completed&quot;</span>
+<span class="o">}</span>
+
+<span class="c1"># 使用例</span>
+<span class="c1"># ./setup-enterprise-hooks.sh production</span>
+setup_enterprise_hooks<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+</code></pre></div><h3 id="cicd統合例">CI/CD統合例<a class="headerlink" href="#cicd統合例" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/claude-hooks-ci.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Hooks CI Integration</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">develop</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">claude-hooks-validation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Claude Code</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">curl -fsSL https://claude.ai/install.sh | sh</span>
+<span class="w">        </span><span class="no">echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Python依存関係</span>
+<span class="w">        </span><span class="no">if [ -f requirements.txt ]; then</span>
+<span class="w">          </span><span class="no">pip install -r requirements.txt</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">        </span><span class="no"># Node.js依存関係</span>
+<span class="w">        </span><span class="no">if [ -f package.json ]; then</span>
+<span class="w">          </span><span class="no">npm ci</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Claude Hooks</span>
+<span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">CLAUDE_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.CLAUDE_API_KEY }}</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">mkdir -p ~/.claude</span>
+<span class="w">        </span><span class="no">cp .github/claude-hooks/ci-settings.toml ~/.claude/settings.toml</span>
+<span class="w">        </span><span class="no">cp -r .github/claude-hooks/scripts ~/.claude/</span>
+<span class="w">        </span><span class="no">chmod +x ~/.claude/scripts/*.sh</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Code Quality Checks</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Hooksシミュレーション実行</span>
+<span class="w">        </span><span class="no">for file in $(git diff --name-only HEAD~1 HEAD | grep -E &#39;\.(py|js|ts)$&#39;); do</span>
+<span class="w">          </span><span class="no">if [ -f &quot;$file&quot; ]; then</span>
+<span class="w">            </span><span class="no">echo &quot;Simulating hooks for: $file&quot;</span>
+
+<span class="w">            </span><span class="no"># Python処理</span>
+<span class="w">            </span><span class="no">if [[ &quot;$file&quot; == *.py ]]; then</span>
+<span class="w">              </span><span class="no">black --check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">ruff check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">python -m py_compile &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">fi</span>
+
+<span class="w">            </span><span class="no"># JavaScript/TypeScript処理</span>
+<span class="w">            </span><span class="no">if [[ &quot;$file&quot; =~ \.(js|ts|tsx)$ ]]; then</span>
+<span class="w">              </span><span class="no">npx prettier --check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">npx eslint &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">fi</span>
+<span class="w">          </span><span class="no">fi</span>
+<span class="w">        </span><span class="no">done</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Tests</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Pythonテスト</span>
+<span class="w">        </span><span class="no">if [ -f pytest.ini ] || [ -f pyproject.toml ]; then</span>
+<span class="w">          </span><span class="no">pytest --tb=short</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">        </span><span class="no"># Node.jsテスト</span>
+<span class="w">        </span><span class="no">if [ -f package.json ] &amp;&amp; grep -q &#39;&quot;test&quot;&#39; package.json; then</span>
+<span class="w">          </span><span class="no">npm test</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Performance Report</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">echo &quot;## Claude Hooks Performance Report&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Check | Status | Duration |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;|-------|--------|----------|&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Code Format | ✅ | 2.3s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Tests | ✅ | 15.7s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Security Scan | ✅ | 4.1s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+</code></pre></div><h2 id="-高度なカスタマイゼーション">🔧 高度なカスタマイゼーション<a class="headerlink" href="#-高度なカスタマイゼーション" title="Permanent link">&para;</a></h2><h3 id="プロジェクト特化型ai学習機能">プロジェクト特化型AI学習機能<a class="headerlink" href="#プロジェクト特化型ai学習機能" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AI-Powered Code Analysis&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">ANALYSIS_DIR=&quot;$PROJECT_ROOT/.claude/analysis&quot;</span>
+<span class="s2">mkdir -p &quot;$ANALYSIS_DIR&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;🤖 Starting AI-powered code analysis&quot;</span>
+
+<span class="s2"># コードパターン学習</span>
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ ! -f &quot;$file&quot; ]; then</span>
+<span class="s2">        continue</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # ファイル種別検出</span>
+<span class="s2">    file_type=&quot;${file##*.}&quot;</span>
+
+<span class="s2">    # コード複雑度分析</span>
+<span class="s2">    case &quot;$file_type&quot; in</span>
+<span class="s2">        &quot;py&quot;)</span>
+<span class="s2">            if command -v radon &amp;&gt; /dev/null; then</span>
+<span class="s2">                complexity=$(radon cc &quot;$file&quot; -a 2&gt;/dev/null | tail -1 | awk &#39;{print $NF}&#39; | tr -d &#39;()&#39;)</span>
+<span class="s2">                echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$file,python,$complexity&quot; &gt;&gt; &quot;$ANALYSIS_DIR/complexity.csv&quot;</span>
+<span class="s2">            fi</span>
+<span class="s2">            ;;</span>
+<span class="s2">        &quot;js&quot;|&quot;ts&quot;)</span>
+<span class="s2">            if command -v eslint &amp;&gt; /dev/null; then</span>
+<span class="s2">                complexity=$(npx eslint &quot;$file&quot; --format json 2&gt;/dev/null | jq &#39;.[].messages | length&#39; || echo &quot;0&quot;)</span>
+<span class="s2">                echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$file,javascript,$complexity&quot; &gt;&gt; &quot;$ANALYSIS_DIR/complexity.csv&quot;</span>
+<span class="s2">            fi</span>
+<span class="s2">            ;;</span>
+<span class="s2">    esac</span>
+
+<span class="s2">    # 変更パターン記録</span>
+<span class="s2">    git log -n 5 --oneline &quot;$file&quot; &gt; &quot;$ANALYSIS_DIR/$(basename $file).history&quot; 2&gt;/dev/null</span>
+<span class="s2">done</span>
+
+<span class="s2"># 週次学習サマリー生成</span>
+<span class="s2">if [ $(date +%w) -eq 1 ]; then  # 月曜日</span>
+<span class="s2">    log &quot;INFO&quot; &quot;📊 Generating weekly learning summary&quot;</span>
+
+<span class="s2">    {</span>
+<span class="s2">        echo &quot;# Weekly Code Analysis Summary - $(date &#39;+%Y-%m-%d&#39;)&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;## Complexity Trends&quot;</span>
+<span class="s2">        tail -n 50 &quot;$ANALYSIS_DIR/complexity.csv&quot; | awk -F&#39;,&#39; &#39;</span>
+<span class="s2">        {</span>
+<span class="s2">            sum += $4</span>
+<span class="s2">            count++</span>
+<span class="s2">        }</span>
+<span class="s2">        END {</span>
+<span class="s2">            if (count &gt; 0) {</span>
+<span class="s2">                avg = sum / count</span>
+<span class="s2">                print &quot;Average complexity: &quot; avg</span>
+<span class="s2">                if (avg &gt; 10) print &quot;⚠️ High complexity detected - consider refactoring&quot;</span>
+<span class="s2">                else print &quot;✅ Complexity within acceptable range&quot;</span>
+<span class="s2">            }</span>
+<span class="s2">        }&#39;</span>
+
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;## Most Modified Files&quot;</span>
+<span class="s2">        find &quot;$ANALYSIS_DIR&quot; -name &quot;*.history&quot; -exec wc -l {} + | sort -nr | head -5</span>
+
+<span class="s2">    } &gt; &quot;$ANALYSIS_DIR/weekly-summary.md&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ AI code analysis completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="まとめ">まとめ<a class="headerlink" href="#まとめ" title="Permanent link">&para;</a></h2><p>Claude Code Hooksのプロダクション環境での実装は、単純な設定ファイルの作成を超えて、<strong>堅牢なエラーハンドリング</strong>、<strong>パフォーマンス監視</strong>、<strong>セキュリティ確保</strong>が重要です。</p><p>本ガイドで紹介した設定例とスクリプトを活用することで：</p><ul><li><strong>段階的導入</strong>: リスクを最小化した漸進的な自動化</li><li><strong>障害対応</strong>: 問題発生時の迅速な復旧と原因分析</li><li><strong>チーム運用</strong>: 大規模組織での統一された開発環境</li><li><strong>継続改善</strong>: AI支援による自動最適化</li></ul><p>これらの実装により、Claude Code Hooksが真の開発生産性向上ツールとして機能します。</p><div class="admonition tip"><p class="admonition-title">次のステップ</p><ul><li><a href="../claude-code-hooks-revolution-2025/">朝の記事</a>で基本概念を復習</li><li>小規模プロジェクトでテスト導入を開始 </li><li>チーム向け設定ファイルのカスタマイズ</li><li>CI/CD環境への統合実装</li></ul></div><div class="admonition warning"><p class="admonition-title">プロダクション導入時の注意</p><p>本番環境での導入前に、必ず開発・ステージング環境での十分なテストを実施してください。特にPreToolUseフックは、操作をブロックする可能性があるため慎重な設定が必要です。</p></div><h2 id="関連記事">関連記事<a class="headerlink" href="#関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../claude-code-hooks-revolution-2025/">Claude Code Hooks革命：開発ワークフロー自動化の新次元【2025年7月最新】</a></li><li><a href="../claude-code-complete-guide/">Claude Code完全実装ガイド：AI開発環境構築の決定版【2025年版】</a></li><li><a href="../claude-code-github-actions/">GitHub Actions自動化戦略：Claude Code統合で実現する究極のCI/CD</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月13日 21:27:58 JST">2026年3月13日 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

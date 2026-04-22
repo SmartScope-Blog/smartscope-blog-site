@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 430" width="980" height="430" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-weight="700" role="img" aria-labelledby="title desc">
+  <title id="title">Operational control points in Claude Opus 4.7</title>
+  <desc id="desc">Three operational controls in Claude Opus 4.7: xhigh, Task Budgets, and /ultrareview.</desc>
+
+  <rect x="24" y="20" width="932" height="390" rx="18" fill="#F6F3EC" stroke="#C7C0B1"/>
+  <text x="490" y="56" text-anchor="middle" fill="#33312D" font-size="24" font-weight="700">Operational Control Points in Opus 4.7</text>
+  <text x="490" y="84" text-anchor="middle" fill="#5F5E5A" font-size="14">The change is not only model quality. It is also about where depth and budget get controlled.</text>
+
+  <rect x="52" y="126" width="276" height="214" rx="18" fill="#FAECE7" stroke="#D85A30" stroke-width="2.2"/>
+  <text x="78" y="160" fill="#A6431F" font-size="14" font-weight="700">xhigh</text>
+  <text x="78" y="188" fill="#A6431F" font-size="20" font-weight="700">Push deeper</text>
+  <text x="78" y="212" fill="#A6431F" font-size="20" font-weight="700">reasoning</text>
+  <text x="78" y="232" fill="#5F5E5A" font-size="11">Sits between high and max.</text>
+  <text x="78" y="248" fill="#5F5E5A" font-size="11">A recommended starting point</text>
+  <text x="78" y="264" fill="#5F5E5A" font-size="11">for coding and agent work.</text>
+  <rect x="78" y="278" width="194" height="14" rx="7" fill="#F3D2C8"/>
+  <rect x="78" y="278" width="146" height="14" rx="7" fill="#D85A30"/>
+  <text x="78" y="308" fill="#5F5E5A" font-size="11">Effect: better quality on hard tasks.</text>
+  <text x="78" y="324" fill="#5F5E5A" font-size="11">Tradeoff: later-turn tokens rise.</text>
+
+  <rect x="352" y="126" width="276" height="214" rx="18" fill="#E8F1FB" stroke="#378ADD" stroke-width="2.2"/>
+  <text x="378" y="160" fill="#1F5C94" font-size="14" font-weight="700">Task Budgets</text>
+  <text x="378" y="188" fill="#1F5C94" font-size="18" font-weight="700">Keep budget spikes</text>
+  <text x="378" y="210" fill="#1F5C94" font-size="18" font-weight="700">in check</text>
+  <text x="378" y="232" fill="#5F5E5A" font-size="11">Not a hard stop. It nudges the</text>
+  <text x="378" y="248" fill="#5F5E5A" font-size="11">whole agentic loop to regulate workload.</text>
+  <rect x="378" y="272" width="44" height="26" rx="8" fill="#FFFFFF" stroke="#378ADD"/>
+  <rect x="430" y="272" width="44" height="26" rx="8" fill="#FFFFFF" stroke="#378ADD"/>
+  <rect x="482" y="272" width="44" height="26" rx="8" fill="#FFFFFF" stroke="#378ADD"/>
+  <rect x="534" y="272" width="44" height="26" rx="8" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="400" y="289" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">plan</text>
+  <text x="452" y="289" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">tool</text>
+  <text x="504" y="289" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">retry</text>
+  <text x="556" y="289" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">stop</text>
+  <text x="378" y="320" fill="#5F5E5A" font-size="11">Effect: long tasks can be shaped</text>
+  <text x="378" y="334" fill="#5F5E5A" font-size="11">without over-stopping them.</text>
+
+  <rect x="652" y="126" width="276" height="214" rx="18" fill="#E1F5EE" stroke="#1D9E75" stroke-width="2.2"/>
+  <text x="678" y="160" fill="#0F6E56" font-size="14" font-weight="700">/ultrareview</text>
+  <text x="678" y="188" fill="#0F6E56" font-size="18" font-weight="700">Split off a</text>
+  <text x="678" y="210" fill="#0F6E56" font-size="18" font-weight="700">review-only pass</text>
+  <text x="678" y="232" fill="#5F5E5A" font-size="11">Claude Code reads the full change set and</text>
+  <text x="678" y="248" fill="#5F5E5A" font-size="11">looks for bugs or design problems separately.</text>
+  <rect x="678" y="270" width="56" height="28" rx="14" fill="#FFFFFF" stroke="#1D9E75"/>
+  <rect x="749" y="270" width="56" height="28" rx="14" fill="#FFFFFF" stroke="#1D9E75"/>
+  <rect x="820" y="270" width="56" height="28" rx="14" fill="#FFFFFF" stroke="#1D9E75"/>
+  <text x="706" y="288" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">read</text>
+  <text x="777" y="288" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">find</text>
+  <text x="848" y="288" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">return</text>
+  <text x="741" y="287" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">→</text>
+  <text x="812" y="287" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">→</text>
+  <text x="678" y="318" fill="#5F5E5A" font-size="11">Effect: implementation and review</text>
+  <text x="678" y="332" fill="#5F5E5A" font-size="11">stop competing for the same turn.</text>
+
+  <rect x="122" y="362" width="736" height="24" rx="12" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="490" y="378" text-anchor="middle" fill="#33312D" font-size="13" font-weight="700">Opus 4.7 should be read as model quality plus reasoning-depth control plus budget control.</text>
+</svg>

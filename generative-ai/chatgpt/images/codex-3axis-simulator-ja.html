@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 3軸シミュレータ</title>
+<style>
+:root {
+  --text: #2c2c2a;
+  --muted: #5f5e5a;
+  --panel: #f7f5ef;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.14);
+  --border-strong: rgba(0, 0, 0, 0.24);
+  --teal-accent: #1D9E75;
+  --teal-fill: #E1F5EE;
+  --amber-accent: #BA7517;
+  --amber-fill: #FAEEDA;
+  --coral-accent: #D85A30;
+  --coral-fill: #FAECE7;
+  --red-accent: #E24B4A;
+  --red-fill: #FCEBEB;
+  --gray-accent: #888780;
+  --gray-fill: #F1EFE8;
+  --blue-accent: #378ADD;
+  --blue-fill: #E6F1FB;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; }
+body { font-family: var(--font); color: var(--text); padding: 14px; }
+.widget { max-width: 800px; margin: 0 auto; }
+.preset-bar-label, .group-label, .panel-label { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+.preset-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+button { font: inherit; }
+.preset-btn, .axis-btn { border: 0.5px solid var(--border-strong); border-radius: 8px; background: var(--surface); color: var(--text); cursor: pointer; transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease; }
+.preset-btn { padding: 7px 10px; font-size: 14px; }
+.preset-btn.active { background: var(--blue-fill); border-color: var(--blue-accent); color: var(--blue-accent); font-weight: 700; }
+.controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+@media (max-width: 680px) { .controls { grid-template-columns: 1fr; } }
+.group { background: var(--panel); border: 0.5px solid var(--border); border-radius: 10px; padding: 12px; min-height: 162px; }
+.group-label { display: flex; align-items: center; gap: 6px; }
+.flag { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; padding: 1px 5px; background: #fff; border: 0.5px solid var(--border); border-radius: 6px; }
+.button-stack { display: flex; flex-direction: column; gap: 6px; }
+.axis-btn { width: 100%; text-align: left; padding: 8px 10px; font-size: 14px; }
+.axis-btn.active { font-weight: 700; }
+.toggle-panel { display: flex; flex-direction: column; gap: 14px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.toggle-copy { font-size: 12px; color: var(--muted); line-height: 1.45; }
+.switch { position: relative; width: 48px; height: 26px; flex: 0 0 auto; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--gray-fill); }
+.slider::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); transition: transform 0.14s ease; }
+.switch input:checked + .slider::after { transform: translateX(22px); }
+.output { border: 0.5px solid var(--border-strong); border-radius: 12px; overflow: hidden; }
+.output-head { padding: 10px 12px; font-size: 14px; font-weight: 700; background: var(--gray-fill); border-bottom: 0.5px solid var(--border); }
+.output-body { padding: 12px; background: var(--panel); display: grid; grid-template-columns: 1fr 220px; gap: 14px; }
+@media (max-width: 680px) { .output-body { grid-template-columns: 1fr; } }
+.codebox { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; padding: 10px 12px; border-radius: 8px; border: 0.5px solid var(--border); background: #fff; margin-bottom: 10px; word-break: break-word; }
+.usecase { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: 12px; font-weight: 700; background: var(--blue-fill); color: var(--blue-accent); margin-top: 10px; }
+.badge-command { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; display: block; margin-top: 6px; font-size: 12px; color: var(--blue-accent); word-break: break-word; }
+.meter-card { background: #fff; border: 0.5px solid var(--border); border-radius: 10px; padding: 10px; }
+.meter-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.meter-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px; }
+.meter-step { height: 12px; border-radius: 999px; background: #ebe7dd; border: 0.5px solid transparent; }
+.meter-label { font-size: 12px; font-weight: 700; }
+.meter-helper { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="preset-bar-label">プリセット</div>
+  <div class="preset-bar" id="presetBar"></div>
+  <div class="controls">
+    <section class="group">
+      <div class="group-label">承認設定 <span class="flag">approval_policy</span> <span class="flag">-a</span></div>
+      <div class="button-stack" id="approvalGroup"></div>
+    </section>
+    <section class="group">
+      <div class="group-label">サンドボックス <span class="flag">sandbox_mode</span> <span class="flag">-s</span></div>
+      <div class="button-stack" id="sandboxGroup"></div>
+    </section>
+    <section class="group">
+      <div class="group-label">ネットワーク <span class="flag">network_access</span></div>
+      <div class="toggle-panel">
+        <div class="toggle-row">
+          <div class="toggle-copy">パッケージレジストリ、API、ドキュメントへの外向きアクセスを有効化。</div>
+          <label class="switch"><input type="checkbox" id="networkToggle"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-copy" id="networkState">OFF</div>
+      </div>
+    </section>
+  </div>
+  <section class="output">
+    <div class="output-head">出力</div>
+    <div class="output-body">
+      <div>
+        <div class="panel-label">コマンド</div>
+        <div class="codebox" id="commandBox"></div>
+        <div class="panel-label">想定用途</div>
+        <div class="usecase" id="usecaseBox"></div>
+        <div id="claudeWrap" hidden>
+          <div class="badge">Claude Code 対応</div>
+          <span class="badge-command" id="claudeBox"></span>
+        </div>
+      </div>
+      <div class="meter-card">
+        <div class="meter-title">リスク</div>
+        <div class="meter-rail">
+          <div class="meter-step" data-step="1"></div>
+          <div class="meter-step" data-step="2"></div>
+          <div class="meter-step" data-step="3"></div>
+          <div class="meter-step" data-step="4"></div>
+        </div>
+        <div class="meter-label" id="riskLabel"></div>
+        <div class="meter-helper" id="riskHelper"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+const COLORS = { low: { fill: "#E1F5EE", accent: "#1D9E75", label: "低" }, medium: { fill: "#FAEEDA", accent: "#BA7517", label: "中" }, high: { fill: "#FAECE7", accent: "#D85A30", label: "高" }, extreme: { fill: "#FCEBEB", accent: "#E24B4A", label: "極高" } };
+const state = { approval: "untrusted", sandbox: "workspace-write", network: false, preset: "デフォルト（安全）" };
+const approvals = ["untrusted", "on-request", "never"];
+const sandboxes = ["read-only", "workspace-write", "danger-full-access"];
+const presets = [
+  { name: "デフォルト（安全）", approval: "untrusted", sandbox: "workspace-write", network: false },
+  { name: "--full-auto", approval: "on-request", sandbox: "workspace-write", network: false },
+  { name: "自動 + ネットワーク", approval: "never", sandbox: "workspace-write", network: true },
+  { name: "フルアクセス", approval: "never", sandbox: "danger-full-access", network: true },
+  { name: "--dangerously-bypass...", approval: "never", sandbox: "danger-full-access", network: true }
+];
+function scoreRisk() { let total = 1; if (state.approval === "on-request") total += 0.5; if (state.approval === "never") total += 1.5; if (state.sandbox === "workspace-write") total += 0.5; if (state.sandbox === "danger-full-access") total += 1.5; if (state.network) total += 0.5; return Math.min(4, Math.round(total)); }
+function riskKey(score) { if (score <= 1) return "low"; if (score === 2) return "medium"; if (score === 3) return "high"; return "extreme"; }
+function isDangerousBypass() { return state.approval === "never" && state.sandbox === "danger-full-access" && state.network; }
+function commandForState() {
+  if (isDangerousBypass() && state.preset === "--dangerously-bypass...") return "codex --dangerously-bypass-approvals-and-sandbox \"無人でリリース作業を進める\"";
+  const parts = ["codex"];
+  if (state.approval === "on-request" && state.sandbox === "workspace-write" && !state.network) { parts.push("--full-auto"); } else { parts.push("-a", state.approval, "-s", state.sandbox); }
+  if (state.network && state.sandbox === "workspace-write") parts.push("-c", "'sandbox_workspace_write.network_access=true'");
+  if (state.network && state.sandbox === "read-only") parts.push("-c", "'sandbox_read_only.network_access=true'");
+  parts.push("\"無人でリリース作業を進める\"");
+  return parts.join(" ");
+}
+function describeUseCase(score) { const key = riskKey(score); if (key === "low") return "監査中心の確認、リポジトリレビュー、設定点検向け。ファイル変更は止めるか、強く制限したい場面に向きます。"; if (key === "medium") return "日常のローカル開発向け。テスト実行、小さな修正、ワークスペース内で完結するリファクタに適します。"; if (key === "high") return "依存更新、パッケージ導入、移行準備のような、信頼済み自動化向け。sandbox は残しつつ裁量を広げる設定です。"; return "隔離ランナーや使い捨て環境でのみ許容。別系統のガードレール、監査ログ、ロールバック前提で扱います。"; }
+function claudeEquivalent() { if (state.approval === "never" && state.sandbox === "danger-full-access") return "--dangerously-skip-permissions"; if (state.approval === "on-request" && state.sandbox === "workspace-write" && !state.network) return "claude (default + allowedTools)"; if (state.sandbox === "read-only") return "Plan mode"; if (state.approval === "never" && state.sandbox === "workspace-write" && state.network) return "allowedTools + Hooks"; return ""; }
+function syncPresetState() { const matched = presets.find((preset) => preset.approval === state.approval && preset.sandbox === state.sandbox && preset.network === state.network); state.preset = matched ? matched.name : ""; }
+function renderButtons(containerId, values, current, onClick) {
+  const container = document.getElementById(containerId); container.innerHTML = "";
+  const color = COLORS[riskKey(scoreRisk())];
+  values.forEach((value) => { const btn = document.createElement("button"); btn.className = "axis-btn"; btn.textContent = value; if (value === current) { btn.classList.add("active"); btn.style.background = color.fill; btn.style.borderColor = color.accent; btn.style.color = color.accent; } btn.addEventListener("click", () => onClick(value)); container.appendChild(btn); });
+}
+function renderPresets() {
+  const bar = document.getElementById("presetBar"); bar.innerHTML = "";
+  presets.forEach((preset) => { const btn = document.createElement("button"); btn.className = "preset-btn"; btn.textContent = preset.name; if (preset.name === state.preset) btn.classList.add("active"); btn.addEventListener("click", () => { state.approval = preset.approval; state.sandbox = preset.sandbox; state.network = preset.network; state.preset = preset.name; render(); }); bar.appendChild(btn); });
+}
+function renderMeter(score) {
+  const color = COLORS[riskKey(score)];
+  document.querySelectorAll(".meter-step").forEach((step) => { const stepValue = Number(step.dataset.step); step.style.background = stepValue <= score ? color.fill : "#ebe7dd"; step.style.borderColor = stepValue <= score ? color.accent : "transparent"; });
+  document.getElementById("riskLabel").textContent = color.label;
+  document.getElementById("riskLabel").style.color = color.accent;
+  document.getElementById("riskHelper").textContent = score === 1 ? "読み取り中心、または強く制限した実行。" : score === 2 ? "一般的なワークスペース自動化。" : score === 3 ? "裁量を広げた信頼済みタスク。" : "無制限実行。外部統制が必須。";
+}
+function render() {
+  syncPresetState();
+  renderPresets();
+  renderButtons("approvalGroup", approvals, state.approval, (value) => { state.approval = value; render(); });
+  renderButtons("sandboxGroup", sandboxes, state.sandbox, (value) => { state.sandbox = value; render(); });
+  const networkToggle = document.getElementById("networkToggle");
+  networkToggle.checked = state.network;
+  const score = scoreRisk();
+  const color = COLORS[riskKey(score)];
+  document.querySelector(".switch .slider").style.background = state.network ? color.accent : "#d7d2c8";
+  document.getElementById("networkState").textContent = state.network ? "ON" : "OFF";
+  document.getElementById("networkState").style.color = state.network ? color.accent : "#888780";
+  document.getElementById("commandBox").textContent = commandForState();
+  document.getElementById("usecaseBox").textContent = describeUseCase(score);
+  const claude = claudeEquivalent();
+  const wrap = document.getElementById("claudeWrap");
+  if (claude) { wrap.hidden = false; document.getElementById("claudeBox").textContent = claude; } else { wrap.hidden = true; }
+  renderMeter(score);
+}
+document.getElementById("networkToggle").addEventListener("change", (event) => { state.network = event.target.checked; render(); });
+render();
+</script>
+</body>
+</html>

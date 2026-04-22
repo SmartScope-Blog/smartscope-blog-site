@@ -1,0 +1,424 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/ai-development/llm-programming-guide/"><link rel="alternate" href="../../../ai-development/llm-programming-guide/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Practical Guide to Programming with LLMs - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Practical Guide to Programming with LLMs"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/ai-development/llm-programming-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Practical Guide to Programming with LLMs"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#practical-guide-to-programming-with-llms" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Practical Guide to Programming with LLMs </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../ai-development/llm-programming-guide/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#fundamental-principles-of-llm-programming" class="md-nav__link"><span class="md-ellipsis"> Fundamental Principles of LLM Programming </span></a><nav class="md-nav" aria-label="Fundamental Principles of LLM Programming"><ul class="md-nav__list"><li class="md-nav__item"><a href="#basic-concepts" class="md-nav__link"><span class="md-ellipsis"> Basic Concepts </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#development-workflow-design" class="md-nav__link"><span class="md-ellipsis"> Development Workflow Design </span></a><nav class="md-nav" aria-label="Development Workflow Design"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-project-initiation-workflow" class="md-nav__link"><span class="md-ellipsis"> 1. Project Initiation Workflow </span></a><nav class="md-nav" aria-label="1. Project Initiation Workflow"><ul class="md-nav__list"><li class="md-nav__item"><a href="#practical-example" class="md-nav__link"><span class="md-ellipsis"> Practical Example </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#2-implementation-phase-workflow" class="md-nav__link"><span class="md-ellipsis"> 2. Implementation Phase Workflow </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#effective-prompt-design-patterns" class="md-nav__link"><span class="md-ellipsis"> Effective Prompt Design Patterns </span></a><nav class="md-nav" aria-label="Effective Prompt Design Patterns"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-hierarchical-prompts" class="md-nav__link"><span class="md-ellipsis"> 1. Hierarchical Prompts </span></a></li><li class="md-nav__item"><a href="#2-context-injection-pattern" class="md-nav__link"><span class="md-ellipsis"> 2. Context Injection Pattern </span></a></li><li class="md-nav__item"><a href="#3-error-correction-pattern" class="md-nav__link"><span class="md-ellipsis"> 3. Error Correction Pattern </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#code-quality-improvement-techniques" class="md-nav__link"><span class="md-ellipsis"> Code Quality Improvement Techniques </span></a><nav class="md-nav" aria-label="Code Quality Improvement Techniques"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-review-driven-development" class="md-nav__link"><span class="md-ellipsis"> 1. Review-Driven Development </span></a></li><li class="md-nav__item"><a href="#2-test-driven-development-tdd-support" class="md-nav__link"><span class="md-ellipsis"> 2. Test-Driven Development (TDD) Support </span></a></li><li class="md-nav__item"><a href="#3-refactoring-support" class="md-nav__link"><span class="md-ellipsis"> 3. Refactoring Support </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#performance-optimization" class="md-nav__link"><span class="md-ellipsis"> Performance Optimization </span></a><nav class="md-nav" aria-label="Performance Optimization"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-profiling-support" class="md-nav__link"><span class="md-ellipsis"> 1. Profiling Support </span></a></li><li class="md-nav__item"><a href="#2-parallel-processing-implementation" class="md-nav__link"><span class="md-ellipsis"> 2. Parallel Processing Implementation </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#debugging-and-troubleshooting" class="md-nav__link"><span class="md-ellipsis"> Debugging and Troubleshooting </span></a><nav class="md-nav" aria-label="Debugging and Troubleshooting"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-systematic-debugging-approach" class="md-nav__link"><span class="md-ellipsis"> 1. Systematic Debugging Approach </span></a></li><li class="md-nav__item"><a href="#2-log-analysis-support" class="md-nav__link"><span class="md-ellipsis"> 2. Log Analysis Support </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#security-best-practices" class="md-nav__link"><span class="md-ellipsis"> Security Best Practices </span></a><nav class="md-nav" aria-label="Security Best Practices"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-security-review" class="md-nav__link"><span class="md-ellipsis"> 1. Security Review </span></a></li><li class="md-nav__item"><a href="#2-secure-api-design" class="md-nav__link"><span class="md-ellipsis"> 2. Secure API Design </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#llm-usage-in-team-development" class="md-nav__link"><span class="md-ellipsis"> LLM Usage in Team Development </span></a><nav class="md-nav" aria-label="LLM Usage in Team Development"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-standardized-code-reviews" class="md-nav__link"><span class="md-ellipsis"> 1. Standardized Code Reviews </span></a></li><li class="md-nav__item"><a href="#2-knowledge-sharing-promotion" class="md-nav__link"><span class="md-ellipsis"> 2. Knowledge Sharing Promotion </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#continuous-learning-and-improvement" class="md-nav__link"><span class="md-ellipsis"> Continuous Learning and Improvement </span></a><nav class="md-nav" aria-label="Continuous Learning and Improvement"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-understanding-technology-trends" class="md-nav__link"><span class="md-ellipsis"> 1. Understanding Technology Trends </span></a></li><li class="md-nav__item"><a href="#2-skill-development-plan" class="md-nav__link"><span class="md-ellipsis"> 2. Skill Development Plan </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#summary" class="md-nav__link"><span class="md-ellipsis"> Summary </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><h1 id="practical-guide-to-programming-with-llms">Practical Guide to Programming with LLMs<a class="headerlink" href="#practical-guide-to-programming-with-llms" title="Permanent link">&para;</a></h1><h2 id="fundamental-principles-of-llm-programming">Fundamental Principles of LLM Programming<a class="headerlink" href="#fundamental-principles-of-llm-programming" title="Permanent link">&para;</a></h2><p>Programming with LLMs (Large Language Models) is fundamentally transforming traditional development methods. As of 2025, LLMs have evolved from simple code completion tools into comprehensive development partners.</p><h3 id="basic-concepts">Basic Concepts<a class="headerlink" href="#basic-concepts" title="Permanent link">&para;</a></h3><ol><li><strong>Human-AI Collaboration</strong>: LLMs are tools for augmentation, not replacement</li><li><strong>Iterative Improvement</strong>: Don't aim for perfection in one go; improve incrementally</li><li><strong>Context-Driven</strong>: Providing rich information yields better results</li><li><strong>Validation Habit</strong>: Always verify and test LLM outputs with human review</li></ol><h2 id="development-workflow-design">Development Workflow Design<a class="headerlink" href="#development-workflow-design" title="Permanent link">&para;</a></h2><h3 id="1-project-initiation-workflow">1. Project Initiation Workflow<a class="headerlink" href="#1-project-initiation-workflow" title="Permanent link">&para;</a></h3><pre class="mermaid"><code>graph TD
+    A[Requirements Analysis] --&gt; B[LLM-Generated Design Proposal]
+    B --&gt; C[Human Design Review]
+    C --&gt; D[Detailed Specification]
+    D --&gt; E[Architecture Design]
+    E --&gt; F[Implementation Planning]</code></pre><h4 id="practical-example">Practical Example<a class="headerlink" href="#practical-example" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="c1"># 1. Consult LLM for requirements analysis</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Analyze the following requirements and propose a technical specification:</span>
+
+<span class="s2">Requirements:</span>
+<span class="s2">- Web-based task management system</span>
+<span class="s2">- User authentication</span>
+<span class="s2">- Task creation, editing, deletion</span>
+<span class="s2">- Team sharing functionality</span>
+<span class="s2">- Real-time updates</span>
+
+<span class="s2">Constraints:</span>
+<span class="s2">- Development period: 3 months</span>
+<span class="s2">- Team: 2 frontend, 2 backend developers</span>
+<span class="s2">- Budget: ≤50,000 yen/month for system operation</span>
+
+<span class="s2">Please propose:</span>
+<span class="s2">1. Technology stack</span>
+<span class="s2">2. Architecture overview</span>
+<span class="s2">3. Implementation priority for major features</span>
+<span class="s2">4. Security considerations</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-implementation-phase-workflow">2. Implementation Phase Workflow<a class="headerlink" href="#2-implementation-phase-workflow" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Incremental implementation approach</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DevelopmentPhase</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phases</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;PoC (Proof of Concept)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;MVP (Minimum Viable Product)&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Feature Expansion&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Performance Optimization&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Production Readiness&quot;</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">llm_assistant</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Leverage LLM in each phase&quot;&quot;&quot;</span>
+        <span class="n">requirements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_phase_requirements</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="n">implementation</span> <span class="o">=</span> <span class="n">llm_assistant</span><span class="o">.</span><span class="n">generate_code</span><span class="p">(</span><span class="n">requirements</span><span class="p">)</span>
+        <span class="n">tested_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_and_validate</span><span class="p">(</span><span class="n">implementation</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tested_code</span>
+</code></pre></div><h2 id="effective-prompt-design-patterns">Effective Prompt Design Patterns<a class="headerlink" href="#effective-prompt-design-patterns" title="Permanent link">&para;</a></h2><h3 id="1-hierarchical-prompts">1. Hierarchical Prompts<a class="headerlink" href="#1-hierarchical-prompts" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Bad example: too vague</span>
+<span class="s2">&quot;Create a login feature in Python&quot;</span>
+
+<span class="c1"># Good example: structured prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">【System Overview】</span>
+<span class="s2">- Web API using FastAPI</span>
+<span class="s2">- JWT authentication implementation</span>
+<span class="s2">- User information management with PostgreSQL</span>
+
+<span class="s2">【Requirements Specification】</span>
+<span class="s2">1. User registration endpoint (POST /register)</span>
+<span class="s2">2. Login endpoint (POST /login)</span>
+<span class="s2">3. User info retrieval (GET /me)</span>
+<span class="s2">4. Password hashing (using bcrypt)</span>
+
+<span class="s2">【Technical Constraints】</span>
+<span class="s2">- Python 3.11</span>
+<span class="s2">- FastAPI 0.104+</span>
+<span class="s2">- SQLAlchemy 2.0</span>
+<span class="s2">- Pydantic v2</span>
+
+<span class="s2">【Security Requirements】</span>
+<span class="s2">- Password minimum 8 characters, alphanumeric + symbols</span>
+<span class="s2">- JWT expiration 1 hour</span>
+<span class="s2">- Refresh token functionality</span>
+
+<span class="s2">【Expected Output】</span>
+<span class="s2">1. Code implementation</span>
+<span class="s2">2. Test cases</span>
+<span class="s2">3. API documentation (OpenAPI format)</span>
+<span class="s2">4. Security checklist</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-context-injection-pattern">2. Context Injection Pattern<a class="headerlink" href="#2-context-injection-pattern" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Prompt with project context</span>
+<span class="n">context_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">【Project Context】</span>
+<span class="s2">Project name: </span><span class="si">{</span><span class="n">project_name</span><span class="si">}</span>
+<span class="s2">Architecture: </span><span class="si">{</span><span class="n">architecture_type</span><span class="si">}</span>
+<span class="s2">Tech stack: </span><span class="si">{</span><span class="n">tech_stack</span><span class="si">}</span>
+<span class="s2">Coding standards: </span><span class="si">{</span><span class="n">coding_standards</span><span class="si">}</span>
+<span class="s2">Testing strategy: </span><span class="si">{</span><span class="n">testing_strategy</span><span class="si">}</span>
+
+<span class="s2">【Existing Code Structure】</span>
+<span class="si">{</span><span class="n">code_structure</span><span class="si">}</span>
+
+<span class="s2">【Current Task】</span>
+<span class="si">{</span><span class="n">current_task</span><span class="si">}</span>
+
+<span class="s2">Please implement considering the above context.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="3-error-correction-pattern">3. Error Correction Pattern<a class="headerlink" href="#3-error-correction-pattern" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">debug_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">【Error Situation】</span>
+<span class="s2">Error message: </span><span class="si">{error_message}</span>
+<span class="s2">Location: </span><span class="si">{error_location}</span>
+<span class="s2">Stack trace: </span><span class="si">{stack_trace}</span>
+
+<span class="s2">【Environment Information】</span>
+<span class="s2">OS: </span><span class="si">{os_info}</span>
+<span class="s2">Python version: </span><span class="si">{python_version}</span>
+<span class="s2">Dependencies: </span><span class="si">{dependencies}</span>
+
+<span class="s2">【Related Code】</span>
+<span class="si">{relevant_code}</span>
+
+<span class="s2">【Attempted Solutions】</span>
+<span class="si">{attempted_solutions}</span>
+
+<span class="s2">【Desired Solution】</span>
+<span class="s2">1. Root cause of the error</span>
+<span class="s2">2. Fix method (including code)</span>
+<span class="s2">3. Prevention measures</span>
+<span class="s2">4. Related potential issues</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="code-quality-improvement-techniques">Code Quality Improvement Techniques<a class="headerlink" href="#code-quality-improvement-techniques" title="Permanent link">&para;</a></h2><h3 id="1-review-driven-development">1. Review-Driven Development<a class="headerlink" href="#1-review-driven-development" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Example of code review using LLM</span>
+<span class="n">review_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please review the following code:</span>
+
+<span class="s2">【Review Perspectives】</span>
+<span class="s2">1. Readability &amp; maintainability</span>
+<span class="s2">2. Performance</span>
+<span class="s2">3. Security</span>
+<span class="s2">4. Error handling</span>
+<span class="s2">5. Testability</span>
+<span class="s2">6. Design principle adherence</span>
+
+<span class="s2">【Code】</span>
+<span class="si">{code_to_review}</span>
+
+<span class="s2">【Project-Specific Constraints】</span>
+<span class="s2">- Processing time must be within 1 second</span>
+<span class="s2">- Memory usage under 100MB</span>
+<span class="s2">- Support up to 1000 concurrent connections</span>
+
+<span class="s2">【Output Format】</span>
+<span class="s2">- Issue identification with severity (High/Medium/Low)</span>
+<span class="s2">- Specific improvement suggestions</span>
+<span class="s2">- Refactored code</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-test-driven-development-tdd-support">2. Test-Driven Development (TDD) Support<a class="headerlink" href="#2-test-driven-development-tdd-support" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Example prompt for test-first development</span>
+<span class="n">tdd_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please create test cases first based on the following specification:</span>
+
+<span class="s2">【Function Specification】</span>
+<span class="si">{function_specification}</span>
+
+<span class="s2">【Testing Strategy】</span>
+<span class="s2">- Unit tests (using pytest)</span>
+<span class="s2">- Boundary value testing</span>
+<span class="s2">- Exception testing</span>
+<span class="s2">- Mocks and stubs</span>
+
+<span class="s2">【Expected Test Cases】</span>
+<span class="s2">1. Happy path tests</span>
+<span class="s2">2. Exception tests</span>
+<span class="s2">3. Boundary value tests</span>
+<span class="s2">4. Performance tests</span>
+
+<span class="s2">After creating tests, please also provide implementation code.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="3-refactoring-support">3. Refactoring Support<a class="headerlink" href="#3-refactoring-support" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">refactoring_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please refactor the following legacy code into modern Python:</span>
+
+<span class="s2">【Target Code】</span>
+<span class="si">{legacy_code}</span>
+
+<span class="s2">【Refactoring Goals】</span>
+<span class="s2">1. Add type hints</span>
+<span class="s2">2. Single Responsibility Principle for functions</span>
+<span class="s2">3. Improve error handling</span>
+<span class="s2">4. Add docstrings</span>
+<span class="s2">5. Testable structure</span>
+
+<span class="s2">【Constraints】</span>
+<span class="s2">- Do not change existing API</span>
+<span class="s2">- Maintain or improve performance</span>
+<span class="s2">- Leverage Python 3.11 features</span>
+
+<span class="s2">【Output】</span>
+<span class="s2">1. Refactored code</span>
+<span class="s2">2. Explanation of changes</span>
+<span class="s2">3. Migration guide</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2><h3 id="1-profiling-support">1. Profiling Support<a class="headerlink" href="#1-profiling-support" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Performance analysis prompt</span>
+<span class="n">performance_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please analyze and improve the performance of the following code:</span>
+
+<span class="s2">【Current Problem】</span>
+<span class="s2">- Processing time: </span><span class="si">{current_time}</span><span class="s2">s (target: </span><span class="si">{target_time}</span><span class="s2">s)</span>
+<span class="s2">- Memory usage: </span><span class="si">{current_memory}</span><span class="s2">MB (target: </span><span class="si">{target_memory}</span><span class="s2">MB)</span>
+<span class="s2">- Data size: </span><span class="si">{data_size}</span><span class="s2"> records</span>
+
+<span class="s2">【Target Code】</span>
+<span class="si">{performance_critical_code}</span>
+
+<span class="s2">【Analysis Items】</span>
+<span class="s2">1. Bottleneck identification</span>
+<span class="s2">2. Algorithm complexity analysis</span>
+<span class="s2">3. Memory efficiency evaluation</span>
+<span class="s2">4. I/O processing optimization</span>
+
+<span class="s2">【Improvement Proposal】</span>
+<span class="s2">1. Optimized code</span>
+<span class="s2">2. Benchmark comparison</span>
+<span class="s2">3. Alternative algorithm proposals</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-parallel-processing-implementation">2. Parallel Processing Implementation<a class="headerlink" href="#2-parallel-processing-implementation" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Guidance for parallel processing implementation</span>
+<span class="n">concurrency_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please parallelize the following process for speedup:</span>
+
+<span class="s2">【Processing Content】</span>
+<span class="si">{sequential_processing_code}</span>
+
+<span class="s2">【Requirements】</span>
+<span class="s2">- Data volume: </span><span class="si">{data_volume}</span>
+<span class="s2">- Available CPUs: </span><span class="si">{cpu_cores}</span><span class="s2"> cores</span>
+<span class="s2">- Memory limit: </span><span class="si">{memory_limit}</span><span class="s2">GB</span>
+
+<span class="s2">【Parallelization Strategy】</span>
+<span class="s2">1. Multiprocessing</span>
+<span class="s2">2. Multithreading</span>
+<span class="s2">3. Asynchronous processing</span>
+<span class="s2">4. Batch processing</span>
+
+<span class="s2">【Considerations】</span>
+<span class="s2">- Data dependencies</span>
+<span class="s2">- Shared resource access</span>
+<span class="s2">- Error handling</span>
+<span class="s2">- Progress monitoring</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="debugging-and-troubleshooting">Debugging and Troubleshooting<a class="headerlink" href="#debugging-and-troubleshooting" title="Permanent link">&para;</a></h2><h3 id="1-systematic-debugging-approach">1. Systematic Debugging Approach<a class="headerlink" href="#1-systematic-debugging-approach" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LLMDebuggingAssistant</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_info</span><span class="p">):</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        【Error Analysis Request】</span>
+
+<span class="s2">        1. Error classification</span>
+<span class="s2">        2. Most likely causes</span>
+<span class="s2">        3. Investigation procedure</span>
+<span class="s2">        4. Proposed fixes</span>
+
+<span class="s2">        【Error Information】</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">error_info</span><span class="si">}</span>
+
+<span class="s2">        【Environment Information】</span>
+<span class="s2">        </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_environment_info</span><span class="p">()</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">suggest_debugging_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_description</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        1. Add logging output</span>
+<span class="s2">        2. Create unit tests</span>
+<span class="s2">        3. Visualize data flow</span>
+<span class="s2">        4. Measure performance</span>
+<span class="s2">        5. Check external dependencies</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-log-analysis-support">2. Log Analysis Support<a class="headerlink" href="#2-log-analysis-support" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">log_analysis_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please analyze the following logs to identify issues:</span>
+
+<span class="s2">【Log Data】</span>
+<span class="si">{log_data}</span>
+
+<span class="s2">【System Information】</span>
+<span class="s2">- Application: </span><span class="si">{app_name}</span>
+<span class="s2">- Environment: </span><span class="si">{environment}</span>
+<span class="s2">- Timezone: </span><span class="si">{timezone}</span>
+
+<span class="s2">【Analysis Items】</span>
+<span class="s2">1. Identify error patterns</span>
+<span class="s2">2. Problem occurrence trends over time</span>
+<span class="s2">3. Correlation of related events</span>
+<span class="s2">4. Anomalies in performance metrics</span>
+
+<span class="s2">【Output】</span>
+<span class="s2">1. Problem summary</span>
+<span class="s2">2. Root cause estimation</span>
+<span class="s2">3. Countermeasure proposals</span>
+<span class="s2">4. Monitoring improvement suggestions</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2><h3 id="1-security-review">1. Security Review<a class="headerlink" href="#1-security-review" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">security_review_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please evaluate the security of the following code:</span>
+
+<span class="s2">【Target Code】</span>
+<span class="si">{code_for_security_review}</span>
+
+<span class="s2">【Checklist】</span>
+<span class="s2">1. Input validation</span>
+<span class="s2">2. SQL injection prevention</span>
+<span class="s2">3. XSS prevention</span>
+<span class="s2">4. Authentication &amp; authorization</span>
+<span class="s2">5. Data encryption</span>
+<span class="s2">6. Log output security</span>
+
+<span class="s2">【Compliance Requirements】</span>
+<span class="s2">- GDPR compliance</span>
+<span class="s2">- SOC2 Type II</span>
+<span class="s2">- PCI DSS (for payment-related)</span>
+
+<span class="s2">【Output】</span>
+<span class="s2">1. Vulnerability identification</span>
+<span class="s2">2. Risk assessment (Critical/High/Medium/Low)</span>
+<span class="s2">3. Fix methods</span>
+<span class="s2">4. Security test cases</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-secure-api-design">2. Secure API Design<a class="headerlink" href="#2-secure-api-design" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Secure API design support</span>
+<span class="n">api_security_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please enhance the security of the following API specification:</span>
+
+<span class="s2">【Current API Specification】</span>
+<span class="si">{current_api_spec}</span>
+
+<span class="s2">【Security Requirements】</span>
+<span class="s2">1. Authentication mechanism (JWT/OAuth2)</span>
+<span class="s2">2. Rate limiting</span>
+<span class="s2">3. Data validation</span>
+<span class="s2">4. Audit logging</span>
+<span class="s2">5. HTTPS enforcement</span>
+
+<span class="s2">【Output】</span>
+<span class="s2">1. Security-enhanced API specification</span>
+<span class="s2">2. Security implementation code</span>
+<span class="s2">3. Security testing procedure</span>
+<span class="s2">4. Operational security checklist</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="llm-usage-in-team-development">LLM Usage in Team Development<a class="headerlink" href="#llm-usage-in-team-development" title="Permanent link">&para;</a></h2><h3 id="1-standardized-code-reviews">1. Standardized Code Reviews<a class="headerlink" href="#1-standardized-code-reviews" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Team review template</span>
+<span class="n">team_review_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">【Review Items】(Team-wide)</span>
+<span class="s2">□ Coding standards compliance</span>
+<span class="s2">□ Test coverage ≥80%</span>
+<span class="s2">□ Documentation updated</span>
+<span class="s2">□ Security check</span>
+<span class="s2">□ Performance impact assessment</span>
+
+<span class="s2">【Project-Specific Items】</span>
+<span class="s2">□ </span><span class="si">{project_specific_checks}</span>
+
+<span class="s2">【LLM Review Results】</span>
+<span class="si">{llm_review_results}</span>
+
+<span class="s2">【Human Reviewer Decision】</span>
+<span class="s2">□ Approve</span>
+<span class="s2">□ Request changes</span>
+<span class="s2">□ Discussion needed</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-knowledge-sharing-promotion">2. Knowledge Sharing Promotion<a class="headerlink" href="#2-knowledge-sharing-promotion" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">knowledge_sharing_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please create technical sharing materials for the team about the following implementation:</span>
+
+<span class="s2">【Implementation Details】</span>
+<span class="si">{implementation_details}</span>
+
+<span class="s2">【Target Audience】</span>
+<span class="s2">- Experience level: </span><span class="si">{team_experience_level}</span>
+<span class="s2">- Technical background: </span><span class="si">{technical_background}</span>
+
+<span class="s2">【Document Structure】</span>
+<span class="s2">1. Overview &amp; background</span>
+<span class="s2">2. Technology selection rationale</span>
+<span class="s2">3. Implementation highlights</span>
+<span class="s2">4. Caveats &amp; pitfalls</span>
+<span class="s2">5. References &amp; links</span>
+
+<span class="s2">【Output Format】</span>
+<span class="s2">- Markdown format</span>
+<span class="s2">- Include code examples</span>
+<span class="s2">- Include diagrams (PlantUML, etc.)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="continuous-learning-and-improvement">Continuous Learning and Improvement<a class="headerlink" href="#continuous-learning-and-improvement" title="Permanent link">&para;</a></h2><h3 id="1-understanding-technology-trends">1. Understanding Technology Trends<a class="headerlink" href="#1-understanding-technology-trends" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">trend_analysis_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please research the latest trends in the following technology domain</span>
+<span class="s2">and evaluate applicability to the project:</span>
+
+<span class="s2">【Technology Domain】</span>
+<span class="si">{technology_domain}</span>
+
+<span class="s2">【Current Project State】</span>
+<span class="si">{project_current_state}</span>
+
+<span class="s2">【Evaluation Criteria】</span>
+<span class="s2">1. Technical benefits</span>
+<span class="s2">2. Adoption cost &amp; risks</span>
+<span class="s2">3. Learning cost</span>
+<span class="s2">4. Competitive advantage</span>
+<span class="s2">5. Long-term maintainability</span>
+
+<span class="s2">【Output】</span>
+<span class="s2">1. Trend analysis report</span>
+<span class="s2">2. Applicability assessment</span>
+<span class="s2">3. Adoption plan proposal</span>
+<span class="s2">4. Risk mitigation measures</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="2-skill-development-plan">2. Skill Development Plan<a class="headerlink" href="#2-skill-development-plan" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="n">skill_development_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Please analyze the current skill set and propose a learning plan:</span>
+
+<span class="s2">【Current Skills】</span>
+<span class="si">{current_skills}</span>
+
+<span class="s2">【Project Required Skills】</span>
+<span class="si">{required_skills}</span>
+
+<span class="s2">【Career Goals】</span>
+<span class="si">{career_goals}</span>
+
+<span class="s2">【Constraints】</span>
+<span class="s2">- Study time: </span><span class="si">{study_hours}</span><span class="s2"> hours/week</span>
+<span class="s2">- Duration: </span><span class="si">{timeframe}</span>
+<span class="s2">- Budget: </span><span class="si">{budget}</span>
+
+<span class="s2">【Learning Plan】</span>
+<span class="s2">1. Prioritized skill list</span>
+<span class="s2">2. Learning resources (books, courses, projects)</span>
+<span class="s2">3. Milestone setting</span>
+<span class="s2">4. Progress measurement method</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2><p>Programming with LLMs has the potential to significantly improve developer productivity and creativity. However, effective utilization requires:</p><ol><li><strong>Clear Communication</strong>: Instructions to LLMs should be specific and structured</li><li><strong>Incremental Approach</strong>: Divide complex problems into smaller parts</li><li><strong>Validation Habit</strong>: Always verify and test LLM outputs with human review</li><li><strong>Continuous Learning</strong>: Actively try new methods and features</li><li><strong>Team-wide Adoption</strong>: Share best practices across the entire team, not just individuals</li></ol><p>LLMs are not replacing developers; they are tools that enable developers to focus on more advanced and creative work. With proper utilization, it becomes possible to develop better software more efficiently.</p><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="February 17, 2026 23:29:52 JST">February 17, 2026 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

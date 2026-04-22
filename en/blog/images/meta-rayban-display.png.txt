@@ -1,0 +1,5 @@
+# Meta Ray-Ban Display Image Placeholder
+This is a placeholder for the Meta Ray-Ban Display image.
+Image should show: Meta Ray-Ban Display smart glasses with Neural Band controller
+Dimensions: 800x400px recommended
+Alt text: Meta Ray-Ban Display smart glasses demonstrating AI integration

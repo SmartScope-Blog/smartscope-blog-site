@@ -1,0 +1,765 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/generative-ai/claude/claude-sonnet-4-github-copilot-hands-on-implementation-2025-migrated/"><link rel="alternate" href="../../../../generative-ai/claude/claude-sonnet-4-github-copilot-hands-on-implementation-2025-migrated/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude sonnet 4 github copilot hands on implementation 2025 migrated - SmartScope</title><link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude sonnet 4 github copilot hands on implementation 2025 migrated"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/generative-ai/claude/claude-sonnet-4-github-copilot-hands-on-implementation-2025-migrated/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude sonnet 4 github copilot hands on implementation 2025 migrated"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-sonnet-4--github-copilot-実装ガイド実践的ハンズオン開発手法2025年7月版" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude sonnet 4 github copilot hands on implementation 2025 migrated </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../../generative-ai/claude/claude-sonnet-4-github-copilot-hands-on-implementation-2025-migrated/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#はじめに" class="md-nav__link"><span class="md-ellipsis"> はじめに </span></a></li><li class="md-nav__item"><a href="#実装前の環境準備" class="md-nav__link"><span class="md-ellipsis"> 実装前の環境準備 </span></a></li><li class="md-nav__item"><a href="#1-github-copilot-エージェント基本設定" class="md-nav__link"><span class="md-ellipsis"> 1. GitHub Copilot エージェント基本設定 </span></a><nav class="md-nav" aria-label="1. GitHub Copilot エージェント基本設定"><ul class="md-nav__list"><li class="md-nav__item"><a href="#11-copilot-workspace設定" class="md-nav__link"><span class="md-ellipsis"> 1.1 Copilot Workspace設定 </span></a></li><li class="md-nav__item"><a href="#12-プロジェクト固有設定" class="md-nav__link"><span class="md-ellipsis"> 1.2 プロジェクト固有設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#2-実践的な実装例" class="md-nav__link"><span class="md-ellipsis"> 2. 実践的な実装例 </span></a><nav class="md-nav" aria-label="2. 実践的な実装例"><ul class="md-nav__list"><li class="md-nav__item"><a href="#21-自律的feature実装エージェント" class="md-nav__link"><span class="md-ellipsis"> 2.1 自律的Feature実装エージェント </span></a></li><li class="md-nav__item"><a href="#22-背景実行タスク管理システム" class="md-nav__link"><span class="md-ellipsis"> 2.2 背景実行タスク管理システム </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#3-github-actions自動化設定" class="md-nav__link"><span class="md-ellipsis"> 3. GitHub Actions自動化設定 </span></a><nav class="md-nav" aria-label="3. GitHub Actions自動化設定"><ul class="md-nav__list"><li class="md-nav__item"><a href="#31-copilotエージェント連携workflow" class="md-nav__link"><span class="md-ellipsis"> 3.1 Copilotエージェント連携Workflow </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#4-mcpmodel-context-protocol統合" class="md-nav__link"><span class="md-ellipsis"> 4. MCP（Model Context Protocol）統合 </span></a><nav class="md-nav" aria-label="4. MCP（Model Context Protocol）統合"><ul class="md-nav__list"><li class="md-nav__item"><a href="#41-mcp-server設定" class="md-nav__link"><span class="md-ellipsis"> 4.1 MCP Server設定 </span></a></li><li class="md-nav__item"><a href="#42-mcp-クライアント連携" class="md-nav__link"><span class="md-ellipsis"> 4.2 MCP クライアント連携 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#5-エラーハンドリングとデバッグ" class="md-nav__link"><span class="md-ellipsis"> 5. エラーハンドリングとデバッグ </span></a><nav class="md-nav" aria-label="5. エラーハンドリングとデバッグ"><ul class="md-nav__list"><li class="md-nav__item"><a href="#51-自動エラー修正システム" class="md-nav__link"><span class="md-ellipsis"> 5.1 自動エラー修正システム </span></a></li><li class="md-nav__item"><a href="#52-統合デバッグ支援" class="md-nav__link"><span class="md-ellipsis"> 5.2 統合デバッグ支援 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#6-パフォーマンス最適化" class="md-nav__link"><span class="md-ellipsis"> 6. パフォーマンス最適化 </span></a><nav class="md-nav" aria-label="6. パフォーマンス最適化"><ul class="md-nav__list"><li class="md-nav__item"><a href="#61-エージェント実行監視" class="md-nav__link"><span class="md-ellipsis"> 6.1 エージェント実行監視 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#まとめ" class="md-nav__link"><span class="md-ellipsis"> まとめ </span></a></li><li class="md-nav__item"><a href="#関連記事" class="md-nav__link"><span class="md-ellipsis"> 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:examples" class="md-tag">examples</a><a href="../../../tags/#tag:hands-on" class="md-tag">hands-on</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code Complete Guide</a></p><blockquote><p><em>Auto-generated English stub on 2025-09-20. Replace with a proper translation.</em></p></blockquote><hr><p>title: "Claude Sonnet 4 × GitHub Copilot 実装ガイド：実践的ハンズオン開発手法【2025年7月版】" description: "Claude Sonnet 4とGitHub Copilotの統合による実際の開発プロセスを詳細解説。具体的なコード例、GitHub Actions設定、MCP連携まで実践的実装方法を網羅。" tags: - Claude Sonnet 4 - GitHub Copilot - Hands-on Implementation - AI Agent - Practical Guide - Code Examples - MCP Integration categories: - AI開発・自動化 - 開発効率化 author: "Claude Code"</p><hr><h1 id="claude-sonnet-4--github-copilot-実装ガイド実践的ハンズオン開発手法2025年7月版">Claude Sonnet 4 × GitHub Copilot 実装ガイド：実践的ハンズオン開発手法【2025年7月版】<a class="headerlink" href="#claude-sonnet-4--github-copilot-実装ガイド実践的ハンズオン開発手法2025年7月版" title="Permanent link">&para;</a></h1><h2 id="はじめに">はじめに<a class="headerlink" href="#はじめに" title="Permanent link">&para;</a></h2><p>Claude Sonnet 4とGitHub Copilotの統合により、AIエージェント開発が大きく変化しました。本記事では、<a href="/generative-ai/claude/ai-agent-development-revolution-july-2025/">AIエージェント開発革命記事</a>で紹介した最新機能を実際に実装するための詳細な手順とコード例を提供します。</p><h2 id="実装前の環境準備">実装前の環境準備<a class="headerlink" href="#実装前の環境準備" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m21.1 12.5 1.4 1.41-6.53 6.59L12.5 17l1.4-1.41 2.07 2.08zM10 17l3 3H3v-2c0-2.21 3.58-4 8-4l1.89.11zm1-13a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4"/></svg></span> <strong>前提条件</strong></p><p>GitHub Copilot Pro、Claude Code、Node.js 18+、Python 3.9+</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg></span> <strong>必要なツール</strong></p><p>GitHub CLI、MCP SDK、Docker（オプション）</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m4.3 13.2L11 12.3V7h1.5v4.4l4.5 2.5z"/></svg></span> <strong>所要時間</strong></p><p>基本設定：30分、高度な実装：2-3時間</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 19h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-1.66C8.07 16.13 6 13 6 9.67v-4L12 3l6 2.67v4c0 3.33-2.07 6.46-5 7.67zM12 5 8 6.69V10h4zm0 5v6c1.91-.47 4-2.94 4-5v-1z"/></svg></span> <strong>権限設定</strong></p><p>GitHub Personal Access Token、MCP Server権限</p></li></ul></div><h2 id="1-github-copilot-エージェント基本設定">1. GitHub Copilot エージェント基本設定<a class="headerlink" href="#1-github-copilot-エージェント基本設定" title="Permanent link">&para;</a></h2><h3 id="11-copilot-workspace設定">1.1 Copilot Workspace設定<a class="headerlink" href="#11-copilot-workspace設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/copilot/config.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
+<span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4-agent&quot;</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4&quot;</span>
+<span class="w">  </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">autonomous_coding</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">background_execution</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vision_analysis</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp_integration</span>
+
+<span class="nt">context</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">include</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;src/**&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;docs/**&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;tests/**&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;package.json&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;README.md&quot;</span>
+<span class="w">  </span><span class="nt">exclude</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;node_modules/**&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;.git/**&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.log&quot;</span>
+
+<span class="nt">memory</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">conversation_history</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">code_context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+
+<span class="nt">tools</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_editor</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terminal</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git_operations</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_runner</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linter</span>
+</code></pre></div><h3 id="12-プロジェクト固有設定">1.2 プロジェクト固有設定<a class="headerlink" href="#12-プロジェクト固有設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// .copilot/project-config.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// プロジェクト特有のルール</span>
+<span class="w">  </span><span class="nx">codeStyle</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;typescript&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">framework</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">testFramework</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;jest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">linting</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;eslint&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;prettier&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 自動タスク設定</span>
+<span class="w">  </span><span class="nx">automatedTasks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">onPush</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;run-tests&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;type-check&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;lint-fix&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;security-scan&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nx">onPR</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;code-review&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;performance-check&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;compatibility-test&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// エージェント動作設定</span>
+<span class="w">  </span><span class="nx">agentBehavior</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">autonomyLevel</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">confirmationRequired</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;deployment&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;database-changes&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">autoFix</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;lint-errors&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;type-errors&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;test-failures&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div><h2 id="2-実践的な実装例">2. 実践的な実装例<a class="headerlink" href="#2-実践的な実装例" title="Permanent link">&para;</a></h2><h3 id="21-自律的feature実装エージェント">2.1 自律的Feature実装エージェント<a class="headerlink" href="#21-自律的feature実装エージェント" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// src/agents/feature-implementation-agent.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CopilotAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">TaskContext</span><span class="p">,</span><span class="w"> </span><span class="nx">ImplementationResult</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@github/copilot-sdk&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">FeatureImplementationAgent</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">CopilotAgent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">implementFeature</span><span class="p">(</span><span class="nx">taskDescription</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">TaskContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ImplementationResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">implementationPlan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">createImplementationPlan</span><span class="p">(</span><span class="nx">taskDescription</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">step</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">implementationPlan</span><span class="p">.</span><span class="nx">steps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">stepResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">executeStep</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">stepResult</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="c1">// エラー自動修正</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">fixResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">autoFix</span><span class="p">(</span><span class="nx">stepResult</span><span class="p">.</span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">fixResult</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 人間のレビューをリクエスト</span>
+<span class="w">            </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">requestHumanReview</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">stepResult</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// テスト実行と検証</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">validateStep</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">handleStepError</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateImplementationSummary</span><span class="p">(</span><span class="nx">implementationPlan</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">createImplementationPlan</span><span class="p">(</span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">TaskContext</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">steps</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;analysis&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;analyze_existing_codebase&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getRelevantFiles</span><span class="p">(</span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">)</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;implementation&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;create_feature_files&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">templates</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">selectTemplates</span><span class="p">(</span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">)</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;testing&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;generate_tests&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">coverage</span><span class="o">:</span><span class="w"> </span><span class="kt">90</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;integration&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;update_dependencies&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">verify</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nx">estimatedTime</span><span class="o">:</span><span class="w"> </span><span class="kt">this.calculateEstimation</span><span class="p">(</span><span class="nx">description</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">riskLevel</span><span class="o">:</span><span class="w"> </span><span class="kt">this.assessRisk</span><span class="p">(</span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">executeStep</span><span class="p">(</span><span class="nx">step</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">TaskContext</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">step</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;analysis&#39;</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">analyzeCodebase</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;implementation&#39;</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">implementCode</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;testing&#39;</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateAndRunTests</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;integration&#39;</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">integrateChanges</span><span class="p">(</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">default</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Unknown step type: </span><span class="si">${</span><span class="nx">step</span><span class="p">.</span><span class="kr">type</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="22-背景実行タスク管理システム">2.2 背景実行タスク管理システム<a class="headerlink" href="#22-背景実行タスク管理システム" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># background_task_manager.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">github</span><span class="w"> </span><span class="kn">import</span> <span class="n">Github</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anthropic</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BackgroundTask</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">assignee</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">estimated_completion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">artifacts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CopilotBackgroundManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">github_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">anthropic_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">github</span> <span class="o">=</span> <span class="n">Github</span><span class="p">(</span><span class="n">github_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anthropic</span> <span class="o">=</span> <span class="n">Anthropic</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">anthropic_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_tasks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BackgroundTask</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">assign_task_to_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GitHub IssueをCopilotエージェントに割り当て&quot;&quot;&quot;</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="n">repo_name</span><span class="p">)</span>
+        <span class="n">issue</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">get_issue</span><span class="p">(</span><span class="n">issue_number</span><span class="p">)</span>
+
+        <span class="c1"># タスク作成</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">BackgroundTask</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;task_</span><span class="si">{</span><span class="n">issue_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">issue</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">issue</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+            <span class="n">assignee</span><span class="o">=</span><span class="s2">&quot;github-copilot[bot]&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># エージェント実行</span>
+        <span class="n">agent_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_agent_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+        <span class="c1"># 進捗更新</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_task_progress</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">agent_result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">task</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_agent_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">BackgroundTask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Claude Sonnet 4による実際のタスク実行&quot;&quot;&quot;</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Task: </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span>
+<span class="s2">        Description: </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">description</span><span class="si">}</span>
+
+<span class="s2">        Please implement this feature following these steps:</span>
+<span class="s2">        1. Analyze the existing codebase</span>
+<span class="s2">        2. Create implementation plan</span>
+<span class="s2">        3. Write the code with proper error handling</span>
+<span class="s2">        4. Generate comprehensive tests</span>
+<span class="s2">        5. Update documentation</span>
+<span class="s2">        6. Create pull request with detailed description</span>
+
+<span class="s2">        Provide detailed implementation with actual code.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Claude Sonnet 4で実装計画生成</span>
+        <span class="n">planning_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">anthropic</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-3-5-sonnet-20241022&quot;</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}]</span>
+        <span class="p">)</span>
+
+        <span class="n">implementation_plan</span> <span class="o">=</span> <span class="n">planning_response</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="c1"># 段階的実行</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_implementation_steps</span><span class="p">(</span><span class="n">implementation_plan</span><span class="p">):</span>
+            <span class="n">step_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_implementation_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_result</span><span class="p">)</span>
+
+            <span class="c1"># 進捗更新</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">progress</span> <span class="o">+=</span> <span class="mi">100</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_implementation_steps</span><span class="p">(</span><span class="n">implementation_plan</span><span class="p">))</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notify_progress_update</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;completed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;implementation_plan&#39;</span><span class="p">:</span> <span class="n">implementation_plan</span><span class="p">,</span>
+            <span class="s1">&#39;results&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+            <span class="s1">&#39;pr_url&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pr_url&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_implementation_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">BackgroundTask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;個別ステップの実行&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;code_generation&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_code</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;test_generation&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_tests</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;documentation&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_documentation</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;pr_creation&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_pull_request</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">BackgroundTask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;コード生成の実装&quot;&quot;&quot;</span>
+        <span class="n">code_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Generate production-ready code for: </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span>
+
+<span class="s2">        Requirements:</span>
+<span class="s2">        - Follow TypeScript/React best practices</span>
+<span class="s2">        - Include proper error handling</span>
+<span class="s2">        - Add JSDoc comments</span>
+<span class="s2">        - Ensure type safety</span>
+<span class="s2">        - Follow existing code patterns</span>
+
+<span class="s2">        File: </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;target_file&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">code_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">anthropic</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-3-5-sonnet-20241022&quot;</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">code_prompt</span><span class="p">}]</span>
+        <span class="p">)</span>
+
+        <span class="n">generated_code</span> <span class="o">=</span> <span class="n">code_response</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="c1"># ファイルに書き込み（実際の実装では適切なファイル操作を行う）</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;code_generation&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;target_file&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">generated_code</span><span class="p">,</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">}</span>
+</code></pre></div><h2 id="3-github-actions自動化設定">3. GitHub Actions自動化設定<a class="headerlink" href="#3-github-actions自動化設定" title="Permanent link">&para;</a></h2><h3 id="31-copilotエージェント連携workflow">3.1 Copilotエージェント連携Workflow<a class="headerlink" href="#31-copilotエージェント連携workflow" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/copilot-agent-automation.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Copilot Agent Automation</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issues</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">assigned</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">labeled</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">issue_comment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">created</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">trigger-copilot-agent</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.assignee.login == &#39;github-copilot[bot]&#39; || contains(github.event.issue.labels.*.name, &#39;copilot-task&#39;) }}</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout Repository</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Node.js</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;18&#39;</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure Copilot Agent</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ANTHROPIC_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.ANTHROPIC_API_KEY }}</span>
+<span class="w">          </span><span class="nt">GITHUB_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># Copilot設定</span>
+<span class="w">          </span><span class="no">gh copilot config set editor &quot;claude-code&quot;</span>
+<span class="w">          </span><span class="no">gh copilot config set model &quot;claude-sonnet-4&quot;</span>
+
+<span class="w">          </span><span class="no"># MCP Server設定</span>
+<span class="w">          </span><span class="no">cat &gt; ~/.mcp-config.json &lt;&lt; EOF</span>
+<span class="w">          </span><span class="no">{</span>
+<span class="w">            </span><span class="no">&quot;servers&quot;: {</span>
+<span class="w">              </span><span class="no">&quot;github&quot;: {</span>
+<span class="w">                </span><span class="no">&quot;command&quot;: &quot;mcp-server-github&quot;,</span>
+<span class="w">                </span><span class="no">&quot;args&quot;: [&quot;--token&quot;, &quot;$GITHUB_TOKEN&quot;]</span>
+<span class="w">              </span><span class="no">},</span>
+<span class="w">              </span><span class="no">&quot;filesystem&quot;: {</span>
+<span class="w">                </span><span class="no">&quot;command&quot;: &quot;mcp-server-filesystem&quot;,</span>
+<span class="w">                </span><span class="no">&quot;args&quot;: [&quot;--root&quot;, &quot;.&quot;]</span>
+<span class="w">              </span><span class="no">}</span>
+<span class="w">            </span><span class="no">}</span>
+<span class="w">          </span><span class="no">}</span>
+<span class="w">          </span><span class="no">EOF</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Execute Background Task</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ISSUE_NUMBER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.issue.number }}</span>
+<span class="w">          </span><span class="nt">ISSUE_TITLE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.issue.title }}</span>
+<span class="w">          </span><span class="nt">ISSUE_BODY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.issue.body }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># Python背景タスク実行</span>
+<span class="w">          </span><span class="no">python3 scripts/background_task_executor.py \</span>
+<span class="w">            </span><span class="no">--issue-number &quot;$ISSUE_NUMBER&quot; \</span>
+<span class="w">            </span><span class="no">--title &quot;$ISSUE_TITLE&quot; \</span>
+<span class="w">            </span><span class="no">--description &quot;$ISSUE_BODY&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Quality Checks</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># TypeScript型チェック</span>
+<span class="w">          </span><span class="no">npm run type-check</span>
+
+<span class="w">          </span><span class="no"># Lint実行</span>
+<span class="w">          </span><span class="no">npm run lint:fix</span>
+
+<span class="w">          </span><span class="no"># テスト実行</span>
+<span class="w">          </span><span class="no">npm run test:coverage</span>
+
+<span class="w">          </span><span class="no"># セキュリティスキャン</span>
+<span class="w">          </span><span class="no">npm audit --audit-level moderate</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create Pull Request</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success()</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">GH_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># 変更があれば自動PR作成</span>
+<span class="w">          </span><span class="no">if [ -n &quot;$(git status --porcelain)&quot; ]; then</span>
+<span class="w">            </span><span class="no">BRANCH_NAME=&quot;copilot-task-${{ github.event.issue.number }}&quot;</span>
+<span class="w">            </span><span class="no">git checkout -b &quot;$BRANCH_NAME&quot;</span>
+<span class="w">            </span><span class="no">git add .</span>
+<span class="w">            </span><span class="no">git commit -m &quot;feat: implement ${{ github.event.issue.title }}</span>
+
+<span class="w">            </span><span class="no">Automated implementation by Copilot Agent</span>
+
+<span class="w">            </span><span class="no">Resolves #${{ github.event.issue.number }}</span>
+
+<span class="w">            </span><span class="no">🤖 Generated with Claude Sonnet 4 &amp; GitHub Copilot&quot;</span>
+
+<span class="w">            </span><span class="no">git push origin &quot;$BRANCH_NAME&quot;</span>
+
+<span class="w">            </span><span class="no">gh pr create \</span>
+<span class="w">              </span><span class="no">--title &quot;✨ ${{ github.event.issue.title }}&quot; \</span>
+<span class="w">              </span><span class="no">--body &quot;## Summary</span>
+<span class="w">            </span><span class="no">Automated implementation of issue #${{ github.event.issue.number }}</span>
+
+<span class="w">            </span><span class="no">## Changes</span>
+<span class="w">            </span><span class="no">- ✅ Feature implementation</span>
+<span class="w">            </span><span class="no">- ✅ Test coverage</span>
+<span class="w">            </span><span class="no">- ✅ Documentation updates</span>
+<span class="w">            </span><span class="no">- ✅ Type safety</span>
+
+<span class="w">            </span><span class="no">## Quality Checks</span>
+<span class="w">            </span><span class="no">- ✅ TypeScript compilation</span>
+<span class="w">            </span><span class="no">- ✅ Lint checks</span>
+<span class="w">            </span><span class="no">- ✅ Test coverage &gt; 90%</span>
+<span class="w">            </span><span class="no">- ✅ Security scan</span>
+
+<span class="w">            </span><span class="no">🤖 Generated with Claude Sonnet 4 &amp; GitHub Copilot&quot; \</span>
+<span class="w">              </span><span class="no">--assignee &quot;${{ github.actor }}&quot; \</span>
+<span class="w">              </span><span class="no">--label &quot;automated,copilot-generated&quot;</span>
+<span class="w">          </span><span class="no">fi</span>
+</code></pre></div><h2 id="4-mcpmodel-context-protocol統合">4. MCP（Model Context Protocol）統合<a class="headerlink" href="#4-mcpmodel-context-protocol統合" title="Permanent link">&para;</a></h2><h3 id="41-mcp-server設定">4.1 MCP Server設定<a class="headerlink" href="#41-mcp-server設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// src/mcp/custom-mcp-server.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MCPServer</span><span class="p">,</span><span class="w"> </span><span class="nx">Tool</span><span class="p">,</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@anthropic/mcp-sdk&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ProjectMCPServer</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">MCPServer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;project-context-server&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">registerTools</span><span class="p">();</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">registerResources</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">registerTools</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ファイル操作ツール</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">addTool</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;read_project_file&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Read and analyze project files with context&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">filepath</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">include_context</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;boolean&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">default</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">filepath</span><span class="p">,</span><span class="w"> </span><span class="nx">include_context</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">args</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">readFileWithContext</span><span class="p">(</span><span class="nx">filepath</span><span class="p">,</span><span class="w"> </span><span class="nx">include_context</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">include_context</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getFileContext</span><span class="p">(</span><span class="nx">filepath</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// データベースクエリツール</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">addTool</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;query_database&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Execute database queries with safety checks&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">dry_run</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;boolean&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">default</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">dry_run</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query_plan</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">analyzeQuery</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">query</span><span class="p">),</span><span class="w"> </span><span class="nx">executed</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w"> </span><span class="p">};</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">executeQuery</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">query</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// API連携ツール</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">addTool</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;api_request&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Make API requests with automatic retry and error handling&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">enum</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;PUT&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DELETE&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">makeAPIRequest</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">registerResources</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// プロジェクト構造リソース</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">addResource</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">uri</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;project://structure&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Project Structure&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Complete project file structure and dependencies&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">mimeType</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getProjectStructure</span><span class="p">());</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// 設定リソース</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">addResource</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">uri</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;project://config&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Project Configuration&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;All project configuration files and settings&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">mimeType</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getProjectConfig</span><span class="p">());</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">readFileWithContext</span><span class="p">(</span><span class="nx">filepath</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">includeContext</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ファイル読み込みとコンテキスト取得の実装</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">&#39;fs/promises&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">filepath</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;utf-8&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">includeContext</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">content</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="kt">this.extractImports</span><span class="p">(</span><span class="nx">content</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">exports</span><span class="o">:</span><span class="w"> </span><span class="kt">this.extractExports</span><span class="p">(</span><span class="nx">content</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">dependencies</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getFileDependencies</span><span class="p">(</span><span class="nx">filepath</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">references</span><span class="o">:</span><span class="w"> </span><span class="kt">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getFileReferences</span><span class="p">(</span><span class="nx">filepath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="42-mcp-クライアント連携">4.2 MCP クライアント連携<a class="headerlink" href="#42-mcp-クライアント連携" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># scripts/mcp_client.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdioServerParameters</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProjectMCPClient</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">servers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect_servers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;複数のMCPサーバーに接続&quot;&quot;&quot;</span>
+        <span class="c1"># ファイルシステムサーバー</span>
+        <span class="n">fs_server</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;mcp-server-filesystem&quot;</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;--root&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># GitHubサーバー</span>
+        <span class="n">github_server</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;mcp-server-github&quot;</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;--token&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GITHUB_TOKEN&quot;</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># データベースサーバー</span>
+        <span class="n">db_server</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;mcp-server-postgres&quot;</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;--connection-string&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL&quot;</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 接続</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;filesystem&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">connect_stdio</span><span class="p">(</span><span class="n">fs_server</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;github&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">connect_stdio</span><span class="p">(</span><span class="n">github_server</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">connect_stdio</span><span class="p">(</span><span class="n">db_server</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_project_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;プロジェクト全体のコンテキストを取得&quot;&quot;&quot;</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># ファイル構造</span>
+        <span class="n">fs_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;filesystem&#39;</span><span class="p">])</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;structure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fs_client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
+            <span class="s1">&#39;list_directory&#39;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;recursive&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># GitHub情報</span>
+        <span class="n">github_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;github&#39;</span><span class="p">])</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;repository&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">github_client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
+            <span class="s1">&#39;get_repository_info&#39;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="s1">&#39;your-org&#39;</span><span class="p">,</span> <span class="s1">&#39;repo&#39;</span><span class="p">:</span> <span class="s1">&#39;your-repo&#39;</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># データベーススキーマ</span>
+        <span class="n">db_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servers</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">])</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db_client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
+            <span class="s1">&#39;describe_schema&#39;</span><span class="p">,</span>
+            <span class="p">{}</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">context</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_agent_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;エージェントタスクをMCP経由で実行&quot;&quot;&quot;</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project_context</span><span class="p">()</span>
+
+        <span class="c1"># Claude Sonnet 4に送信する統合コンテキスト</span>
+        <span class="n">enhanced_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Task: </span><span class="si">{</span><span class="n">task_description</span><span class="si">}</span>
+
+<span class="s2">        Project Context:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span>
+
+<span class="s2">        Please implement this task using the provided context.</span>
+<span class="s2">        Use MCP tools for file operations, database queries, and GitHub interactions.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">enhanced_prompt</span>
+</code></pre></div><h2 id="5-エラーハンドリングとデバッグ">5. エラーハンドリングとデバッグ<a class="headerlink" href="#5-エラーハンドリングとデバッグ" title="Permanent link">&para;</a></h2><h3 id="51-自動エラー修正システム">5.1 自動エラー修正システム<a class="headerlink" href="#51-自動エラー修正システム" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// src/utils/auto-error-fix.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DiagnosticSeverity</span><span class="p">,</span><span class="w"> </span><span class="nx">TextDocument</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vscode-languageserver-textdocument&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AutoErrorFix</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">fixTypeScriptErrors</span><span class="p">(</span><span class="nx">document</span><span class="o">:</span><span class="w"> </span><span class="kt">TextDocument</span><span class="p">,</span><span class="w"> </span><span class="nx">diagnostics</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">fixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">diagnostic</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">diagnostics</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">fix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateFix</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">fix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">fixes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">fix</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">applyFixes</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span><span class="w"> </span><span class="nx">fixes</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">generateFix</span><span class="p">(</span><span class="nx">diagnostic</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">document</span><span class="o">:</span><span class="w"> </span><span class="kt">TextDocument</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">errorCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagnostic</span><span class="p">.</span><span class="nx">code</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagnostic</span><span class="p">.</span><span class="nx">message</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">diagnostic</span><span class="p">.</span><span class="nx">range</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">errorCode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">2322</span><span class="o">:</span><span class="w"> </span><span class="c1">// Type assignment error</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fixTypeAssignment</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">2339</span><span class="o">:</span><span class="w"> </span><span class="c1">// Property does not exist</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fixMissingProperty</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">2304</span><span class="o">:</span><span class="w"> </span><span class="c1">// Cannot find name</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fixMissingImport</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">1005</span><span class="o">:</span><span class="w"> </span><span class="c1">// Expected token</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fixSyntaxError</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">default</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateGenericFix</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">fixTypeAssignment</span><span class="p">(</span><span class="nx">diagnostic</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">document</span><span class="o">:</span><span class="w"> </span><span class="kt">TextDocument</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">    Fix this TypeScript type assignment error:</span>
+<span class="sb">    Error: </span><span class="si">${</span><span class="nx">diagnostic</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span>
+<span class="sb">    Code: </span><span class="si">${</span><span class="nb">document</span><span class="p">.</span><span class="nx">getText</span><span class="p">(</span><span class="nx">diagnostic</span><span class="p">.</span><span class="nx">range</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">    Provide only the corrected code without explanation.</span>
+<span class="sb">    `</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Claude Sonnet 4で修正コード生成</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">fixedCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">callClaudeForFix</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">range</span><span class="o">:</span><span class="w"> </span><span class="kt">diagnostic.range</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">newText</span><span class="o">:</span><span class="w"> </span><span class="kt">fixedCode</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">callClaudeForFix</span><span class="p">(</span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Claude APIを呼び出して修正案を取得</span>
+<span class="w">    </span><span class="c1">// 実際の実装ではAnthropicクライアントを使用</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;// Fixed code here&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="52-統合デバッグ支援">5.2 統合デバッグ支援<a class="headerlink" href="#52-統合デバッグ支援" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// scripts/debug-assistant.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Anthropic</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@anthropic-ai/sdk&#39;</span><span class="p">);</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">DebugAssistant</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">anthropicKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">anthropic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Anthropic</span><span class="p">({</span><span class="w"> </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="nx">anthropicKey</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">analyzeError</span><span class="p">(</span><span class="nx">errorLog</span><span class="p">,</span><span class="w"> </span><span class="nx">codeContext</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">    Analyze this error and provide detailed debugging information:</span>
+
+<span class="sb">    Error Log:</span>
+<span class="sb">    </span><span class="si">${</span><span class="nx">errorLog</span><span class="si">}</span>
+
+<span class="sb">    Code Context:</span>
+<span class="sb">    </span><span class="si">${</span><span class="nx">codeContext</span><span class="si">}</span>
+
+<span class="sb">    Please provide:</span>
+<span class="sb">    1. Root cause analysis</span>
+<span class="sb">    2. Step-by-step fix instructions</span>
+<span class="sb">    3. Prevention strategies</span>
+<span class="sb">    4. Related code that might be affected</span>
+<span class="sb">    `</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">anthropic</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude-3-5-sonnet-20241022&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">max_tokens</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">parseDebugResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">text</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">parseDebugResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">rootCause</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">extractSection</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Root cause analysis&#39;</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">fixInstructions</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">extractSection</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Step-by-step fix instructions&#39;</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">prevention</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">extractSection</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Prevention strategies&#39;</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">relatedCode</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">extractSection</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Related code&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="6-パフォーマンス最適化">6. パフォーマンス最適化<a class="headerlink" href="#6-パフォーマンス最適化" title="Permanent link">&para;</a></h2><h3 id="61-エージェント実行監視">6.1 エージェント実行監視<a class="headerlink" href="#61-エージェント実行監視" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># monitoring/agent_performance.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PerformanceMetrics</span><span class="p">:</span>
+    <span class="n">execution_time</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">memory_usage</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cpu_usage</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">tokens_used</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">api_calls</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentPerformanceMonitor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">PerformanceMetrics</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">monitor_agent_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;エージェント実行のパフォーマンスを監視&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">start_memory</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">used</span>
+
+        <span class="c1"># CPU使用率監視開始</span>
+        <span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># エージェント実行</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="c1"># メトリクス記録</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="n">PerformanceMetrics</span><span class="p">(</span>
+                <span class="n">execution_time</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span>
+                <span class="n">memory_usage</span><span class="o">=</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">used</span> <span class="o">-</span> <span class="n">start_memory</span><span class="p">,</span>
+                <span class="n">cpu_usage</span><span class="o">=</span><span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-</span> <span class="n">cpu_percent</span><span class="p">,</span>
+                <span class="n">tokens_used</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;tokens_used&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">api_calls</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;api_calls&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">record_metrics</span><span class="p">(</span><span class="n">agent_func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># エラー時のメトリクスも記録</span>
+            <span class="n">error_metrics</span> <span class="o">=</span> <span class="n">PerformanceMetrics</span><span class="p">(</span>
+                <span class="n">execution_time</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span>
+                <span class="n">memory_usage</span><span class="o">=</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">used</span> <span class="o">-</span> <span class="n">start_memory</span><span class="p">,</span>
+                <span class="n">cpu_usage</span><span class="o">=</span><span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-</span> <span class="n">cpu_percent</span><span class="p">,</span>
+                <span class="n">tokens_used</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">api_calls</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">record_metrics</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">agent_func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">_error&quot;</span><span class="p">,</span> <span class="n">error_metrics</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;パフォーマンスサマリーを取得&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="n">metrics_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;average_execution_time&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">execution_time</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics_list</span><span class="p">),</span>
+            <span class="s1">&#39;average_memory_usage&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">memory_usage</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics_list</span><span class="p">),</span>
+            <span class="s1">&#39;total_api_calls&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">api_calls</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">),</span>
+            <span class="s1">&#39;total_tokens&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">tokens_used</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">),</span>
+            <span class="s1">&#39;execution_count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics_list</span><span class="p">)</span>
+        <span class="p">}</span>
+</code></pre></div><h2 id="まとめ">まとめ<a class="headerlink" href="#まとめ" title="Permanent link">&para;</a></h2><p>本記事では、Claude Sonnet 4とGitHub Copilotの統合による実践的な実装方法を詳細に解説しました。</p><ul><li><strong>環境設定</strong>: Copilot Workspace設定とプロジェクト固有設定</li><li><strong>実装例</strong>: 自律的Feature実装エージェントと背景タスク管理</li><li><strong>自動化</strong>: GitHub Actions連携による完全自動化</li><li><strong>MCP統合</strong>: 外部データアクセスと統合コンテキスト</li><li><strong>品質管理</strong>: エラーハンドリングとパフォーマンス監視</li></ul><p>これらの実装により、AI駆動開発の効率性と品質を大幅に向上させることができます。</p><div class="admonition tip"><p class="admonition-title">実装のポイント</p><ul><li>段階的な導入で リスクを最小化</li><li>適切な監視とログ設定</li><li>エラーハンドリングの徹底</li><li>セキュリティ設定の確認</li></ul></div><h2 id="関連記事">関連記事<a class="headerlink" href="#関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="/generative-ai/claude/ai-agent-development-revolution-july-2025/">AIエージェント開発革命：Claude Sonnet 4とGitHub Copilot最新機能</a></li><li><a href="../claude-code-hooks-hands-on-implementation/">Claude Code Hooks実装ガイド</a></li><li><a href="../../github-copilot/github-copilot-applyto-pattern-guide/">GitHub Copilot ApplyTo パターン活用ガイド</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="March 13, 2026 21:27:58 JST">March 13, 2026 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../../javascripts/mermaid-init.js"></script><script src="../../../../javascripts/mobile-nav.js"></script><script src="../../../../javascripts/daily-progress.js"></script><script src="../../../../javascripts/fix-md-links.js"></script><script src="../../../../javascripts/mobile-category-tabs.js"></script></body></html>

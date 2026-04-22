@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 540" width="680" height="540" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Old Design: Every Component Tangled in One Container (Pet Problem)</title>
+  <desc id="desc">A single large container holds brain, hands, and session together, with credential theft risk, debugging difficulty, and session loss on container death</desc>
+
+  <rect x="30" y="40" width="620" height="280" rx="16" fill="#FAECE7" stroke="#D85A30" stroke-width="2.5"/>
+  <text x="50" y="68" fill="#A6431F" font-size="14" font-weight="700">Old Design: Everything in One Container (= Pet)</text>
+  <text x="50" y="86" fill="#A6431F" font-size="11" opacity="0.85">Named, hand-tended, cannot afford to lose</text>
+
+  <rect x="60" y="120" width="180" height="160" rx="10" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.8"/>
+  <text x="150" y="148" text-anchor="middle" fill="#463F9F" font-size="15" font-weight="700">Brain</text>
+  <text x="150" y="168" text-anchor="middle" fill="#463F9F" font-size="11">Claude + Harness</text>
+  <text x="150" y="196" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">Inference loop</text>
+  <text x="150" y="212" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">Tool routing</text>
+
+  <rect x="260" y="120" width="180" height="160" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.8"/>
+  <text x="350" y="148" text-anchor="middle" fill="#0F6E56" font-size="15" font-weight="700">Hands</text>
+  <text x="350" y="168" text-anchor="middle" fill="#0F6E56" font-size="11">Sandbox</text>
+  <text x="350" y="196" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">Code execution</text>
+  <text x="350" y="212" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">Credentials colocated</text>
+
+  <rect x="460" y="120" width="170" height="160" rx="10" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.8"/>
+  <text x="545" y="148" text-anchor="middle" fill="#8A5210" font-size="15" font-weight="700">Log</text>
+  <text x="545" y="168" text-anchor="middle" fill="#8A5210" font-size="11">Event Log</text>
+  <text x="545" y="196" text-anchor="middle" fill="#8A5210" font-size="10" opacity="0.85">WebSocket delivery</text>
+  <text x="545" y="212" text-anchor="middle" fill="#8A5210" font-size="10" opacity="0.85">Shares container fate</text>
+
+  <rect x="30" y="350" width="300" height="104" rx="10" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <text x="180" y="374" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Problem 1: Credentials in sandbox</text>
+  <text x="46" y="396" fill="#A6431F" font-size="10.5">Prompt injection reads environment variables</text>
+  <text x="46" y="414" fill="#A6431F" font-size="10.5">Attacker obtains token</text>
+  <text x="46" y="432" fill="#A6431F" font-size="10.5"><tspan font-weight="700">Can spawn new unrestricted sessions</tspan></text>
+
+  <rect x="350" y="350" width="300" height="104" rx="10" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <text x="500" y="374" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Problem 2: Debug / VPC difficulty</text>
+  <text x="366" y="396" fill="#A6431F" font-size="10.5">User data colocation blocks log access</text>
+  <text x="366" y="414" fill="#A6431F" font-size="10.5">Customer VPC requires network peering</text>
+  <text x="366" y="432" fill="#A6431F" font-size="10.5">Side effect of colocation assumption</text>
+
+  <line x1="30" y1="484" x2="650" y2="484" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 3"/>
+  <text x="340" y="510" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Container dies → Session lost, no recovery</text>
+</svg>

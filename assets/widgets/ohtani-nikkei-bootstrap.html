@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR効果のブートストラップ可視化</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --c-blue: #2979FF;
+  --c-blue-soft: #BBD6FF;
+  --c-red: #D64545;
+  --c-yellow: #E0A800;
+  --c-green: #2E9E6E;
+  --c-curve: rgba(41,121,255,0.18);
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --c-blue: #5B9DFF;
+  --c-blue-soft: #2B4773;
+  --c-red: #E66A6A;
+  --c-yellow: #F0BC4A;
+  --c-green: #4CC38A;
+  --c-curve: rgba(91,157,255,0.22);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background: var(--color-background-primary);
+  font-size: 14px;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 15px; margin: 0 0 6px; font-weight: 700; }
+.sub {
+  font-size: 12px; color: var(--color-text-secondary); margin: 0 0 14px;
+}
+.controls {
+  display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap;
+}
+.controls button {
+  font: inherit; font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-primary);
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.controls button.active {
+  background: var(--c-blue); color: #fff; border-color: var(--c-blue);
+}
+.metric {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-size: 12px; margin: 10px 0;
+  color: var(--color-text-secondary);
+}
+.metric strong { color: var(--color-text-primary); font-size: 14px; }
+svg { display: block; width: 100%; height: auto; }
+.note {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: var(--color-background-secondary);
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>「偶然だけで起きる確率」を可視化する</h1>
+  <p class="sub">HR日と非HR日の翌日寄付きギャップ差。横軸の正規分布は「効果なし」を仮定したとき、ランダムサンプリングで観測されうる値の分布。赤線が実際の観測値。</p>
+
+  <div class="controls">
+    <button data-case="full" class="active">全期間 +0.115%</button>
+    <button data-case="dodgers">ドジャース期 +0.221%</button>
+  </div>
+
+  <div class="metric">
+    <span>観測値: <strong id="obs">+0.115%</strong></span>
+    <span>t値: <strong id="tv">2.07</strong></span>
+    <span>p値: <strong id="pv">0.038</strong></span>
+    <span>判定: <strong id="judge" style="color:var(--c-green);">5%有意</strong></span>
+  </div>
+
+  <svg id="chart" viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="curveFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--c-blue)" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="var(--c-blue)" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <g font-family="var(--font-sans)" font-size="11">
+      <!-- Axis -->
+      <line x1="40" y1="240" x2="700" y2="240" stroke="var(--color-text-secondary)" stroke-width="1"/>
+      <!-- X labels -->
+      <text x="40" y="258" text-anchor="middle" fill="var(--color-text-secondary)">-0.30%</text>
+      <text x="370" y="258" text-anchor="middle" fill="var(--color-text-secondary)">0</text>
+      <text x="700" y="258" text-anchor="middle" fill="var(--color-text-secondary)">+0.30%</text>
+      <text x="205" y="258" text-anchor="middle" fill="var(--color-text-secondary)">-0.15%</text>
+      <text x="535" y="258" text-anchor="middle" fill="var(--color-text-secondary)">+0.15%</text>
+      <!-- Curve placeholder -->
+      <path id="curve" fill="url(#curveFill)" stroke="var(--c-blue)" stroke-width="1.5"/>
+      <!-- Mean line at center -->
+      <line x1="370" y1="60" x2="370" y2="240" stroke="var(--color-text-secondary)" stroke-dasharray="3,3" stroke-width="1"/>
+      <text x="370" y="55" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">帰無仮説の中心 (差=0)</text>
+      <!-- Observed marker (will be repositioned) -->
+      <line id="obsLine" x1="623" y1="80" x2="623" y2="240" stroke="var(--c-red)" stroke-width="2"/>
+      <text id="obsLabel" x="623" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="var(--c-red)">+0.115%</text>
+      <!-- Right-tail shaded -->
+      <text x="660" y="200" text-anchor="middle" font-size="10" fill="var(--c-red)">この線より</text>
+      <text x="660" y="214" text-anchor="middle" font-size="10" fill="var(--c-red)">右の面積 = p値</text>
+    </g>
+  </svg>
+  <div class="note" id="caseNote">単純比較ではt=2.07 / p=0.038で5%有意。ただしS&amp;P500を統制するとt=1.52に低下し有意性は消える。</div>
+</div>
+
+<script>
+(function(){
+  // Generate normal-distribution path under N(0, sigma)
+  // sigma in % units (we use 0.08 as approx SE of the diff under H0)
+  var sigma = 0.08;       // %
+  var xMin = -0.30, xMax = 0.30;
+  var W = 660, H = 180, x0 = 40, y0 = 240;
+
+  function normPdf(x){
+    return Math.exp(-(x*x)/(2*sigma*sigma)) / (sigma*Math.sqrt(2*Math.PI));
+  }
+
+  function buildCurve(){
+    var pts = [];
+    var maxPdf = normPdf(0);
+    var N = 200;
+    for (var i=0;i<=N;i++){
+      var x = xMin + (xMax-xMin)*(i/N);
+      var px = x0 + (x - xMin)/(xMax - xMin) * W;
+      var py = y0 - (normPdf(x)/maxPdf)*H;
+      pts.push(px.toFixed(1)+","+py.toFixed(1));
+    }
+    var d = "M"+pts[0]+" L"+pts.slice(1).join(" L")+" L"+(x0+W)+","+y0+" L"+x0+","+y0+" Z";
+    document.getElementById("curve").setAttribute("d", d);
+  }
+  buildCurve();
+
+  function updateObs(obs){
+    var px = x0 + (obs - xMin)/(xMax - xMin) * W;
+    var line = document.getElementById("obsLine");
+    line.setAttribute("x1", px.toFixed(1));
+    line.setAttribute("x2", px.toFixed(1));
+    var label = document.getElementById("obsLabel");
+    label.setAttribute("x", px.toFixed(1));
+    label.textContent = "+" + obs.toFixed(3) + "%";
+  }
+
+  var cases = {
+    full:    {obs: 0.115, t: "2.07", p: "0.038", judge: "5%有意", color: "var(--c-green)",
+              note: "単純比較ではt=2.07 / p=0.038で5%有意。ただしS&amp;P500を統制するとt=1.52に低下し有意性は消える。"},
+    dodgers: {obs: 0.221, t: "2.41", p: "0.016", judge: "5%有意（n=143）", color: "var(--c-green)",
+              note: "ドジャース移籍後はHR日と非HR日の差が4倍以上に拡大。サンプルが半減する点と、デイ/ナイト分離の議論を併せて読む必要がある。"}
+  };
+
+  function setCase(key){
+    var c = cases[key];
+    updateObs(c.obs);
+    document.getElementById("obs").textContent = "+" + c.obs.toFixed(3) + "%";
+    document.getElementById("tv").textContent = c.t;
+    document.getElementById("pv").textContent = c.p;
+    var j = document.getElementById("judge");
+    j.textContent = c.judge;
+    j.style.color = c.color;
+    document.getElementById("caseNote").innerHTML = c.note;
+  }
+  setCase("full");
+
+  document.querySelectorAll(".controls button").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelectorAll(".controls button").forEach(function(x){x.classList.remove("active");});
+      b.classList.add("active");
+      setCase(b.getAttribute("data-case"));
+    });
+  });
+})();
+(function() {
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

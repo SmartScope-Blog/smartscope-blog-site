@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 660" width="1080" height="660" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Mythos positioning: not a general-release model, but a defensive research preview</title>
+  <desc id="desc">Diagram showing public Claude models on the left, Claude Mythos Preview in the center as a limited defensive preview, and safeguards flowing back into public models on the right.</desc>
+
+  <rect x="24" y="20" width="1032" height="620" rx="18" fill="#F8F5EF" stroke="#D4CCBE"/>
+  <text x="540" y="58" text-anchor="middle" fill="#111827" font-size="28" font-weight="700">Where Claude Mythos Sits</text>
+  <text x="540" y="90" text-anchor="middle" fill="#374151" font-size="16">Not a general-release Claude model, but a limited defensive research preview</text>
+
+  <rect x="52" y="138" width="286" height="340" rx="18" fill="#EAF3FE" stroke="#2D7DD2" stroke-width="2.5"/>
+  <text x="195" y="178" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">Public Claude Line</text>
+  <text x="195" y="206" text-anchor="middle" fill="#374151" font-size="14">Broadly distributed to users and developers</text>
+
+  <rect x="92" y="240" width="206" height="62" rx="10" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="195" y="278" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Haiku / Sonnet / Opus</text>
+
+  <rect x="82" y="324" width="226" height="82" rx="10" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="195" y="356" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">claude.ai / API</text>
+  <text x="195" y="380" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">/ Claude Code</text>
+
+  <rect x="78" y="418" width="234" height="48" rx="8" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="195" y="439" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">Capability level suited</text>
+  <text x="195" y="456" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">for broad release</text>
+
+  <rect x="390" y="112" width="300" height="392" rx="18" fill="#FFF1EA" stroke="#E0592A" stroke-width="2.8"/>
+  <text x="540" y="156" text-anchor="middle" fill="#111827" font-size="24" font-weight="700">Claude Mythos Preview</text>
+  <text x="540" y="184" text-anchor="middle" fill="#374151" font-size="14">2026-04-07 / unreleased frontier model</text>
+
+  <rect x="438" y="226" width="204" height="58" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="540" y="261" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Not for general release</text>
+
+  <rect x="428" y="304" width="224" height="84" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="540" y="336" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">Limited to defensive</text>
+  <text x="540" y="358" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">cybersecurity use</text>
+  <text x="540" y="378" text-anchor="middle" fill="#374151" font-size="13">Validate with defenders first</text>
+
+  <rect x="428" y="408" width="224" height="72" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="540" y="438" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">Glasswing participants</text>
+  <text x="540" y="460" text-anchor="middle" fill="#374151" font-size="13">plus 40+ additional organizations</text>
+
+  <rect x="742" y="138" width="286" height="340" rx="18" fill="#E8F7F0" stroke="#1F9D73" stroke-width="2.5"/>
+  <text x="885" y="178" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">What Flows Back</text>
+  <text x="885" y="206" text-anchor="middle" fill="#374151" font-size="14">This is the part most developers will feel</text>
+
+  <rect x="792" y="240" width="186" height="62" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="885" y="278" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">New safeguards</text>
+
+  <rect x="792" y="324" width="186" height="62" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="885" y="362" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Future Claude Opus</text>
+
+  <rect x="776" y="400" width="218" height="66" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="885" y="427" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">Claude Code</text>
+  <text x="885" y="446" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">operating assumptions</text>
+
+  <path d="M340 306 C360 306, 370 306, 388 306" fill="none" stroke="#2D7DD2" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <path d="M692 306 C712 306, 722 306, 740 306" fill="none" stroke="#1F9D73" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+
+  <rect x="104" y="530" width="872" height="74" rx="14" fill="#FFFFFF" stroke="#D4CCBE"/>
+  <text x="540" y="560" text-anchor="middle" fill="#111827" font-size="18" font-weight="700">Project Glasswing</text>
+  <text x="540" y="586" text-anchor="middle" fill="#374151" font-size="14">A limited program supporting critical infrastructure defenders and OSS maintainers</text>
+
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#2D7DD2" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#1F9D73" stroke-width="1.5"/>
+    </marker>
+  </defs>
+</svg>

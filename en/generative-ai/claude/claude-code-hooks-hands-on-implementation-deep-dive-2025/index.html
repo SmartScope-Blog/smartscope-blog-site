@@ -1,0 +1,916 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/"><link rel="alternate" href="../../../../generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude code hooks hands on implementation deep dive 2025 - SmartScope</title><link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="website"><meta property="og:title" content="Claude code hooks hands on implementation deep dive 2025"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude code hooks hands on implementation deep dive 2025"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-hooks-complete-implementation-guide-hands-on-production-operations-august-2025-latest" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude code hooks hands on implementation deep dive 2025 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../../generative-ai/claude/claude-code-hooks-hands-on-implementation-deep-dive-2025/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#introduction" class="md-nav__link"><span class="md-ellipsis"> Introduction </span></a></li><li class="md-nav__item"><a href="#-what-you-can-achieve" class="md-nav__link"><span class="md-ellipsis"> 🎯 What You Can Achieve </span></a></li><li class="md-nav__item"><a href="#-production-preparation-environment-setup" class="md-nav__link"><span class="md-ellipsis"> 🛠️ Production Preparation: Environment Setup </span></a><nav class="md-nav" aria-label="🛠️ Production Preparation: Environment Setup"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-directory-structure-setup" class="md-nav__link"><span class="md-ellipsis"> 1. Directory Structure Setup </span></a></li><li class="md-nav__item"><a href="#2-creating-base-configuration-files" class="md-nav__link"><span class="md-ellipsis"> 2. Creating Base Configuration Files </span></a></li><li class="md-nav__item"><a href="#3-preparing-common-script-library" class="md-nav__link"><span class="md-ellipsis"> 3. Preparing Common Script Library </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-language-specific-implementation-patterns" class="md-nav__link"><span class="md-ellipsis"> 🔧 Language-Specific Implementation Patterns </span></a><nav class="md-nav" aria-label="🔧 Language-Specific Implementation Patterns"><ul class="md-nav__list"><li class="md-nav__item"><a href="#python-project-complete-configuration" class="md-nav__link"><span class="md-ellipsis"> Python Project Complete Configuration </span></a></li><li class="md-nav__item"><a href="#typescriptreact-project-configuration" class="md-nav__link"><span class="md-ellipsis"> TypeScript/React Project Configuration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-security-and-production-environment-protection" class="md-nav__link"><span class="md-ellipsis"> 🛡️ Security and Production Environment Protection </span></a><nav class="md-nav" aria-label="🛡️ Security and Production Environment Protection"><ul class="md-nav__list"><li class="md-nav__item"><a href="#production-environment-protection-configuration" class="md-nav__link"><span class="md-ellipsis"> Production Environment Protection Configuration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-performance-optimization-and-monitoring" class="md-nav__link"><span class="md-ellipsis"> 📊 Performance Optimization and Monitoring </span></a><nav class="md-nav" aria-label="📊 Performance Optimization and Monitoring"><ul class="md-nav__list"><li class="md-nav__item"><a href="#execution-time-monitoring-and-bottleneck-detection" class="md-nav__link"><span class="md-ellipsis"> Execution Time Monitoring and Bottleneck Detection </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-troubleshooting-and-incident-response" class="md-nav__link"><span class="md-ellipsis"> 🚨 Troubleshooting and Incident Response </span></a><nav class="md-nav" aria-label="🚨 Troubleshooting and Incident Response"><ul class="md-nav__list"><li class="md-nav__item"><a href="#common-issues-and-solutions" class="md-nav__link"><span class="md-ellipsis"> Common Issues and Solutions </span></a><nav class="md-nav" aria-label="Common Issues and Solutions"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-when-hooks-execution-hangs" class="md-nav__link"><span class="md-ellipsis"> 1. When Hooks Execution Hangs </span></a></li><li class="md-nav__item"><a href="#2-resolving-race-conditions-in-parallel-execution" class="md-nav__link"><span class="md-ellipsis"> 2. Resolving Race Conditions in Parallel Execution </span></a></li><li class="md-nav__item"><a href="#3-error-recovery-and-rollback-functionality" class="md-nav__link"><span class="md-ellipsis"> 3. Error Recovery and Rollback Functionality </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="#-enterprise-implementation-case-studies-and-best-practices" class="md-nav__link"><span class="md-ellipsis"> 📈 Enterprise Implementation Case Studies and Best Practices </span></a><nav class="md-nav" aria-label="📈 Enterprise Implementation Case Studies and Best Practices"><ul class="md-nav__list"><li class="md-nav__item"><a href="#configuration-management-for-large-teams" class="md-nav__link"><span class="md-ellipsis"> Configuration Management for Large Teams </span></a></li><li class="md-nav__item"><a href="#cicd-integration-example" class="md-nav__link"><span class="md-ellipsis"> CI/CD Integration Example </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-advanced-customization" class="md-nav__link"><span class="md-ellipsis"> 🔧 Advanced Customization </span></a><nav class="md-nav" aria-label="🔧 Advanced Customization"><ul class="md-nav__list"><li class="md-nav__item"><a href="#project-specific-ai-learning-functionality" class="md-nav__link"><span class="md-ellipsis"> Project-Specific AI Learning Functionality </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#summary" class="md-nav__link"><span class="md-ellipsis"> Summary </span></a></li><li class="md-nav__item"><a href="#related-articles" class="md-nav__link"><span class="md-ellipsis"> Related Articles </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><ul><li>Claude-Code-Hooks</li><li>Implementation-Guide</li><li>Production-Operations</li><li>Hands-On</li><li>Development-Automation</li><li>Practical-Edition categories:</li><li>AI-Development-Automation</li><li>Development-Efficiency author: Claude Code content_type: hands-on-guide</li></ul><hr><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code Complete Guide</a></p><h1 id="claude-code-hooks-complete-implementation-guide-hands-on-production-operations-august-2025-latest">Claude Code Hooks Complete Implementation Guide: Hands-On Production Operations [August 2025 Latest]<a class="headerlink" href="#claude-code-hooks-complete-implementation-guide-hands-on-production-operations-august-2025-latest" title="Permanent link">&para;</a></h1><h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2><p>While the <a href="../claude-code-hooks-revolution-2025/">Claude Code Hooks Revolution article</a> covered the overview of Claude Code Hooks, there are many implementation challenges when introducing them into actual production environments.</p><p>This article provides a complete implementation guide for reliably introducing and operating Claude Code Hooks, focusing on <strong>working code examples</strong> and <strong>production operation considerations</strong>.</p><h2 id="-what-you-can-achieve">🎯 What You Can Achieve<a class="headerlink" href="#-what-you-can-achieve" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>Zero-Downtime Introduction</strong></p><p>Minimize risk with gradual introduction to existing projects</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m14.6 16.6 4.6-4.6-4.6-4.6L16 6l6 6-6 6zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6z"/></svg></span> <strong>Practical Configuration Collection</strong></p><p>Proven configuration files ready to copy and paste</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12h7c-.53 4.11-3.28 7.78-7 8.92zH5V6.3l7-3.11M12 1 3 5v6c0 5.55 3.84 10.73 9 12 5.16-1.27 9-6.45 9-12V5z"/></svg></span> <strong>Error Handling</strong></p><p>Reliable failure response in production environments</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>Performance Optimization</strong></p><p>Improved execution efficiency in large-scale projects</p></li></ul></div><h2 id="-production-preparation-environment-setup">🛠️ Production Preparation: Environment Setup<a class="headerlink" href="#-production-preparation-environment-setup" title="Permanent link">&para;</a></h2><h3 id="1-directory-structure-setup">1. Directory Structure Setup<a class="headerlink" href="#1-directory-structure-setup" title="Permanent link">&para;</a></h3><p>First, build a directory structure to manage Claude Code Hooks configuration systematically:</p><div class="highlight"><pre><span></span><code><span class="c1"># Execute at project root</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.claude/<span class="o">{</span>hooks,scripts,logs,configs<span class="o">}</span>
+
+<span class="c1"># Prepare Claude Code configuration directory</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/<span class="o">{</span>hooks,templates,backups<span class="o">}</span>
+
+<span class="c1"># Log rotation configuration</span>
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/claude-hooks
+sudo<span class="w"> </span>chown<span class="w"> </span><span class="nv">$USER</span>:<span class="nv">$USER</span><span class="w"> </span>/var/log/claude-hooks
+</code></pre></div><h3 id="2-creating-base-configuration-files">2. Creating Base Configuration Files<a class="headerlink" href="#2-creating-base-configuration-files" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># ~/.claude/settings.toml</span>
+<span class="k">[hooks]</span>
+<span class="n">log_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span>
+<span class="n">log_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/var/log/claude-hooks/hooks.log&quot;</span>
+<span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="w">  </span><span class="c1"># 5 minute timeout</span>
+<span class="n">retry_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="n">enable_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[hooks.environment]</span>
+<span class="c1"># Environment variable settings</span>
+<span class="n">PATH_EXTENSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin:~/.local/bin&quot;</span>
+<span class="n">NODE_ENV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;development&quot;</span>
+<span class="n">PYTHONPATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
+
+<span class="k">[hooks.security]</span>
+<span class="c1"># Security settings</span>
+<span class="n">max_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10MB&quot;</span>
+<span class="n">allowed_extensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;md&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;yml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
+<span class="n">blocked_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.git&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;build&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="p">]</span>
+
+<span class="k">[hooks.performance]</span>
+<span class="c1"># Performance settings</span>
+<span class="n">parallel_execution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">max_concurrent_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="n">cache_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">cache_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="w">  </span><span class="c1"># 5 minutes</span>
+</code></pre></div><h3 id="3-preparing-common-script-library">3. Preparing Common Script Library<a class="headerlink" href="#3-preparing-common-script-library" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># ~/.claude/scripts/common.sh - Common function library</span>
+
+<span class="c1"># Log output function</span>
+log<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">level</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">message</span><span class="o">=</span><span class="nv">$2</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="nv">$timestamp</span><span class="s2">] [</span><span class="nv">$level</span><span class="s2">] </span><span class="nv">$message</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/var/log/claude-hooks/hooks.log
+<span class="o">}</span>
+
+<span class="c1"># Error handling function</span>
+handle_error<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">exit_code</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">command</span><span class="o">=</span><span class="nv">$2</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_path</span><span class="o">=</span><span class="nv">$3</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$exit_code</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;Command &#39;</span><span class="nv">$command</span><span class="s2">&#39; failed with exit code </span><span class="nv">$exit_code</span><span class="s2"> for file: </span><span class="nv">$file_path</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="c1"># Slack notification (optional)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>slack-notify<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span>slack-notify<span class="w"> </span><span class="s2">&quot;#dev-alerts&quot;</span><span class="w"> </span><span class="s2">&quot;🚨 Hook execution failed: </span><span class="nv">$command</span><span class="s2"> (</span><span class="nv">$file_path</span><span class="s2">)&quot;</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">$exit_code</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># File validation function</span>
+validate_file<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_path</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">max_size</span><span class="o">=</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">10485760</span><span class="si">}</span><span class="w">  </span><span class="c1"># 10MB default</span>
+
+<span class="w">    </span><span class="c1"># File existence check</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;File not found: </span><span class="nv">$file_path</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># File size check</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file_size</span><span class="o">=</span><span class="k">$(</span>stat<span class="w"> </span>-f%z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>stat<span class="w"> </span>-c%s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file_path</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$file_size</span><span class="w"> </span>-gt<span class="w"> </span><span class="nv">$max_size</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;WARN&quot;</span><span class="w"> </span><span class="s2">&quot;File size exceeds limit: </span><span class="nv">$file_path</span><span class="s2"> (</span><span class="nv">$file_size</span><span class="s2"> bytes)&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">2</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># Process management function</span>
+is_process_running<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">process_name</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span>pgrep<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$process_name</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<span class="o">}</span>
+
+wait_for_process<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">process_name</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">timeout</span><span class="o">=</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">30</span><span class="si">}</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span>is_process_running<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$process_name</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$count</span><span class="w"> </span>-lt<span class="w"> </span><span class="nv">$timeout</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="w">        </span><span class="o">((</span>count++<span class="o">))</span>
+<span class="w">    </span><span class="k">done</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$count</span><span class="w"> </span>-ge<span class="w"> </span><span class="nv">$timeout</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>log<span class="w"> </span><span class="s2">&quot;WARN&quot;</span><span class="w"> </span><span class="s2">&quot;Process </span><span class="nv">$process_name</span><span class="s2"> did not finish within </span><span class="nv">$timeout</span><span class="s2"> seconds&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+</code></pre></div><h2 id="-language-specific-implementation-patterns">🔧 Language-Specific Implementation Patterns<a class="headerlink" href="#-language-specific-implementation-patterns" title="Permanent link">&para;</a></h2><h3 id="python-project-complete-configuration">Python Project Complete Configuration<a class="headerlink" href="#python-project-complete-configuration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Comprehensive Python-specific configuration</span>
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python File Validation&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Validating Python file: $file&quot;</span>
+
+<span class="s2">    # File validation</span>
+<span class="s2">    validate_file &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    # Python syntax check</span>
+<span class="s2">    python -m py_compile &quot;$file&quot;</span>
+<span class="s2">    handle_error $? &quot;python -m py_compile&quot; &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    # Import validation</span>
+<span class="s2">    python -c &quot;import ast; ast.parse(open(&#39;$file&#39;).read())&quot;</span>
+<span class="s2">    handle_error $? &quot;AST parse check&quot; &quot;$file&quot; || exit 1</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;✅ Python file validation passed: $file&quot;</span>
+<span class="s2">done</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Format and Quality&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># Lock to prevent concurrent execution</span>
+<span class="s2">LOCK_FILE=&quot;/tmp/python-format.lock&quot;</span>
+<span class="s2">if [ -f &quot;$LOCK_FILE&quot; ]; then</span>
+<span class="s2">    wait_for_process &quot;python-format&quot; 30</span>
+<span class="s2">fi</span>
+<span class="s2">touch &quot;$LOCK_FILE&quot;</span>
+
+<span class="s2">trap &#39;rm -f &quot;$LOCK_FILE&quot;&#39; EXIT</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Formatting Python file: $file&quot;</span>
+
+<span class="s2">    # Create backup</span>
+<span class="s2">    cp &quot;$file&quot; &quot;$file.backup&quot;</span>
+
+<span class="s2">    # Execute formatting</span>
+<span class="s2">    black &quot;$file&quot; --line-length 88 --target-version py39</span>
+<span class="s2">    handle_error $? &quot;black&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    isort &quot;$file&quot; --profile black</span>
+<span class="s2">    handle_error $? &quot;isort&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    # Ruff validation</span>
+<span class="s2">    ruff check &quot;$file&quot; --fix</span>
+<span class="s2">    handle_error $? &quot;ruff check&quot; &quot;$file&quot; || { cp &quot;$file.backup&quot; &quot;$file&quot;; exit 1; }</span>
+
+<span class="s2">    # Delete backup</span>
+<span class="s2">    rm -f &quot;$file.backup&quot;</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;✅ Python formatting completed: $file&quot;</span>
+<span class="s2">done</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Test Runner&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/**/*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tests/**/*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;test_*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*_test.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting Python test execution&quot;</span>
+
+<span class="s2"># Detect project root</span>
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2"># Check virtual environment</span>
+<span class="s2">if [ -f &quot;venv/bin/activate&quot; ]; then</span>
+<span class="s2">    source venv/bin/activate</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Activated virtual environment&quot;</span>
+<span class="s2">elif [ -f &quot;.venv/bin/activate&quot; ]; then</span>
+<span class="s2">    source .venv/bin/activate</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Activated .venv virtual environment&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Execute tests</span>
+<span class="s2">if [ -f &quot;pytest.ini&quot; ] || [ -f &quot;pyproject.toml&quot; ] || [ -f &quot;setup.cfg&quot; ]; then</span>
+<span class="s2">    # When pytest configuration file exists</span>
+<span class="s2">    pytest --tb=short -q --no-header --disable-warnings</span>
+<span class="s2">    test_result=$?</span>
+<span class="s2">else</span>
+<span class="s2">    # Execute tests with default configuration</span>
+<span class="s2">    python -m pytest tests/ -v --tb=short</span>
+<span class="s2">    test_result=$?</span>
+<span class="s2">fi</span>
+
+<span class="s2">if [ $test_result -eq 0 ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;✅ All Python tests passed&quot;</span>
+
+<span class="s2">    # Coverage report (optional)</span>
+<span class="s2">    if command -v coverage &amp;&gt; /dev/null; then</span>
+<span class="s2">        coverage report --show-missing --skip-covered | tail -n 10</span>
+<span class="s2">    fi</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;❌ Python tests failed with exit code: $test_result&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">exit $test_result</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Python Security Scan&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting Python security scan&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    # Bandit security check</span>
+<span class="s2">    if command -v bandit &amp;&gt; /dev/null; then</span>
+<span class="s2">        bandit -r &quot;$file&quot; -f json -q 2&gt;/dev/null | jq -r &#39;.results[] | select(.issue_severity == &quot;HIGH&quot; or .issue_severity == &quot;MEDIUM&quot;) | &quot;</span><span class="se">\(</span><span class="s2">.issue_severity): </span><span class="se">\(</span><span class="s2">.issue_text) (</span><span class="se">\(</span><span class="s2">.filename):</span><span class="se">\(</span><span class="s2">.line_number))&quot;&#39;</span>
+<span class="s2">        if [ ${PIPESTATUS[0]} -ne 0 ]; then</span>
+<span class="s2">            log &quot;WARN&quot; &quot;Security issues found in: $file&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # Sensitive information detection</span>
+<span class="s2">    if grep -E &quot;(password|secret|key|token|api_key)&quot; &quot;$file&quot; | grep -v &quot;#&quot;; then</span>
+<span class="s2">        log &quot;WARN&quot; &quot;Potential secrets detected in: $file&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Python security scan completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h3 id="typescriptreact-project-configuration">TypeScript/React Project Configuration<a class="headerlink" href="#typescriptreact-project-configuration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TypeScript Quality Pipeline&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.jsx&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># Detect project root</span>
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting TypeScript quality pipeline&quot;</span>
+
+<span class="s2"># Check Node.js project</span>
+<span class="s2">if [ ! -f &quot;package.json&quot; ]; then</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;package.json not found&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Detect npm/yarn/pnpm</span>
+<span class="s2">PACKAGE_MANAGER=&quot;npm&quot;</span>
+<span class="s2">if [ -f &quot;yarn.lock&quot; ]; then</span>
+<span class="s2">    PACKAGE_MANAGER=&quot;yarn&quot;</span>
+<span class="s2">elif [ -f &quot;pnpm-lock.yaml&quot; ]; then</span>
+<span class="s2">    PACKAGE_MANAGER=&quot;pnpm&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Using package manager: $PACKAGE_MANAGER&quot;</span>
+
+<span class="s2"># Check dependencies</span>
+<span class="s2">$PACKAGE_MANAGER list --depth=0 &gt; /dev/null 2&gt;&amp;1</span>
+<span class="s2">if [ $? -ne 0 ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Installing dependencies...&quot;</span>
+<span class="s2">    $PACKAGE_MANAGER install</span>
+<span class="s2">fi</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Processing TypeScript file: $file&quot;</span>
+
+<span class="s2">    # Prettier formatting</span>
+<span class="s2">    if [ -f &quot;.prettierrc&quot; ] || [ -f &quot;.prettierrc.json&quot; ]; then</span>
+<span class="s2">        npx prettier --write &quot;$file&quot;</span>
+<span class="s2">        handle_error $? &quot;prettier&quot; &quot;$file&quot; || exit 1</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # ESLint fix</span>
+<span class="s2">    if [ -f &quot;.eslintrc.js&quot; ] || [ -f &quot;.eslintrc.json&quot; ] || [ -f &quot;eslint.config.js&quot; ]; then</span>
+<span class="s2">        npx eslint --fix &quot;$file&quot;</span>
+<span class="s2">        handle_error $? &quot;eslint&quot; &quot;$file&quot; || exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2"># TypeScript type check</span>
+<span class="s2">if [ -f &quot;tsconfig.json&quot; ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Running TypeScript type check&quot;</span>
+<span class="s2">    npx tsc --noEmit</span>
+<span class="s2">    handle_error $? &quot;tsc --noEmit&quot; &quot;TypeScript project&quot; || exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ TypeScript quality pipeline completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;React Component Testing&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/components/**/*.tsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;src/components/**/*.ts&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">cd &quot;$PROJECT_ROOT&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Starting React component testing&quot;</span>
+
+<span class="s2"># Check test files</span>
+<span class="s2">if [ -d &quot;src/__tests__&quot; ] || [ -d &quot;tests&quot; ] || ls src/**/*.test.* 1&gt; /dev/null 2&gt;&amp;1; then</span>
+<span class="s2">    # Execute Jest tests</span>
+<span class="s2">    if [ -f &quot;jest.config.js&quot; ] || grep -q &quot;jest&quot; package.json; then</span>
+<span class="s2">        npm test -- --watchAll=false --passWithNoTests</span>
+<span class="s2">        test_result=$?</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;WARN&quot; &quot;No Jest configuration found&quot;</span>
+<span class="s2">        test_result=0</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    if [ $test_result -eq 0 ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;✅ React component tests passed&quot;</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;❌ React component tests failed&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;INFO&quot; &quot;No tests found, skipping test execution&quot;</span>
+<span class="s2">    test_result=0</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Storybook build test (optional)</span>
+<span class="s2">if [ -f &quot;.storybook/main.js&quot; ] || [ -f &quot;.storybook/main.ts&quot; ]; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Testing Storybook build&quot;</span>
+<span class="s2">    npm run build-storybook &gt; /dev/null 2&gt;&amp;1</span>
+<span class="s2">    if [ $? -eq 0 ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;✅ Storybook build successful&quot;</span>
+<span class="s2">    else</span>
+<span class="s2">        log &quot;WARN&quot; &quot;Storybook build issues detected&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">fi</span>
+
+<span class="s2">exit $test_result</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-security-and-production-environment-protection">🛡️ Security and Production Environment Protection<a class="headerlink" href="#-security-and-production-environment-protection" title="Permanent link">&para;</a></h2><h3 id="production-environment-protection-configuration">Production Environment Protection Configuration<a class="headerlink" href="#production-environment-protection-configuration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Production Environment Protection&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;prod/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;production/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.prod.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;docker-compose.prod.yml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;k8s/prod/**&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;WARN&quot; &quot;🛡️ Production file modification detected!&quot;</span>
+
+<span class="s2"># Check current branch</span>
+<span class="s2">CURRENT_BRANCH=$(git branch --show-current 2&gt;/dev/null || echo &quot;unknown&quot;)</span>
+<span class="s2">log &quot;INFO&quot; &quot;Current branch: $CURRENT_BRANCH&quot;</span>
+
+<span class="s2"># Restrict production file editing on main/master branch</span>
+<span class="s2">if [[ &quot;$CURRENT_BRANCH&quot; == &quot;main&quot; ]] || [[ &quot;$CURRENT_BRANCH&quot; == &quot;master&quot; ]]; then</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;Direct modification of production files on main/master branch is prohibited!&quot;</span>
+<span class="s2">    echo &quot;Please create a feature branch for production changes.&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Interactive confirmation (auto-skip in CI environment)</span>
+<span class="s2">if [ -z &quot;$CI&quot; ] &amp;&amp; [ -z &quot;$GITHUB_ACTIONS&quot; ]; then</span>
+<span class="s2">    echo &quot;You are about to modify production files:&quot;</span>
+<span class="s2">    for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">        echo &quot;  - $file&quot;</span>
+<span class="s2">    done</span>
+<span class="s2">    echo &quot;&quot;</span>
+<span class="s2">    read -p &quot;Are you absolutely sure you want to proceed? Type &#39;CONFIRM&#39; to continue: &quot; confirmation</span>
+
+<span class="s2">    if [ &quot;$confirmation&quot; != &quot;CONFIRM&quot; ]; then</span>
+<span class="s2">        log &quot;INFO&quot; &quot;Operation cancelled by user&quot;</span>
+<span class="s2">        exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">fi</span>
+
+<span class="s2"># Create backup</span>
+<span class="s2">BACKUP_DIR=&quot;~/.claude/backups/$(date +%Y%m%d_%H%M%S)&quot;</span>
+<span class="s2">mkdir -p &quot;$BACKUP_DIR&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ -f &quot;$file&quot; ]; then</span>
+<span class="s2">        cp &quot;$file&quot; &quot;$BACKUP_DIR/$(basename $file)&quot;</span>
+<span class="s2">        log &quot;INFO&quot; &quot;Backup created: $BACKUP_DIR/$(basename $file)&quot;</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;Production modification approved - backup created in $BACKUP_DIR&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Secret Detection and Prevention&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PreToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;🔒 Running secret detection scan&quot;</span>
+
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ ! -f &quot;$file&quot; ]; then</span>
+<span class="s2">        continue</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # Common secret pattern detection</span>
+<span class="s2">    SECRETS_FOUND=false</span>
+
+<span class="s2">    # API key detection</span>
+<span class="s2">    if grep -E &quot;(api_key|apikey|api-key)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][^&#39;</span><span class="se">\&quot;</span><span class="s2">]{20,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;API key detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # Password detection</span>
+<span class="s2">    if grep -E &quot;(password|passwd|pwd)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][^&#39;</span><span class="se">\&quot;</span><span class="s2">]{8,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Password detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # Token detection</span>
+<span class="s2">    if grep -E &quot;(token|secret|key)[</span><span class="se">\s</span><span class="s2">]*=[</span><span class="se">\s</span><span class="s2">]*[&#39;</span><span class="se">\&quot;</span><span class="s2">][a-zA-Z0-9+/]{20,}[&#39;</span><span class="se">\&quot;</span><span class="s2">]&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Token/Secret detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # AWS credential detection</span>
+<span class="s2">    if grep -E &quot;AKIA[0-9A-Z]{16}&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;AWS Access Key detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # GitHub Token detection</span>
+<span class="s2">    if grep -E &quot;ghp_[0-9a-zA-Z]{36}&quot; &quot;$file&quot;; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;GitHub Token detected in: $file&quot;</span>
+<span class="s2">        SECRETS_FOUND=true</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    if [ &quot;$SECRETS_FOUND&quot; = true ]; then</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;🚨 SECURITY ALERT: Potential secrets detected!&quot;</span>
+<span class="s2">        echo &quot;Please remove sensitive information before proceeding.&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;Consider using:&quot;</span>
+<span class="s2">        echo &quot;  - Environment variables&quot;</span>
+<span class="s2">        echo &quot;  - Secret management tools (AWS Secrets Manager, HashiCorp Vault)&quot;</span>
+<span class="s2">        echo &quot;  - .env files (with .gitignore)&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        exit 1</span>
+<span class="s2">    fi</span>
+<span class="s2">done</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ No secrets detected&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-performance-optimization-and-monitoring">📊 Performance Optimization and Monitoring<a class="headerlink" href="#-performance-optimization-and-monitoring" title="Permanent link">&para;</a></h2><h3 id="execution-time-monitoring-and-bottleneck-detection">Execution Time Monitoring and Bottleneck Detection<a class="headerlink" href="#execution-time-monitoring-and-bottleneck-detection" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Performance Monitor&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># Performance log directory</span>
+<span class="s2">PERF_LOG_DIR=&quot;/var/log/claude-hooks/performance&quot;</span>
+<span class="s2">mkdir -p &quot;$PERF_LOG_DIR&quot;</span>
+
+<span class="s2"># Start execution time measurement</span>
+<span class="s2">START_TIME=$(date +%s.%N)</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;📊 Performance monitoring started&quot;</span>
+
+<span class="s2"># Process at hook execution completion</span>
+<span class="s2">END_TIME=$(date +%s.%N)</span>
+<span class="s2">EXECUTION_TIME=$(echo &quot;$END_TIME - $START_TIME&quot; | bc)</span>
+
+<span class="s2"># Record performance data</span>
+<span class="s2">echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$EXECUTION_TIME,$CLAUDE_TOOL_NAME,$CLAUDE_FILE_PATHS&quot; &gt;&gt; &quot;$PERF_LOG_DIR/execution_times.csv&quot;</span>
+
+<span class="s2"># Threshold check (warning if over 5 seconds)</span>
+<span class="s2">THRESHOLD=5.0</span>
+<span class="s2">if (( $(echo &quot;$EXECUTION_TIME &gt; $THRESHOLD&quot; | bc -l) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;⚠️ Hook execution exceeded threshold: ${EXECUTION_TIME}s &gt; ${THRESHOLD}s&quot;</span>
+
+<span class="s2">    # Performance detail log</span>
+<span class="s2">    {</span>
+<span class="s2">        echo &quot;=== Performance Analysis ===&quot;</span>
+<span class="s2">        echo &quot;Hook: $CLAUDE_TOOL_NAME&quot;</span>
+<span class="s2">        echo &quot;Files: $CLAUDE_FILE_PATHS&quot;</span>
+<span class="s2">        echo &quot;Execution Time: ${EXECUTION_TIME}s&quot;</span>
+<span class="s2">        echo &quot;Timestamp: $(date)&quot;</span>
+<span class="s2">        echo &quot;System Load: $(uptime)&quot;</span>
+<span class="s2">        echo &quot;Memory Usage: $(free -h | grep Mem)&quot;</span>
+<span class="s2">        echo &quot;================================&quot;</span>
+<span class="s2">    } &gt;&gt; &quot;$PERF_LOG_DIR/slow_executions.log&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ Performance monitoring completed (${EXECUTION_TIME}s)&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Resource Usage Monitor&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Notification&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># System resource monitoring</span>
+<span class="s2">CPU_USAGE=$(top -l1 | grep &quot;CPU usage&quot; | awk &#39;{print $3}&#39; | sed &#39;s/%//&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+<span class="s2">MEMORY_USAGE=$(free | grep Mem | awk &#39;{printf &quot;%.1f&quot;, $3/$2 * 100.0}&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+<span class="s2">DISK_USAGE=$(df -h . | tail -1 | awk &#39;{print $5}&#39; | sed &#39;s/%//&#39; 2&gt;/dev/null || echo &quot;0&quot;)</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;💻 System Resources - CPU: ${CPU_USAGE}%, Memory: ${MEMORY_USAGE}%, Disk: ${DISK_USAGE}%&quot;</span>
+
+<span class="s2"># High usage alert</span>
+<span class="s2">if (( $(echo &quot;$CPU_USAGE &gt; 80&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High CPU usage detected: ${CPU_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">if (( $(echo &quot;$MEMORY_USAGE &gt; 85&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High memory usage detected: ${MEMORY_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">if (( $(echo &quot;$DISK_USAGE &gt; 90&quot; | bc -l 2&gt;/dev/null || echo &quot;0&quot;) )); then</span>
+<span class="s2">    log &quot;WARN&quot; &quot;High disk usage detected: ${DISK_USAGE}%&quot;</span>
+<span class="s2">fi</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-troubleshooting-and-incident-response">🚨 Troubleshooting and Incident Response<a class="headerlink" href="#-troubleshooting-and-incident-response" title="Permanent link">&para;</a></h2><h3 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h3><h4 id="1-when-hooks-execution-hangs">1. When Hooks Execution Hangs<a class="headerlink" href="#1-when-hooks-execution-hangs" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># ~/.claude/scripts/hook-watchdog.sh</span>
+
+<span class="c1"># Detection and termination of hung Hook processes</span>
+find_hung_processes<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">max_runtime</span><span class="o">=</span><span class="m">600</span><span class="w">  </span><span class="c1"># 10 minutes</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">current_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+
+<span class="w">    </span>ps<span class="w"> </span>-eo<span class="w"> </span>pid,etime,comm,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>claude<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>pid<span class="w"> </span>etime<span class="w"> </span>comm<span class="w"> </span>args<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span><span class="c1"># Convert execution time to seconds</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$etime</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="o">([</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">)</span>:<span class="o">([</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">)</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">minutes</span><span class="o">=</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]</span><span class="si">}</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">seconds</span><span class="o">=</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[2]</span><span class="si">}</span>
+<span class="w">            </span><span class="nb">local</span><span class="w"> </span><span class="nv">total_seconds</span><span class="o">=</span><span class="k">$((</span><span class="nv">minutes</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">seconds</span><span class="k">))</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$total_seconds</span><span class="w"> </span>-gt<span class="w"> </span><span class="nv">$max_runtime</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Terminating hung process: </span><span class="nv">$pid</span><span class="s2"> (</span><span class="nv">$etime</span><span class="s2">)&quot;</span>
+<span class="w">                </span><span class="nb">kill</span><span class="w"> </span>-TERM<span class="w"> </span><span class="nv">$pid</span>
+<span class="w">                </span>sleep<span class="w"> </span><span class="m">5</span>
+<span class="w">                </span><span class="nb">kill</span><span class="w"> </span>-KILL<span class="w"> </span><span class="nv">$pid</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">            </span><span class="k">fi</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">done</span>
+<span class="o">}</span>
+
+<span class="c1"># Cron job for periodic execution</span>
+<span class="c1"># */5 * * * * /home/user/.claude/scripts/hook-watchdog.sh</span>
+find_hung_processes
+</code></pre></div><h4 id="2-resolving-race-conditions-in-parallel-execution">2. Resolving Race Conditions in Parallel Execution<a class="headerlink" href="#2-resolving-race-conditions-in-parallel-execution" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Mutex Protected Operation&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;package.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;requirements.txt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Cargo.toml&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># Mutex lock implementation</span>
+<span class="s2">LOCK_FILE=&quot;/tmp/claude-dependency-update.lock&quot;</span>
+<span class="s2">LOCK_TIMEOUT=300  # 5 minutes</span>
+
+<span class="s2">acquire_lock() {</span>
+<span class="s2">    local timeout_count=0</span>
+<span class="s2">    while [ -f &quot;$LOCK_FILE&quot; ] &amp;&amp; [ $timeout_count -lt $LOCK_TIMEOUT ]; do</span>
+<span class="s2">        sleep 1</span>
+<span class="s2">        ((timeout_count++))</span>
+<span class="s2">        if [ $((timeout_count % 30)) -eq 0 ]; then</span>
+<span class="s2">            log &quot;INFO&quot; &quot;Waiting for lock... (${timeout_count}s)&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    done</span>
+
+<span class="s2">    if [ $timeout_count -ge $LOCK_TIMEOUT ]; then</span>
+<span class="s2">        log &quot;ERROR&quot; &quot;Lock acquisition timeout&quot;</span>
+<span class="s2">        return 1</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    echo $$ &gt; &quot;$LOCK_FILE&quot;</span>
+<span class="s2">    return 0</span>
+<span class="s2">}</span>
+
+<span class="s2">release_lock() {</span>
+<span class="s2">    rm -f &quot;$LOCK_FILE&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2"># Cleanup with trap</span>
+<span class="s2">trap &#39;release_lock&#39; EXIT</span>
+
+<span class="s2">if acquire_lock; then</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Lock acquired, proceeding with operation&quot;</span>
+
+<span class="s2">    # Dependency update process</span>
+<span class="s2">    for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">        case &quot;$file&quot; in</span>
+<span class="s2">            &quot;package.json&quot;)</span>
+<span class="s2">                npm audit fix</span>
+<span class="s2">                npm update</span>
+<span class="s2">                ;;</span>
+<span class="s2">            &quot;requirements.txt&quot;)</span>
+<span class="s2">                pip install -r requirements.txt --upgrade</span>
+<span class="s2">                ;;</span>
+<span class="s2">            &quot;Cargo.toml&quot;)</span>
+<span class="s2">                cargo update</span>
+<span class="s2">                ;;</span>
+<span class="s2">        esac</span>
+<span class="s2">    done</span>
+
+<span class="s2">    log &quot;INFO&quot; &quot;Dependency update completed&quot;</span>
+<span class="s2">else</span>
+<span class="s2">    log &quot;ERROR&quot; &quot;Failed to acquire lock&quot;</span>
+<span class="s2">    exit 1</span>
+<span class="s2">fi</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h4 id="3-error-recovery-and-rollback-functionality">3. Error Recovery and Rollback Functionality<a class="headerlink" href="#3-error-recovery-and-rollback-functionality" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Auto Rollback on Error&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">file_paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.ts&quot;</span><span class="p">]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2"># Create backup directory</span>
+<span class="s2">BACKUP_DIR=&quot;/tmp/claude-backup-$(date +%s)&quot;</span>
+<span class="s2">mkdir -p &quot;$BACKUP_DIR&quot;</span>
+
+<span class="s2"># Backup function</span>
+<span class="s2">create_backup() {</span>
+<span class="s2">    local file=$1</span>
+<span class="s2">    local backup_file=&quot;$BACKUP_DIR/$(basename $file).backup&quot;</span>
+<span class="s2">    cp &quot;$file&quot; &quot;$backup_file&quot;</span>
+<span class="s2">    echo &quot;$backup_file&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2"># Rollback function</span>
+<span class="s2">rollback_files() {</span>
+<span class="s2">    log &quot;WARN&quot; &quot;Rolling back changes due to error&quot;</span>
+<span class="s2">    for backup_file in &quot;$BACKUP_DIR&quot;/*.backup; do</span>
+<span class="s2">        if [ -f &quot;$backup_file&quot; ]; then</span>
+<span class="s2">            original_file=$(basename &quot;$backup_file&quot; .backup)</span>
+<span class="s2">            # Identify original file location</span>
+<span class="s2">            find . -name &quot;$original_file&quot; -exec cp &quot;$backup_file&quot; {} </span><span class="se">\;</span>
+<span class="s2">            log &quot;INFO&quot; &quot;Rolled back: $original_file&quot;</span>
+<span class="s2">        fi</span>
+<span class="s2">    done</span>
+<span class="s2">}</span>
+
+<span class="s2"># Set error trap</span>
+<span class="s2">trap &#39;rollback_files; exit 1&#39; ERR</span>
+
+<span class="s2"># Start processing</span>
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Processing file: $file&quot;</span>
+
+<span class="s2">    # Create backup</span>
+<span class="s2">    backup_file=$(create_backup &quot;$file&quot;)</span>
+<span class="s2">    log &quot;INFO&quot; &quot;Backup created: $backup_file&quot;</span>
+
+<span class="s2">    # Actual processing (example: formatting)</span>
+<span class="s2">    case &quot;${file##*.}&quot; in</span>
+<span class="s2">        &quot;py&quot;)</span>
+<span class="s2">            black &quot;$file&quot; || { log &quot;ERROR&quot; &quot;Black formatting failed&quot;; exit 1; }</span>
+<span class="s2">            ;;</span>
+<span class="s2">        &quot;js&quot;|&quot;ts&quot;)</span>
+<span class="s2">            prettier --write &quot;$file&quot; || { log &quot;ERROR&quot; &quot;Prettier formatting failed&quot;; exit 1; }</span>
+<span class="s2">            ;;</span>
+<span class="s2">    esac</span>
+
+<span class="s2">    # Delete backup on successful processing</span>
+<span class="s2">    rm -f &quot;$backup_file&quot;</span>
+<span class="s2">done</span>
+
+<span class="s2"># Delete backup directory when all processing completes</span>
+<span class="s2">rmdir &quot;$BACKUP_DIR&quot; 2&gt;/dev/null || true</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ All files processed successfully&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="-enterprise-implementation-case-studies-and-best-practices">📈 Enterprise Implementation Case Studies and Best Practices<a class="headerlink" href="#-enterprise-implementation-case-studies-and-best-practices" title="Permanent link">&para;</a></h2><h3 id="configuration-management-for-large-teams">Configuration Management for Large Teams<a class="headerlink" href="#configuration-management-for-large-teams" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Team shared configuration setup script</span>
+
+<span class="c1"># Enterprise Claude Hooks configuration management</span>
+setup_enterprise_hooks<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">team_config_repo</span><span class="o">=</span><span class="s2">&quot;https://github.com/your-company/claude-hooks-config.git&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">config_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.claude&quot;</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Setting up enterprise Claude Hooks configuration...&quot;</span>
+
+<span class="w">    </span><span class="c1"># Backup existing configuration</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">.backup.</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># Clone team configuration</span>
+<span class="w">    </span>git<span class="w"> </span>clone<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$team_config_repo</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">&quot;</span>
+
+<span class="w">    </span><span class="c1"># Apply environment-specific configuration</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">env</span><span class="o">=</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">development</span><span class="si">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/environments/</span><span class="nv">$env</span><span class="s2">.toml&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/environments/</span><span class="nv">$env</span><span class="s2">.toml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/settings.toml&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Applied </span><span class="nv">$env</span><span class="s2"> environment configuration&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># Set execution permissions for team-specific scripts</span>
+<span class="w">    </span>chmod<span class="w"> </span>+x<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$config_dir</span><span class="s2">/scripts/&quot;</span>*.sh
+
+<span class="w">    </span><span class="c1"># Prepare log directory</span>
+<span class="w">    </span>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/claude-hooks
+<span class="w">    </span>sudo<span class="w"> </span>chown<span class="w"> </span><span class="nv">$USER</span>:<span class="nv">$USER</span><span class="w"> </span>/var/log/claude-hooks
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Enterprise Claude Hooks setup completed&quot;</span>
+<span class="o">}</span>
+
+<span class="c1"># Usage example</span>
+<span class="c1"># ./setup-enterprise-hooks.sh production</span>
+setup_enterprise_hooks<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+</code></pre></div><h3 id="cicd-integration-example">CI/CD Integration Example<a class="headerlink" href="#cicd-integration-example" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/claude-hooks-ci.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Hooks CI Integration</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">develop</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">claude-hooks-validation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Claude Code</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">curl -fsSL https://claude.ai/install.sh | sh</span>
+<span class="w">        </span><span class="no">echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Python dependencies</span>
+<span class="w">        </span><span class="no">if [ -f requirements.txt ]; then</span>
+<span class="w">          </span><span class="no">pip install -r requirements.txt</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">        </span><span class="no"># Node.js dependencies</span>
+<span class="w">        </span><span class="no">if [ -f package.json ]; then</span>
+<span class="w">          </span><span class="no">npm ci</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Claude Hooks</span>
+<span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">CLAUDE_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.CLAUDE_API_KEY }}</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">mkdir -p ~/.claude</span>
+<span class="w">        </span><span class="no">cp .github/claude-hooks/ci-settings.toml ~/.claude/settings.toml</span>
+<span class="w">        </span><span class="no">cp -r .github/claude-hooks/scripts ~/.claude/</span>
+<span class="w">        </span><span class="no">chmod +x ~/.claude/scripts/*.sh</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Code Quality Checks</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Simulate hooks execution</span>
+<span class="w">        </span><span class="no">for file in $(git diff --name-only HEAD~1 HEAD | grep -E &#39;\.(py|js|ts)$&#39;); do</span>
+<span class="w">          </span><span class="no">if [ -f &quot;$file&quot; ]; then</span>
+<span class="w">            </span><span class="no">echo &quot;Simulating hooks for: $file&quot;</span>
+
+<span class="w">            </span><span class="no"># Python processing</span>
+<span class="w">            </span><span class="no">if [[ &quot;$file&quot; == *.py ]]; then</span>
+<span class="w">              </span><span class="no">black --check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">ruff check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">python -m py_compile &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">fi</span>
+
+<span class="w">            </span><span class="no"># JavaScript/TypeScript processing</span>
+<span class="w">            </span><span class="no">if [[ &quot;$file&quot; =~ \.(js|ts|tsx)$ ]]; then</span>
+<span class="w">              </span><span class="no">npx prettier --check &quot;$file&quot;</span>
+<span class="w">              </span><span class="no">npx eslint &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">fi</span>
+<span class="w">          </span><span class="no">fi</span>
+<span class="w">        </span><span class="no">done</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Tests</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no"># Python tests</span>
+<span class="w">        </span><span class="no">if [ -f pytest.ini ] || [ -f pyproject.toml ]; then</span>
+<span class="w">          </span><span class="no">pytest --tb=short</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">        </span><span class="no"># Node.js tests</span>
+<span class="w">        </span><span class="no">if [ -f package.json ] &amp;&amp; grep -q &#39;&quot;test&quot;&#39; package.json; then</span>
+<span class="w">          </span><span class="no">npm test</span>
+<span class="w">        </span><span class="no">fi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Performance Report</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">echo &quot;## Claude Hooks Performance Report&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Check | Status | Duration |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;|-------|--------|----------|&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Code Format | ✅ | 2.3s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Tests | ✅ | 15.7s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+<span class="w">        </span><span class="no">echo &quot;| Security Scan | ✅ | 4.1s |&quot; &gt;&gt; $GITHUB_STEP_SUMMARY</span>
+</code></pre></div><h2 id="-advanced-customization">🔧 Advanced Customization<a class="headerlink" href="#-advanced-customization" title="Permanent link">&para;</a></h2><h3 id="project-specific-ai-learning-functionality">Project-Specific AI Learning Functionality<a class="headerlink" href="#project-specific-ai-learning-functionality" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">[[hooks]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AI-Powered Code Analysis&quot;</span>
+<span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostToolUse&quot;</span>
+<span class="n">run_in_background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[hooks.matcher]</span>
+<span class="n">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;edit_file&quot;</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">source ~/.claude/scripts/common.sh</span>
+
+<span class="s2">PROJECT_ROOT=$(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)</span>
+<span class="s2">ANALYSIS_DIR=&quot;$PROJECT_ROOT/.claude/analysis&quot;</span>
+<span class="s2">mkdir -p &quot;$ANALYSIS_DIR&quot;</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;🤖 Starting AI-powered code analysis&quot;</span>
+
+<span class="s2"># Code pattern learning</span>
+<span class="s2">for file in $CLAUDE_FILE_PATHS; do</span>
+<span class="s2">    if [ ! -f &quot;$file&quot; ]; then</span>
+<span class="s2">        continue</span>
+<span class="s2">    fi</span>
+
+<span class="s2">    # File type detection</span>
+<span class="s2">    file_type=&quot;${file##*.}&quot;</span>
+
+<span class="s2">    # Code complexity analysis</span>
+<span class="s2">    case &quot;$file_type&quot; in</span>
+<span class="s2">        &quot;py&quot;)</span>
+<span class="s2">            if command -v radon &amp;&gt; /dev/null; then</span>
+<span class="s2">                complexity=$(radon cc &quot;$file&quot; -a 2&gt;/dev/null | tail -1 | awk &#39;{print $NF}&#39; | tr -d &#39;()&#39;)</span>
+<span class="s2">                echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$file,python,$complexity&quot; &gt;&gt; &quot;$ANALYSIS_DIR/complexity.csv&quot;</span>
+<span class="s2">            fi</span>
+<span class="s2">            ;;</span>
+<span class="s2">        &quot;js&quot;|&quot;ts&quot;)</span>
+<span class="s2">            if command -v eslint &amp;&gt; /dev/null; then</span>
+<span class="s2">                complexity=$(npx eslint &quot;$file&quot; --format json 2&gt;/dev/null | jq &#39;.[].messages | length&#39; || echo &quot;0&quot;)</span>
+<span class="s2">                echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;),$file,javascript,$complexity&quot; &gt;&gt; &quot;$ANALYSIS_DIR/complexity.csv&quot;</span>
+<span class="s2">            fi</span>
+<span class="s2">            ;;</span>
+<span class="s2">    esac</span>
+
+<span class="s2">    # Record change pattern</span>
+<span class="s2">    git log -n 5 --oneline &quot;$file&quot; &gt; &quot;$ANALYSIS_DIR/$(basename $file).history&quot; 2&gt;/dev/null</span>
+<span class="s2">done</span>
+
+<span class="s2"># Generate weekly learning summary</span>
+<span class="s2">if [ $(date +%w) -eq 1 ]; then  # Monday</span>
+<span class="s2">    log &quot;INFO&quot; &quot;📊 Generating weekly learning summary&quot;</span>
+
+<span class="s2">    {</span>
+<span class="s2">        echo &quot;# Weekly Code Analysis Summary - $(date &#39;+%Y-%m-%d&#39;)&quot;</span>
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;## Complexity Trends&quot;</span>
+<span class="s2">        tail -n 50 &quot;$ANALYSIS_DIR/complexity.csv&quot; | awk -F&#39;,&#39; &#39;</span>
+<span class="s2">        {</span>
+<span class="s2">            sum += $4</span>
+<span class="s2">            count++</span>
+<span class="s2">        }</span>
+<span class="s2">        END {</span>
+<span class="s2">            if (count &gt; 0) {</span>
+<span class="s2">                avg = sum / count</span>
+<span class="s2">                print &quot;Average complexity: &quot; avg</span>
+<span class="s2">                if (avg &gt; 10) print &quot;⚠️ High complexity detected - consider refactoring&quot;</span>
+<span class="s2">                else print &quot;✅ Complexity within acceptable range&quot;</span>
+<span class="s2">            }</span>
+<span class="s2">        }&#39;</span>
+
+<span class="s2">        echo &quot;&quot;</span>
+<span class="s2">        echo &quot;## Most Modified Files&quot;</span>
+<span class="s2">        find &quot;$ANALYSIS_DIR&quot; -name &quot;*.history&quot; -exec wc -l {} + | sort -nr | head -5</span>
+
+<span class="s2">    } &gt; &quot;$ANALYSIS_DIR/weekly-summary.md&quot;</span>
+<span class="s2">fi</span>
+
+<span class="s2">log &quot;INFO&quot; &quot;✅ AI code analysis completed&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div><h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2><p>Implementing Claude Code Hooks in production environments goes beyond simple configuration file creation, requiring <strong>robust error handling</strong>, <strong>performance monitoring</strong>, and <strong>security assurance</strong>.</p><p>By utilizing the configuration examples and scripts introduced in this guide, you can achieve:</p><ul><li><strong>Gradual Introduction</strong>: Progressive automation that minimizes risk</li><li><strong>Incident Response</strong>: Rapid recovery and root cause analysis when issues occur</li><li><strong>Team Operations</strong>: Unified development environment for large organizations</li><li><strong>Continuous Improvement</strong>: Automatic optimization with AI assistance</li></ul><p>These implementations enable Claude Code Hooks to function as a true development productivity enhancement tool.</p><div class="admonition tip"><p class="admonition-title">Next Steps</p><ul><li>Review basic concepts in the <a href="../claude-code-hooks-revolution-2025/">morning article</a></li><li>Begin test introduction in small projects </li><li>Customize team configuration files</li><li>Implement CI/CD environment integration</li></ul></div><div class="admonition warning"><p class="admonition-title">Production Introduction Considerations</p><p>Before production deployment, ensure thorough testing in development and staging environments. PreToolUse hooks in particular require careful configuration as they may block operations.</p></div><h2 id="related-articles">Related Articles<a class="headerlink" href="#related-articles" title="Permanent link">&para;</a></h2><ul><li><a href="../claude-code-hooks-revolution-2025/">Claude Code Hooks Revolution: New Dimension of Development Workflow Automation [July 2025 Latest]</a></li><li><a href="../claude-code-complete-guide/">Claude Code Complete Implementation Guide: Definitive AI Development Environment Setup [2025 Edition]</a></li><li><a href="../claude-code-github-actions/">GitHub Actions Automation Strategy: Ultimate CI/CD with Claude Code Integration</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="March 13, 2026 21:27:58 JST">March 13, 2026 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../../javascripts/mermaid-init.js"></script><script src="../../../../javascripts/mobile-nav.js"></script><script src="../../../../javascripts/daily-progress.js"></script><script src="../../../../javascripts/fix-md-links.js"></script><script src="../../../../javascripts/mobile-category-tabs.js"></script></body></html>

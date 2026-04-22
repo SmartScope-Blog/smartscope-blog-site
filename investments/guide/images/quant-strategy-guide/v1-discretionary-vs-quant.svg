@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+  <title id="title">裁量トレードとクオンツ戦略の比較</title>
+  <desc id="desc">経験や勘で判断する裁量トレードと、ルールで判断するクオンツ戦略の違いを左右比較した図。</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .panel-left { fill: #f7f7f5; stroke: #d8d7d2; stroke-width: 2; }
+    .panel-right { fill: #f1fbf7; stroke: #1d9e75; stroke-width: 2; }
+    .title { font: 700 34px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .subtitle { font: 700 24px 'Segoe UI', 'Noto Sans JP', sans-serif; }
+    .label { font: 700 17px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #3d3d38; }
+    .body { font: 15px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4c4c46; }
+    .small { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+    .divider { stroke: #888780; stroke-width: 2; stroke-dasharray: 10 8; }
+    .pro { fill: #e8f5ef; stroke: #1d9e75; stroke-width: 1.2; }
+    .con { fill: #fce9e4; stroke: #e24b4a; stroke-width: 1.2; }
+    .protext { font: 700 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #177a5b; }
+    .context { fill: #ffffff; stroke: #d7d6d0; stroke-width: 1.2; }
+  </style>
+  <rect class="bg" width="920" height="520" rx="28"/>
+  <text x="460" y="50" text-anchor="middle" class="title">投資判断のアプローチ</text>
+  <line x1="460" y1="84" x2="460" y2="456" class="divider"/>
+
+  <rect x="40" y="96" width="380" height="360" rx="28" class="panel-left"/>
+  <text x="70" y="138" class="subtitle" fill="#66655f">裁量トレード</text>
+  <text x="70" y="168" class="label">どう決めるか</text>
+  <text x="70" y="194" class="body">経験・勘・ニュース解釈</text>
+
+  <rect x="70" y="220" width="320" height="68" rx="18" class="context"/>
+  <rect x="88" y="238" width="76" height="24" rx="12" class="pro"/>
+  <text x="126" y="254" text-anchor="middle" class="protext">良い点</text>
+  <text x="182" y="244" class="body">相場の急変や例外に</text>
+  <text x="182" y="264" class="body">柔軟に対応しやすい</text>
+
+  <rect x="70" y="302" width="320" height="68" rx="18" class="context"/>
+  <rect x="88" y="320" width="76" height="24" rx="12" class="con"/>
+  <text x="126" y="336" text-anchor="middle" class="protext" fill="#b53d3c">弱い点</text>
+  <text x="182" y="326" class="body">同じ場面でも判断が</text>
+  <text x="182" y="346" class="body">人によってぶれやすい</text>
+
+  <text x="70" y="402" class="label">向いている場面</text>
+  <text x="70" y="428" class="small">定量化しにくいニュースや構造変化への対応</text>
+
+  <rect x="500" y="96" width="380" height="360" rx="28" class="panel-right"/>
+  <text x="530" y="138" class="subtitle" fill="#1d9e75">クオンツ戦略</text>
+  <text x="530" y="168" class="label">どう決めるか</text>
+  <text x="530" y="194" class="body">数値ルール・統計・アルゴリズム</text>
+
+  <rect x="530" y="220" width="320" height="68" rx="18" class="context"/>
+  <rect x="548" y="238" width="76" height="24" rx="12" class="pro"/>
+  <text x="586" y="254" text-anchor="middle" class="protext">良い点</text>
+  <text x="642" y="244" class="body">同じ条件で何度でも</text>
+  <text x="642" y="264" class="body">検証し直せる</text>
+
+  <rect x="530" y="302" width="320" height="68" rx="18" class="context"/>
+  <rect x="548" y="320" width="76" height="24" rx="12" class="con"/>
+  <text x="586" y="336" text-anchor="middle" class="protext" fill="#b53d3c">弱い点</text>
+  <text x="642" y="326" class="body">過去に合わせすぎると</text>
+  <text x="642" y="346" class="body">将来に弱くなる</text>
+
+  <text x="530" y="402" class="label">向いている場面</text>
+  <text x="530" y="428" class="small">同じ判断を繰り返したい運用、多銘柄の比較</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 700" width="980" height="700" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Mythosの能力境界：確認済みの強みと未達領域</title>
+  <desc id="desc">Claude Mythos Previewの強い点と、まだ限界が残る点を左右2列で整理した図</desc>
+
+  <rect x="24" y="20" width="932" height="660" rx="18" fill="#F8F5EF" stroke="#D4CCBE"/>
+  <text x="490" y="58" text-anchor="middle" fill="#111827" font-size="28" font-weight="700">Claude Mythosの能力境界</text>
+  <text x="490" y="90" text-anchor="middle" fill="#374151" font-size="16">強い。だが万能ではない。</text>
+
+  <rect x="52" y="126" width="412" height="424" rx="18" fill="#E8F7F0" stroke="#1F9D73" stroke-width="2.5"/>
+  <text x="258" y="168" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">確認済みの強み</text>
+  <text x="258" y="196" text-anchor="middle" fill="#374151" font-size="14">防御用途で非常に強力</text>
+
+  <rect x="88" y="228" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="258" y="258" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">主要OS・主要ブラウザで</text>
+  <text x="258" y="280" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">zero-day を発見できると報告</text>
+
+  <rect x="88" y="324" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="258" y="354" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">private cyber range を</text>
+  <text x="258" y="376" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">end-to-end で完了</text>
+
+  <rect x="88" y="420" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="258" y="450" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">企業ネットワーク攻撃の</text>
+  <text x="258" y="472" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">シミュレーションを完了</text>
+
+  <rect x="516" y="126" width="412" height="424" rx="18" fill="#FFF1EA" stroke="#E0592A" stroke-width="2.5"/>
+  <text x="722" y="168" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">まだ限界がある点</text>
+  <text x="722" y="196" text-anchor="middle" fill="#374151" font-size="14">ここを落とすと神話化になる</text>
+
+  <rect x="552" y="228" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="722" y="258" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">OT環境の別レンジは未達</text>
+  <text x="722" y="280" text-anchor="middle" fill="#374151" font-size="13">どの環境でも万能という話ではない</text>
+
+  <rect x="552" y="324" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="722" y="354" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">modern patched sandbox では</text>
+  <text x="722" y="376" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">新規 exploit を見つけられず</text>
+
+  <rect x="552" y="420" width="340" height="78" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="722" y="450" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">事例の多くは責任ある開示待ちで</text>
+  <text x="722" y="472" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">詳細はまだ非公開</text>
+
+  <line x1="490" y1="224" x2="490" y2="510" stroke="#C7C0B1" stroke-width="1.2" stroke-dasharray="6 6"/>
+
+  <rect x="116" y="582" width="748" height="58" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+  <text x="490" y="609" text-anchor="middle" fill="#111827" font-size="17" font-weight="700">結論: 守る側には有益だが、攻撃側にも転用できるので一般公開できない</text>
+  <text x="490" y="631" text-anchor="middle" fill="#374151" font-size="13">今回の論点は性能そのものより、配布ポリシーが変わったことにある</text>
+</svg>

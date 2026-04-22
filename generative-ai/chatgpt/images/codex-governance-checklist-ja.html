@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex ガバナンスチェックリスト</title>
+<style>
+:root {
+  --text: #2c2c2a;
+  --muted: #5f5e5a;
+  --border: rgba(0, 0, 0, 0.14);
+  --teal-accent: #1D9E75;
+  --teal-fill: #E1F5EE;
+  --amber-accent: #BA7517;
+  --amber-fill: #FAEEDA;
+  --blue-accent: #378ADD;
+  --blue-fill: #E6F1FB;
+  --purple-accent: #534AB7;
+  --purple-fill: #EEEDFE;
+  --red-accent: #E24B4A;
+  --red-fill: #FCEBEB;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; }
+body { font-family: var(--font); color: var(--text); padding: 14px; }
+.widget { max-width: 800px; margin: 0 auto; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+.card { display: flex; gap: 10px; padding: 12px; border-radius: 8px; border: 0.5px solid var(--border); }
+.num { font-size: 18px; font-weight: 700; line-height: 1; min-width: 20px; }
+.title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.desc { font-size: 12px; color: var(--muted); line-height: 1.45; }
+.teal { background: var(--teal-fill); border-color: var(--teal-accent); }
+.teal .num { color: var(--teal-accent); }
+.blue { background: var(--blue-fill); border-color: var(--blue-accent); }
+.blue .num { color: var(--blue-accent); }
+.amber { background: var(--amber-fill); border-color: var(--amber-accent); }
+.amber .num { color: var(--amber-accent); }
+.purple { background: var(--purple-fill); border-color: var(--purple-accent); }
+.purple .num { color: var(--purple-accent); }
+.anti-title { font-size: 14px; font-weight: 700; color: var(--red-accent); margin-bottom: 8px; }
+.anti-list { display: grid; gap: 8px; }
+.anti-item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--red-accent); background: var(--red-fill); font-size: 12px; line-height: 1.45; }
+.x { color: var(--red-accent); font-weight: 700; font-size: 14px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="grid">
+    <div class="card teal"><div class="num">1</div><div><div class="title">ログ保管</div><div class="desc">sessions/*.jsonl と codex-tui.log を S3 または GCS に退避。30日以上を目安に保持。</div></div></div>
+    <div class="card blue"><div class="num">2</div><div><div class="title">二者承認</div><div class="desc">approval_policy=never を使う変更は、別の PR reviewer を必須にする。</div></div></div>
+    <div class="card amber"><div class="num">3</div><div><div class="title">bypass 使用アラート</div><div class="desc">--dangerously-bypass-approvals-and-sandbox の使用時は Slack やメールで通知する。</div></div></div>
+    <div class="card purple"><div class="num">4</div><div><div class="title">最小権限</div><div class="desc">sandbox_permissions はコマンド単位で固定し、恒久的な danger-full-access を避ける。</div></div></div>
+  </div>
+  <div class="anti-title">避けるべき運用</div>
+  <div class="anti-list">
+    <div class="anti-item"><span class="x">X</span><span>本番ホストで <span class="mono">--dangerously-bypass...</span> を使う</span></div>
+    <div class="anti-item"><span class="x">X</span><span>プロンプトに API key を直書きする</span></div>
+    <div class="anti-item"><span class="x">X</span><span><span class="mono">danger-full-access</span> と一括削除を同時に使う</span></div>
+  </div>
+</div>
+</body>
+</html>

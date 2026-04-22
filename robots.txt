@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+Disallow: /drafts/
+Disallow: /admin/
+Disallow: /private/
+
+# Archive content (keep for internal reference, exclude from search engines)
+Disallow: /AI-Daily-News/
+Disallow: /en/AI-Daily-News/
+
+# Block malformed URLs (double slashes)
+Disallow: //
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://smartscope.blog/sitemap.xml
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 10

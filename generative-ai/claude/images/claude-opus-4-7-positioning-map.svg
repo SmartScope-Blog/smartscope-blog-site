@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" font-weight="700" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Opus 4.7 と Mythos Preview の位置づけ</title>
+  <desc id="desc">Claude Opus 4.7 は一般提供の本線、Mythos Preview は限定公開の検証線として並行して存在することを、配布・役割・能力・読み方の4観点で比較する図</desc>
+
+  <rect x="24" y="20" width="932" height="520" rx="20" fill="#F6F3EC" stroke="#C7C0B1"/>
+
+  <text x="490" y="58" text-anchor="middle" fill="#33312D" font-size="26" font-weight="700">Claude Opus 4.7 と Mythos Preview の位置づけ</text>
+  <text x="490" y="86" text-anchor="middle" fill="#4A4740" font-size="15" font-weight="700">矢印でつなぐ話ではなく、一般提供ラインと限定プレビューラインを並行比較で読む</text>
+
+  <rect x="58" y="118" width="394" height="114" rx="18" fill="#E8F1FB" stroke="#378ADD" stroke-width="2.4"/>
+  <rect x="82" y="136" width="88" height="28" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="126" y="155" text-anchor="middle" fill="#1F5C94" font-size="12" font-weight="700">本番線</text>
+  <text x="255" y="168" text-anchor="middle" fill="#1F5C94" font-size="32" font-weight="700">Opus 4.7</text>
+  <text x="255" y="196" text-anchor="middle" fill="#1F5C94" font-size="15" font-weight="700">general-access の最上位モデル</text>
+  <text x="255" y="216" text-anchor="middle" fill="#4A4740" font-size="13" font-weight="700">Opus 4.6 の直接後継として広く使う側</text>
+
+  <rect x="528" y="118" width="394" height="114" rx="18" fill="#FAECE7" stroke="#D85A30" stroke-width="2.4"/>
+  <rect x="544" y="136" width="68" height="24" rx="12" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="578" y="152" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">検証線</text>
+  <text x="752" y="176" text-anchor="middle" fill="#A6431F" font-size="26" font-weight="700">Mythos Preview</text>
+  <text x="725" y="196" text-anchor="middle" fill="#A6431F" font-size="15" font-weight="700">限定公開の frontier preview</text>
+  <text x="725" y="216" text-anchor="middle" fill="#4A4740" font-size="13" font-weight="700">防御目的で能力境界を検証する側</text>
+
+  <!-- Row 1 -->
+  <rect x="58" y="262" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="285" text-anchor="middle" fill="#4A4740" font-size="13" font-weight="700">比較軸 1</text>
+  <text x="144" y="306" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">配布</text>
+
+  <rect x="236" y="262" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="282" text-anchor="middle" fill="#1F5C94" font-size="11.5" font-weight="700">Claude / API / Bedrock</text>
+  <text x="344" y="297" text-anchor="middle" fill="#1F5C94" font-size="11.5" font-weight="700">Vertex AI / Foundry</text>
+  <text x="344" y="311" text-anchor="middle" fill="#4A4740" font-size="11.5" font-weight="700">一般ユーザーと開発者が広く触る</text>
+
+  <rect x="528" y="262" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="286" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">一般公開しない</text>
+  <text x="725" y="306" text-anchor="middle" fill="#4A4740" font-size="12" font-weight="700">限定パートナーと検証対象組織だけで扱う</text>
+
+  <!-- Row 2 -->
+  <rect x="58" y="332" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="355" text-anchor="middle" fill="#4A4740" font-size="13" font-weight="700">比較軸 2</text>
+  <text x="144" y="376" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">役割</text>
+
+  <rect x="236" y="332" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="356" text-anchor="middle" fill="#1F5C94" font-size="13" font-weight="700">Opus 4.6 の後継</text>
+  <text x="344" y="376" text-anchor="middle" fill="#4A4740" font-size="12" font-weight="700">価格を維持して本番投入する</text>
+
+  <rect x="528" y="332" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="356" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">cyber safeguard の検証線</text>
+  <text x="725" y="376" text-anchor="middle" fill="#4A4740" font-size="12" font-weight="700">公開より先に危険域の挙動を見る</text>
+
+  <!-- Row 3 -->
+  <rect x="58" y="402" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="425" text-anchor="middle" fill="#4A4740" font-size="13" font-weight="700">比較軸 3</text>
+  <text x="144" y="446" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">能力の位置</text>
+
+  <rect x="236" y="402" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="426" text-anchor="middle" fill="#1F5C94" font-size="12.5" font-weight="700">general-access の最上位</text>
+  <text x="344" y="446" text-anchor="middle" fill="#4A4740" font-size="12" font-weight="700">多くの比較対象はここを見る</text>
+
+  <rect x="528" y="402" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="426" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">capability frontier はこの側</text>
+  <text x="725" y="446" text-anchor="middle" fill="#4A4740" font-size="12" font-weight="700">4.7 より強いが本番線ではない</text>
+
+  <!-- Bottom note -->
+  <rect x="108" y="486" width="764" height="30" rx="15" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="490" y="506" text-anchor="middle" fill="#33312D" font-size="14" font-weight="700">読む順番は「まず Opus 4.7」「Mythos Preview は別線として補足」の順でよい</text>
+</svg>

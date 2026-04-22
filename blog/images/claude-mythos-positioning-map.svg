@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 620" width="980" height="620" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Mythosの位置づけ：一般公開モデルではなく防御用プレビュー</title>
+  <desc id="desc">公開Claudeラインの外側にClaude Mythos Previewがあり、その知見が将来の公開モデルへ安全装置として戻る流れを示す図</desc>
+
+  <rect x="24" y="20" width="932" height="580" rx="18" fill="#F8F5EF" stroke="#D4CCBE"/>
+  <text x="490" y="58" text-anchor="middle" fill="#111827" font-size="28" font-weight="700">Claude Mythosの位置づけ</text>
+  <text x="490" y="90" text-anchor="middle" fill="#374151" font-size="16">一般公開モデルではなく、防御目的に限定された研究プレビュー</text>
+
+  <rect x="48" y="130" width="256" height="316" rx="18" fill="#EAF3FE" stroke="#2D7DD2" stroke-width="2.5"/>
+  <text x="176" y="170" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">公開Claudeライン</text>
+  <text x="176" y="198" text-anchor="middle" fill="#374151" font-size="14">一般ユーザーと開発者向け</text>
+
+  <rect x="84" y="230" width="184" height="60" rx="10" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="176" y="267" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">Haiku / Sonnet / Opus</text>
+
+  <rect x="76" y="306" width="200" height="72" rx="10" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="176" y="336" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">claude.ai / API</text>
+  <text x="176" y="358" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">/ Claude Code</text>
+
+  <rect x="84" y="394" width="184" height="30" rx="8" fill="#FFFFFF" stroke="#2D7DD2"/>
+  <text x="176" y="414" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">広く配布できる能力水準</text>
+
+  <rect x="340" y="108" width="300" height="360" rx="18" fill="#FFF1EA" stroke="#E0592A" stroke-width="2.8"/>
+  <text x="490" y="152" text-anchor="middle" fill="#111827" font-size="24" font-weight="700">Claude Mythos Preview</text>
+  <text x="490" y="180" text-anchor="middle" fill="#374151" font-size="14">2026-04-07 / unreleased frontier model</text>
+
+  <rect x="388" y="220" width="204" height="54" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="490" y="253" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">一般公開しない</text>
+
+  <rect x="388" y="292" width="204" height="64" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="490" y="321" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">防御目的のサイバー利用に限定</text>
+  <text x="490" y="341" text-anchor="middle" fill="#374151" font-size="13">守る側の検証を先に進める</text>
+
+  <rect x="388" y="374" width="204" height="64" rx="10" fill="#FFFFFF" stroke="#E0592A"/>
+  <text x="490" y="403" text-anchor="middle" fill="#111827" font-size="14" font-weight="700">Glasswing参加組織</text>
+  <text x="490" y="423" text-anchor="middle" fill="#374151" font-size="13">+ 40超の追加組織</text>
+
+  <rect x="676" y="130" width="256" height="316" rx="18" fill="#E8F7F0" stroke="#1F9D73" stroke-width="2.5"/>
+  <text x="804" y="170" text-anchor="middle" fill="#111827" font-size="22" font-weight="700">公開ラインへ戻るもの</text>
+  <text x="804" y="198" text-anchor="middle" fill="#374151" font-size="14">多くの開発者に効くのはこちら</text>
+
+  <rect x="712" y="230" width="184" height="60" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="804" y="267" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">新しい safeguards</text>
+
+  <rect x="712" y="312" width="184" height="60" rx="10" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="804" y="349" text-anchor="middle" fill="#111827" font-size="15" font-weight="700">今後の Claude Opus</text>
+
+  <rect x="712" y="394" width="184" height="30" rx="8" fill="#FFFFFF" stroke="#1F9D73"/>
+  <text x="804" y="414" text-anchor="middle" fill="#374151" font-size="13" font-weight="600">Claude Codeの運用前提</text>
+
+  <path d="M306 288 C323 288, 329 288, 338 288" fill="none" stroke="#2D7DD2" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <path d="M642 288 C659 288, 665 288, 674 288" fill="none" stroke="#1F9D73" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+
+  <rect x="94" y="500" width="792" height="68" rx="14" fill="#FFFFFF" stroke="#D4CCBE"/>
+  <text x="490" y="529" text-anchor="middle" fill="#111827" font-size="18" font-weight="700">Project Glasswing</text>
+  <text x="490" y="553" text-anchor="middle" fill="#374151" font-size="14">重要インフラとOSS保守を支援する限定プログラム</text>
+
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#2D7DD2" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#1F9D73" stroke-width="1.5"/>
+    </marker>
+  </defs>
+</svg>

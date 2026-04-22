@@ -1,0 +1,366 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A systematic guide to design patterns and practical applications for development efficiency using Claude Code's custom slash commands, explained through a lateral thinking approach"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/generative-ai/claude/claude-code-custom-slash-commands-design-guide/"><link rel="alternate" href="../../../../generative-ai/claude/claude-code-custom-slash-commands-design-guide/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude Code Custom Slash Commands Design Guide - Expanding Development Efficiency Through Lateral Thinking - SmartScope</title><link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude Code Custom Slash Commands Design Guide - Expanding Development Efficiency Through Lateral Thinking"><meta property="og:description" content="A systematic guide to design patterns and practical applications for development efficiency using Claude Code's custom slash commands, explained through a lateral thinking approach"><meta property="og:url" content="https://smartscope.blog/en/generative-ai/claude/claude-code-custom-slash-commands-design-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude Code Custom Slash Commands Design Guide - Expanding Development Efficiency Through Lateral Thinking"><meta name="twitter:description" content="A systematic guide to design patterns and practical applications for development efficiency using Claude Code's custom slash commands, explained through a lateral thinking approach"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-custom-slash-commands-design-guide---expanding-development-efficiency-through-lateral-thinking" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude Code Custom Slash Commands Design Guide - Expanding Development Efficiency Through Lateral Thinking </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../../generative-ai/claude/claude-code-custom-slash-commands-design-guide/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#introduction-why-custom-slash-commands" class="md-nav__link"><span class="md-ellipsis"> Introduction: Why Custom Slash Commands? </span></a><nav class="md-nav" aria-label="Introduction: Why Custom Slash Commands?"><ul class="md-nav__list"><li class="md-nav__item"><a href="#what-youll-learn-in-this-article" class="md-nav__link"><span class="md-ellipsis"> What You'll Learn in This Article </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#1-six-application-domains-discovered-through-lateral-thinking" class="md-nav__link"><span class="md-ellipsis"> 1. Six Application Domains Discovered Through Lateral Thinking </span></a><nav class="md-nav" aria-label="1. Six Application Domains Discovered Through Lateral Thinking"><ul class="md-nav__list"><li class="md-nav__item"><a href="#11-time-based-applications" class="md-nav__link"><span class="md-ellipsis"> 1.1 Time-Based Applications </span></a></li><li class="md-nav__item"><a href="#12-role-and-perspective-switching" class="md-nav__link"><span class="md-ellipsis"> 1.2 Role and Perspective Switching </span></a></li><li class="md-nav__item"><a href="#13-emotional-and-human-elements" class="md-nav__link"><span class="md-ellipsis"> 1.3 Emotional and Human Elements </span></a></li><li class="md-nav__item"><a href="#14-learning-and-growth-support" class="md-nav__link"><span class="md-ellipsis"> 1.4 Learning and Growth Support </span></a></li><li class="md-nav__item"><a href="#15-creative-and-ideation-support" class="md-nav__link"><span class="md-ellipsis"> 1.5 Creative and Ideation Support </span></a></li><li class="md-nav__item"><a href="#16-meta-cognition-and-quality-improvement" class="md-nav__link"><span class="md-ellipsis"> 1.6 Meta-Cognition and Quality Improvement </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#2-five-design-categories-and-principles" class="md-nav__link"><span class="md-ellipsis"> 2. Five Design Categories and Principles </span></a><nav class="md-nav" aria-label="2. Five Design Categories and Principles"><ul class="md-nav__list"><li class="md-nav__item"><a href="#21-information-gathering-and-analysis" class="md-nav__link"><span class="md-ellipsis"> 2.1 Information Gathering and Analysis </span></a></li><li class="md-nav__item"><a href="#22-transformation-and-generation" class="md-nav__link"><span class="md-ellipsis"> 2.2 Transformation and Generation </span></a></li><li class="md-nav__item"><a href="#23-dialogue-and-support" class="md-nav__link"><span class="md-ellipsis"> 2.3 Dialogue and Support </span></a></li><li class="md-nav__item"><a href="#24-automation-and-efficiency" class="md-nav__link"><span class="md-ellipsis"> 2.4 Automation and Efficiency </span></a></li><li class="md-nav__item"><a href="#25-quality-assurance" class="md-nav__link"><span class="md-ellipsis"> 2.5 Quality Assurance </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#3-15-practical-command-designs" class="md-nav__link"><span class="md-ellipsis"> 3. 15 Practical Command Designs </span></a><nav class="md-nav" aria-label="3. 15 Practical Command Designs"><ul class="md-nav__list"><li class="md-nav__item"><a href="#31-morning---morning-startup" class="md-nav__link"><span class="md-ellipsis"> 3.1 /morning - Morning Startup </span></a></li><li class="md-nav__item"><a href="#32-standup---standup-meeting-helper" class="md-nav__link"><span class="md-ellipsis"> 3.2 /standup - Standup Meeting Helper </span></a></li><li class="md-nav__item"><a href="#33-explain-concept---concept-explanation-generator" class="md-nav__link"><span class="md-ellipsis"> 3.3 /explain {concept} - Concept Explanation Generator </span></a></li><li class="md-nav__item"><a href="#34-review---code-review-assistant" class="md-nav__link"><span class="md-ellipsis"> 3.4 /review - Code Review Assistant </span></a></li><li class="md-nav__item"><a href="#35-doc-gen-target---automatic-documentation-generator" class="md-nav__link"><span class="md-ellipsis"> 3.5 /doc-gen {target} - Automatic Documentation Generator </span></a></li><li class="md-nav__item"><a href="#36-test-ideas---test-case-suggestions" class="md-nav__link"><span class="md-ellipsis"> 3.6 /test-ideas - Test Case Suggestions </span></a></li><li class="md-nav__item"><a href="#37-refactor-suggest---refactoring-suggestions" class="md-nav__link"><span class="md-ellipsis"> 3.7 /refactor-suggest - Refactoring Suggestions </span></a></li><li class="md-nav__item"><a href="#38-learn-today---learning-log" class="md-nav__link"><span class="md-ellipsis"> 3.8 /learn-today - Learning Log </span></a></li><li class="md-nav__item"><a href="#39-dependency-check---dependency-auditor" class="md-nav__link"><span class="md-ellipsis"> 3.9 /dependency-check - Dependency Auditor </span></a></li><li class="md-nav__item"><a href="#310-architecture-view---architecture-visualizer" class="md-nav__link"><span class="md-ellipsis"> 3.10 /architecture-view - Architecture Visualizer </span></a></li><li class="md-nav__item"><a href="#311-estimate-task---estimation-helper" class="md-nav__link"><span class="md-ellipsis"> 3.11 /estimate {task} - Estimation Helper </span></a></li><li class="md-nav__item"><a href="#312-debug-helper---debug-assistant" class="md-nav__link"><span class="md-ellipsis"> 3.12 /debug-helper - Debug Assistant </span></a></li><li class="md-nav__item"><a href="#313-meeting-prep-type---meeting-preparation-helper" class="md-nav__link"><span class="md-ellipsis"> 3.13 /meeting-prep {type} - Meeting Preparation Helper </span></a></li><li class="md-nav__item"><a href="#314-knowledge-graph---knowledge-systematization" class="md-nav__link"><span class="md-ellipsis"> 3.14 /knowledge-graph - Knowledge Systematization </span></a></li><li class="md-nav__item"><a href="#315-performance-profile---performance-analyzer" class="md-nav__link"><span class="md-ellipsis"> 3.15 /performance-profile - Performance Analyzer </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#4-command-orchestration-architecture" class="md-nav__link"><span class="md-ellipsis"> 4. Command Orchestration Architecture </span></a><nav class="md-nav" aria-label="4. Command Orchestration Architecture"><ul class="md-nav__list"><li class="md-nav__item"><a href="#41-pipeline-type" class="md-nav__link"><span class="md-ellipsis"> 4.1 Pipeline Type </span></a></li><li class="md-nav__item"><a href="#42-hierarchical-type" class="md-nav__link"><span class="md-ellipsis"> 4.2 Hierarchical Type </span></a></li><li class="md-nav__item"><a href="#43-aggregation-type" class="md-nav__link"><span class="md-ellipsis"> 4.3 Aggregation Type </span></a></li><li class="md-nav__item"><a href="#44-feedback-type" class="md-nav__link"><span class="md-ellipsis"> 4.4 Feedback Type </span></a></li><li class="md-nav__item"><a href="#orchestration-design-principles" class="md-nav__link"><span class="md-ellipsis"> Orchestration Design Principles </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#5-best-practices" class="md-nav__link"><span class="md-ellipsis"> 5. Best Practices </span></a><nav class="md-nav" aria-label="5. Best Practices"><ul class="md-nav__list"><li class="md-nav__item"><a href="#51-single-responsibility-principle" class="md-nav__link"><span class="md-ellipsis"> 5.1 Single Responsibility Principle </span></a></li><li class="md-nav__item"><a href="#52-parameter-design" class="md-nav__link"><span class="md-ellipsis"> 5.2 Parameter Design </span></a></li><li class="md-nav__item"><a href="#53-error-handling" class="md-nav__link"><span class="md-ellipsis"> 5.3 Error Handling </span></a></li><li class="md-nav__item"><a href="#54-documentation-structure" class="md-nav__link"><span class="md-ellipsis"> 5.4 Documentation Structure </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#parameters" class="md-nav__link"><span class="md-ellipsis"> Parameters </span></a></li><li class="md-nav__item"><a href="#execution-details" class="md-nav__link"><span class="md-ellipsis"> Execution Details </span></a></li><li class="md-nav__item"><a href="#output-format" class="md-nav__link"><span class="md-ellipsis"> Output Format </span></a></li><li class="md-nav__item"><a href="#related-commands" class="md-nav__link"><span class="md-ellipsis"> Related Commands </span></a><nav class="md-nav" aria-label="Related Commands"><ul class="md-nav__list"><li class="md-nav__item"><a href="#62-implicit-side-effects" class="md-nav__link"><span class="md-ellipsis"> 6.2 Implicit Side Effects </span></a></li><li class="md-nav__item"><a href="#63-environment-dependency" class="md-nav__link"><span class="md-ellipsis"> 6.3 Environment Dependency </span></a></li><li class="md-nav__item"><a href="#64-opaque-processing" class="md-nav__link"><span class="md-ellipsis"> 6.4 Opaque Processing </span></a></li><li class="md-nav__item"><a href="#65-excessive-automation" class="md-nav__link"><span class="md-ellipsis"> 6.5 Excessive Automation </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#7-implementation-guide" class="md-nav__link"><span class="md-ellipsis"> 7. Implementation Guide </span></a><nav class="md-nav" aria-label="7. Implementation Guide"><ul class="md-nav__list"><li class="md-nav__item"><a href="#71-environment-setup" class="md-nav__link"><span class="md-ellipsis"> 7.1 Environment Setup </span></a></li><li class="md-nav__item"><a href="#72-command-structure" class="md-nav__link"><span class="md-ellipsis"> 7.2 Command Structure </span></a></li><li class="md-nav__item"><a href="#73-debugging-and-testing" class="md-nav__link"><span class="md-ellipsis"> 7.3 Debugging and Testing </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#8-advanced-applications" class="md-nav__link"><span class="md-ellipsis"> 8. Advanced Applications </span></a><nav class="md-nav" aria-label="8. Advanced Applications"><ul class="md-nav__list"><li class="md-nav__item"><a href="#81-collaboration-with-ai" class="md-nav__link"><span class="md-ellipsis"> 8.1 Collaboration with AI </span></a></li><li class="md-nav__item"><a href="#82-team-development-applications" class="md-nav__link"><span class="md-ellipsis"> 8.2 Team Development Applications </span></a></li><li class="md-nav__item"><a href="#83-cicd-integration" class="md-nav__link"><span class="md-ellipsis"> 8.3 CI/CD Integration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#summary-the-future-of-development-experience" class="md-nav__link"><span class="md-ellipsis"> Summary: The Future of Development Experience </span></a><nav class="md-nav" aria-label="Summary: The Future of Development Experience"><ul class="md-nav__list"><li class="md-nav__item"><a href="#future-outlook" class="md-nav__link"><span class="md-ellipsis"> Future Outlook </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#reference-links" class="md-nav__link"><span class="md-ellipsis"> Reference Links </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:ai-development-tools" class="md-tag">AI Development Tools</a><a href="../../../tags/#tag:claude-code" class="md-tag">Claude Code</a><a href="../../../tags/#tag:custom-slash-commands" class="md-tag">Custom Slash Commands</a><a href="../../../tags/#tag:development-efficiency" class="md-tag">Development Efficiency</a><a href="../../../tags/#tag:lateral-thinking" class="md-tag">Lateral Thinking</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code Complete Guide</a></p><h1 id="claude-code-custom-slash-commands-design-guide---expanding-development-efficiency-through-lateral-thinking">Claude Code Custom Slash Commands Design Guide - Expanding Development Efficiency Through Lateral Thinking<a class="headerlink" href="#claude-code-custom-slash-commands-design-guide---expanding-development-efficiency-through-lateral-thinking" title="Permanent link">&para;</a></h1><h2 id="introduction-why-custom-slash-commands">Introduction: Why Custom Slash Commands?<a class="headerlink" href="#introduction-why-custom-slash-commands" title="Permanent link">&para;</a></h2><p>Claude Code's custom slash commands are a powerful feature that allows you to create your own commands using Markdown files placed in the <code>.claude/commands/</code> directory. Beyond simple task automation, they enable a new style of collaboration with AI.</p><h3 id="what-youll-learn-in-this-article">What You'll Learn in This Article<a class="headerlink" href="#what-youll-learn-in-this-article" title="Permanent link">&para;</a></h3><ul><li>Discovering innovative use cases through lateral thinking</li><li>Systematic design patterns and category classification</li><li>15 practical command design examples</li><li>Advanced automation through command orchestration</li><li>Best practices and anti-patterns to avoid</li></ul><h2 id="1-six-application-domains-discovered-through-lateral-thinking">1. Six Application Domains Discovered Through Lateral Thinking<a class="headerlink" href="#1-six-application-domains-discovered-through-lateral-thinking" title="Permanent link">&para;</a></h2><p>Let's explore the possibilities of custom slash commands from multiple perspectives, free from conventional frameworks.</p><h3 id="11-time-based-applications">1.1 Time-Based Applications<a class="headerlink" href="#11-time-based-applications" title="Permanent link">&para;</a></h3><p><strong>Morning Routine</strong><div class="highlight"><pre><span></span><code>/morning
+</code></pre></div> - Check Git status - Display TODO list - Review recent changes - Suggest today's agenda</p><p><strong>Regular Checkpoints</strong><div class="highlight"><pre><span></span><code>/standup
+/recap
+</code></pre></div> - Visualize progress - Reflect on achievements</p><h3 id="12-role-and-perspective-switching">1.2 Role and Perspective Switching<a class="headerlink" href="#12-role-and-perspective-switching" title="Permanent link">&para;</a></h3><p>Support work from different persona perspectives:</p><div class="highlight"><pre><span></span><code>/reviewer<span class="w">    </span><span class="c1"># Code reviewer&#39;s perspective</span>
+/architect<span class="w">   </span><span class="c1"># Architect&#39;s perspective</span>
+/beginner<span class="w">    </span><span class="c1"># Beginner-friendly explanations</span>
+</code></pre></div><h3 id="13-emotional-and-human-elements">1.3 Emotional and Human Elements<a class="headerlink" href="#13-emotional-and-human-elements" title="Permanent link">&para;</a></h3><p>Development involves not just technical aspects, but human dimensions as well:</p><div class="highlight"><pre><span></span><code>/motivate<span class="w">    </span><span class="c1"># Boost motivation</span>
+/break<span class="w">       </span><span class="c1"># Suggest breaks</span>
+/celebrate<span class="w">   </span><span class="c1"># Celebrate success</span>
+</code></pre></div><h3 id="14-learning-and-growth-support">1.4 Learning and Growth Support<a class="headerlink" href="#14-learning-and-growth-support" title="Permanent link">&para;</a></h3><p>Support knowledge retention and continuous growth:</p><div class="highlight"><pre><span></span><code>/learn-today<span class="w">  </span><span class="c1"># Today&#39;s learning log</span>
+/quiz<span class="w">         </span><span class="c1"># Generate technical quiz</span>
+/explain<span class="w">      </span><span class="c1"># Simple concept explanations</span>
+</code></pre></div><h3 id="15-creative-and-ideation-support">1.5 Creative and Ideation Support<a class="headerlink" href="#15-creative-and-ideation-support" title="Permanent link">&para;</a></h3><p>Features that stimulate creativity:</p><div class="highlight"><pre><span></span><code>/brainstorm<span class="w">   </span><span class="c1"># Idea generation support</span>
+/analogies<span class="w">    </span><span class="c1"># Explain through analogies</span>
+/storytell<span class="w">    </span><span class="c1"># Storytelling</span>
+</code></pre></div><h3 id="16-meta-cognition-and-quality-improvement">1.6 Meta-Cognition and Quality Improvement<a class="headerlink" href="#16-meta-cognition-and-quality-improvement" title="Permanent link">&para;</a></h3><p>Visualize and improve thought processes:</p><div class="highlight"><pre><span></span><code>/reflect<span class="w">      </span><span class="c1"># Reflect on thought processes</span>
+/assumptions<span class="w">  </span><span class="c1"># Verify assumptions</span>
+/blindspots<span class="w">   </span><span class="c1"># Check for oversights</span>
+</code></pre></div><h2 id="2-five-design-categories-and-principles">2. Five Design Categories and Principles<a class="headerlink" href="#2-five-design-categories-and-principles" title="Permanent link">&para;</a></h2><h3 id="21-information-gathering-and-analysis">2.1 Information Gathering and Analysis<a class="headerlink" href="#21-information-gathering-and-analysis" title="Permanent link">&para;</a></h3><p><strong>Characteristics</strong> - Input: Target (project, code, documentation) - Processing: Analysis, aggregation, visualization - Output: Reports, summaries, insights</p><p><strong>Design Principles</strong> - Emphasize data accuracy - Visually clear output - Integrate multiple data sources</p><h3 id="22-transformation-and-generation">2.2 Transformation and Generation<a class="headerlink" href="#22-transformation-and-generation" title="Permanent link">&para;</a></h3><p><strong>Characteristics</strong> - Input: Source data (code, text, ideas) - Processing: Apply transformation rules - Output: Data in different format</p><p><strong>Design Principles</strong> - Clarify transformation rules - Consider reversibility - Error handling</p><h3 id="23-dialogue-and-support">2.3 Dialogue and Support<a class="headerlink" href="#23-dialogue-and-support" title="Permanent link">&para;</a></h3><p><strong>Characteristics</strong> - Input: User state, questions - Processing: Interactive exchange - Output: Personalized responses</p><p><strong>Design Principles</strong> - Understand context - Empathetic responses - Gradual support</p><h3 id="24-automation-and-efficiency">2.4 Automation and Efficiency<a class="headerlink" href="#24-automation-and-efficiency" title="Permanent link">&para;</a></h3><p><strong>Characteristics</strong> - Input: Repetitive task definition - Processing: Automatic execution - Output: Completion report</p><p><strong>Design Principles</strong> - Ensure idempotency - Visualize progress - Error recovery</p><h3 id="25-quality-assurance">2.5 Quality Assurance<a class="headerlink" href="#25-quality-assurance" title="Permanent link">&para;</a></h3><p><strong>Characteristics</strong> - Input: Target deliverable - Processing: Rule-based checks - Output: Issues and improvement suggestions</p><p><strong>Design Principles</strong> - Comprehensive check items - Prioritized suggestions - Actionable recommendations</p><h2 id="3-15-practical-command-designs">3. 15 Practical Command Designs<a class="headerlink" href="#3-15-practical-command-designs" title="Permanent link">&para;</a></h2><h3 id="31-morning---morning-startup">3.1 /morning - Morning Startup<a class="headerlink" href="#31-morning---morning-startup" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Morning Startup Command</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Check Git status (uncommitted changes, branch state)
+<span class="k">2.</span> Display today&#39;s TODO list
+<span class="k">3.</span> List files changed in last 24 hours
+<span class="k">4.</span> Check for dependency updates
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Verify repository state with <span class="sb">`git status`</span>
+<span class="k">-</span><span class="w"> </span>Show recent commits with <span class="sb">`git log --since=&quot;24 hours ago&quot; --oneline`</span>
+<span class="k">-</span><span class="w"> </span>Extract today&#39;s items from TODO file or issue tracker
+<span class="k">-</span><span class="w"> </span>Check for updatable dependencies via package manager
+
+<span class="gu">## Output Format</span>
+Formatted Markdown report for quick morning overview
+</code></pre></div><h3 id="32-standup---standup-meeting-helper">3.2 /standup - Standup Meeting Helper<a class="headerlink" href="#32-standup---standup-meeting-helper" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Standup Meeting Helper</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Yesterday&#39;s completed tasks
+<span class="k">2.</span> Today&#39;s planned tasks
+<span class="k">3.</span> Blockers and issues
+<span class="k">4.</span> Items to share with team
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Extract yesterday&#39;s work from Git commit history
+<span class="k">-</span><span class="w"> </span>Organize today&#39;s items from TODO list
+<span class="k">-</span><span class="w"> </span>Check for unresolved errors and warnings
+<span class="k">-</span><span class="w"> </span>Review PR and issue statuses
+
+<span class="gu">## Output Format</span>
+Bulleted format for standup meetings
+</code></pre></div><h3 id="33-explain-concept---concept-explanation-generator">3.3 /explain {concept} - Concept Explanation Generator<a class="headerlink" href="#33-explain-concept---concept-explanation-generator" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Concept Explainer</span>
+
+<span class="gu">## Parameters</span>
+<span class="k">-</span><span class="w"> </span>concept: Technical concept to explain
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Beginner level: Explanation understandable to elementary students
+<span class="k">2.</span> Intermediate level: Explanation for practitioners
+<span class="k">3.</span> Advanced level: Detailed explanation for experts
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Explain the concept&#39;s core at three levels
+<span class="k">-</span><span class="w"> </span>Include concrete examples and analogies
+<span class="k">-</span><span class="w"> </span>Provide links to related concepts
+
+<span class="gu">## Output Format</span>
+Markdown document with three-tiered explanations
+</code></pre></div><h3 id="34-review---code-review-assistant">3.4 /review - Code Review Assistant<a class="headerlink" href="#34-review---code-review-assistant" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Code Review Assistant</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Security check
+<span class="k">2.</span> Performance analysis
+<span class="k">3.</span> Readability assessment
+<span class="k">4.</span> Best practice compliance verification
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Check recent changes for security patterns
+<span class="k">-</span><span class="w"> </span>Detect computationally expensive operations and inefficient loops
+<span class="k">-</span><span class="w"> </span>Evaluate naming conventions, comments, and structure
+<span class="k">-</span><span class="w"> </span>Cross-reference with language-specific best practices
+
+<span class="gu">## Output Format</span>
+Prioritized improvement suggestion list
+</code></pre></div><h3 id="35-doc-gen-target---automatic-documentation-generator">3.5 /doc-gen {target} - Automatic Documentation Generator<a class="headerlink" href="#35-doc-gen-target---automatic-documentation-generator" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Documentation Generator</span>
+
+<span class="gu">## Parameters</span>
+<span class="k">-</span><span class="w"> </span>target: Documentation target (file/directory)
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Generate README.md
+<span class="k">2.</span> Create API documentation
+<span class="k">3.</span> Generate usage examples
+<span class="k">4.</span> Organize changelog
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Extract function/class descriptions from code
+<span class="k">-</span><span class="w"> </span>Analyze usage patterns to generate examples
+<span class="k">-</span><span class="w"> </span>Extract important changes from Git log
+<span class="k">-</span><span class="w"> </span>Format in Markdown
+
+<span class="gu">## Output Format</span>
+Documentation template suited to the project
+</code></pre></div><h3 id="36-test-ideas---test-case-suggestions">3.6 /test-ideas - Test Case Suggestions<a class="headerlink" href="#36-test-ideas---test-case-suggestions" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Test Case Idea Generator</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Positive test cases
+<span class="k">2.</span> Negative test cases
+<span class="k">3.</span> Edge cases
+<span class="k">4.</span> Performance tests
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Analyze code input/output patterns
+<span class="k">-</span><span class="w"> </span>Identify boundary values
+<span class="k">-</span><span class="w"> </span>Verification points for error handling
+<span class="k">-</span><span class="w"> </span>Suggest load test scenarios
+
+<span class="gu">## Output Format</span>
+Test case checklist
+</code></pre></div><h3 id="37-refactor-suggest---refactoring-suggestions">3.7 /refactor-suggest - Refactoring Suggestions<a class="headerlink" href="#37-refactor-suggest---refactoring-suggestions" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Refactoring Suggester</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Detect code duplication
+<span class="k">2.</span> Suggest design pattern applications
+<span class="k">3.</span> Naming improvements
+<span class="k">4.</span> Structural simplification
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Identify similar code blocks
+<span class="k">-</span><span class="w"> </span>Propose applicable design patterns
+<span class="k">-</span><span class="w"> </span>Suggest clearer variable and function names
+<span class="k">-</span><span class="w"> </span>Propose splitting high-complexity sections
+
+<span class="gu">## Output Format</span>
+Prioritized refactoring suggestions
+</code></pre></div><h3 id="38-learn-today---learning-log">3.8 /learn-today - Learning Log<a class="headerlink" href="#38-learn-today---learning-log" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Today I Learned Recorder</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Newly learned technical concepts
+<span class="k">2.</span> Problems solved and methods used
+<span class="k">3.</span> Tools or libraries discovered
+<span class="k">4.</span> Ideas for improvement
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Extract learning items from today&#39;s commit messages
+<span class="k">-</span><span class="w"> </span>Pair error messages with solutions
+<span class="k">-</span><span class="w"> </span>Record newly introduced dependencies
+<span class="k">-</span><span class="w"> </span>Save in TIL format as Markdown file
+
+<span class="gu">## Output Format</span>
+Structured TIL entry
+</code></pre></div><h3 id="39-dependency-check---dependency-auditor">3.9 /dependency-check - Dependency Auditor<a class="headerlink" href="#39-dependency-check---dependency-auditor" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Dependency Auditor</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Detect outdated versions
+<span class="k">2.</span> Security vulnerability check
+<span class="k">3.</span> License compatibility verification
+<span class="k">4.</span> Identify unused dependencies
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Verify versions via package manager
+<span class="k">-</span><span class="w"> </span>Cross-reference with vulnerability databases
+<span class="k">-</span><span class="w"> </span>List licenses and check compatibility
+<span class="k">-</span><span class="w"> </span>Analyze actually used dependencies
+
+<span class="gu">## Output Format</span>
+Actionable improvement report
+</code></pre></div><h3 id="310-architecture-view---architecture-visualizer">3.10 /architecture-view - Architecture Visualizer<a class="headerlink" href="#310-architecture-view---architecture-visualizer" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Architecture Visualizer</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Illustrate directory structure
+<span class="k">2.</span> Module interdependencies
+<span class="k">3.</span> Data flow diagram
+<span class="k">4.</span> External service integrations
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Display project structure in tree format
+<span class="k">-</span><span class="w"> </span>Generate dependency graph from imports
+<span class="k">-</span><span class="w"> </span>Track main data flows
+<span class="k">-</span><span class="w"> </span>Extract external integrations from config files
+
+<span class="gu">## Output Format</span>
+Mermaid diagrams and textual explanation
+</code></pre></div><h3 id="311-estimate-task---estimation-helper">3.11 /estimate {task} - Estimation Helper<a class="headerlink" href="#311-estimate-task---estimation-helper" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Task Estimation Helper</span>
+
+<span class="gu">## Parameters</span>
+<span class="k">-</span><span class="w"> </span>task: Task description to estimate
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Search for similar tasks
+<span class="k">2.</span> Effort estimation
+<span class="k">3.</span> Identify risk factors
+<span class="k">4.</span> Suggest buffer
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Search for similar work from past commits
+<span class="k">-</span><span class="w"> </span>Statistical analysis of work times
+<span class="k">-</span><span class="w"> </span>Evaluate technical risks and dependencies
+<span class="k">-</span><span class="w"> </span>Calculate appropriate buffer rate
+
+<span class="gu">## Output Format</span>
+Report with estimation rationale
+</code></pre></div><h3 id="312-debug-helper---debug-assistant">3.12 /debug-helper - Debug Assistant<a class="headerlink" href="#312-debug-helper---debug-assistant" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Debug Assistant</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Error message analysis
+<span class="k">2.</span> Stack trace analysis
+<span class="k">3.</span> Suggest common solutions
+<span class="k">4.</span> Debugging procedure guide
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Extract keywords from error messages
+<span class="k">-</span><span class="w"> </span>Pattern matching for similar errors
+<span class="k">-</span><span class="w"> </span>Language/framework-specific solutions
+<span class="k">-</span><span class="w"> </span>Step-by-step debugging procedures
+
+<span class="gu">## Output Format</span>
+Structured troubleshooting guide
+</code></pre></div><h3 id="313-meeting-prep-type---meeting-preparation-helper">3.13 /meeting-prep {type} - Meeting Preparation Helper<a class="headerlink" href="#313-meeting-prep-type---meeting-preparation-helper" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Meeting Preparation Helper</span>
+
+<span class="gu">## Parameters</span>
+<span class="k">-</span><span class="w"> </span>type: Meeting type (design/review/planning/retrospective)
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Agenda template
+<span class="k">2.</span> Required materials list
+<span class="k">3.</span> Preparation items
+<span class="k">4.</span> Anticipated questions and answers
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Select template based on meeting type
+<span class="k">-</span><span class="w"> </span>Collect related documents
+<span class="k">-</span><span class="w"> </span>Pre-sharing items for participants
+<span class="k">-</span><span class="w"> </span>Prepare common question patterns
+
+<span class="gu">## Output Format</span>
+Meeting preparation checklist
+</code></pre></div><h3 id="314-knowledge-graph---knowledge-systematization">3.14 /knowledge-graph - Knowledge Systematization<a class="headerlink" href="#314-knowledge-graph---knowledge-systematization" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Knowledge Graph Generator</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Project glossary
+<span class="k">2.</span> Concept relationship map
+<span class="k">3.</span> Technology stack diagram
+<span class="k">4.</span> Team knowledge matrix
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Extract technical terms from code and documentation
+<span class="k">-</span><span class="w"> </span>Analyze relationships between concepts
+<span class="k">-</span><span class="w"> </span>Structure technology hierarchy
+<span class="k">-</span><span class="w"> </span>Map team member expertise areas
+
+<span class="gu">## Output Format</span>
+Interactive knowledge graph
+</code></pre></div><h3 id="315-performance-profile---performance-analyzer">3.15 /performance-profile - Performance Analyzer<a class="headerlink" href="#315-performance-profile---performance-analyzer" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Performance Profiler</span>
+
+<span class="gu">## Tasks</span>
+<span class="k">1.</span> Identify bottlenecks
+<span class="k">2.</span> Resource usage status
+<span class="k">3.</span> Optimization candidates
+<span class="k">4.</span> Benchmark comparison
+
+<span class="gu">## Execution Details</span>
+<span class="k">-</span><span class="w"> </span>Identify computationally expensive operations
+<span class="k">-</span><span class="w"> </span>Analyze memory usage patterns
+<span class="k">-</span><span class="w"> </span>Discover parallelizable operations
+<span class="k">-</span><span class="w"> </span>Compare with industry standards
+
+<span class="gu">## Output Format</span>
+Performance improvement roadmap
+</code></pre></div><h2 id="4-command-orchestration-architecture">4. Command Orchestration Architecture<a class="headerlink" href="#4-command-orchestration-architecture" title="Permanent link">&para;</a></h2><h3 id="41-pipeline-type">4.1 Pipeline Type<a class="headerlink" href="#41-pipeline-type" title="Permanent link">&para;</a></h3><p>Sequential processing flow:</p><div class="highlight"><pre><span></span><code>/morning<span class="w"> </span>→<span class="w"> </span>/standup<span class="w"> </span>→<span class="w"> </span>/estimate<span class="w"> </span>today
+</code></pre></div><p>Executed as a continuous flow from morning check, through standup preparation, to today's task estimation.</p><h3 id="42-hierarchical-type">4.2 Hierarchical Type<a class="headerlink" href="#42-hierarchical-type" title="Permanent link">&para;</a></h3><p>Derived actions based on review results:</p><div class="highlight"><pre><span></span><code>/review
+  ├→ /refactor-suggest
+  └→ /test-ideas
+</code></pre></div><p>Branching to refactoring suggestions or test case generation based on code review results.</p><h3 id="43-aggregation-type">4.3 Aggregation Type<a class="headerlink" href="#43-aggregation-type" title="Permanent link">&para;</a></h3><p>Integrating multiple analysis results:</p><div class="highlight"><pre><span></span><code>/dependency-check + /performance-profile 
+    → /architecture-view
+</code></pre></div><p>Integrating dependency and performance analysis results to generate an overall architecture view.</p><h3 id="44-feedback-type">4.4 Feedback Type<a class="headerlink" href="#44-feedback-type" title="Permanent link">&para;</a></h3><p>Continuous learning cycle:</p><div class="highlight"><pre><span></span><code>/learn-today → /knowledge-graph 
+    ↓             ↑
+    └─────────────┘
+</code></pre></div><p>Daily learning content accumulates in the knowledge graph and is utilized in subsequent learning and explanations in a circular structure.</p><h3 id="orchestration-design-principles">Orchestration Design Principles<a class="headerlink" href="#orchestration-design-principles" title="Permanent link">&para;</a></h3><ol><li><strong>Standard Output Format</strong>: Unified in JSON/Markdown</li><li><strong>Context Sharing</strong>: Passing execution results</li><li><strong>Error Propagation</strong>: Consistent error handling</li><li><strong>History Management</strong>: Traceability of execution chains</li></ol><h2 id="5-best-practices">5. Best Practices<a class="headerlink" href="#5-best-practices" title="Permanent link">&para;</a></h2><h3 id="51-single-responsibility-principle">5.1 Single Responsibility Principle<a class="headerlink" href="#51-single-responsibility-principle" title="Permanent link">&para;</a></h3><p>Specialize each command for one clear purpose:</p><div class="highlight"><pre><span></span><code><span class="gh"># Good: Clear single purpose</span>
+/format-code    # Code formatting only
+/lint-check     # Linting only
+
+<span class="gh"># Bad: Over-stuffed with features</span>
+/do-everything  # Formatting, linting, testing, deploying...
+</code></pre></div><h3 id="52-parameter-design">5.2 Parameter Design<a class="headerlink" href="#52-parameter-design" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Parameter Design Principles</span>
+<span class="gu">## Required Arguments</span>
+<span class="k">-</span><span class="w"> </span>Keep to a minimum
+<span class="k">-</span><span class="w"> </span>Use clear names
+
+<span class="gu">## Optional Arguments</span>
+<span class="k">-</span><span class="w"> </span>Cover common cases with default values
+<span class="k">-</span><span class="w"> </span>Support advanced usage
+
+<span class="gu">## Example</span>
+/explain {concept} [--level beginner|intermediate|expert] [--lang ja|en]
+</code></pre></div><h3 id="53-error-handling">5.3 Error Handling<a class="headerlink" href="#53-error-handling" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Error Handling Best Practices</span>
+<span class="k">1.</span> Handle unexpected input
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Clear error messages
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Show correct usage
+
+<span class="k">2.</span> Confirm destructive operations
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Confirmation prompt before execution
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Provide dry-run functionality
+
+<span class="k">3.</span> Recovery methods
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Recovery procedures on error
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Rollback functionality
+</code></pre></div><h3 id="54-documentation-structure">5.4 Documentation Structure<a class="headerlink" href="#54-documentation-structure" title="Permanent link">&para;</a></h3><p>Give all commands the following structure:</p><div class="highlight"><pre><span></span><code><span class="gh"># Command Name</span>
+
+<span class="gu">## Purpose</span>
+The problem this command solves or value it provides
+
+<span class="gu">## Usage Example</span>
+```bash
+/command-name param1 --option value
+</code></pre></div><h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2><ul><li>param1: description</li><li>--option: option description (default: value)</li></ul><h2 id="execution-details">Execution Details<a class="headerlink" href="#execution-details" title="Permanent link">&para;</a></h2><ol><li>Details of step 1</li><li>Details of step 2</li></ol><h2 id="output-format">Output Format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h2><p>Expected output format and sample</p><h2 id="related-commands">Related Commands<a class="headerlink" href="#related-commands" title="Permanent link">&para;</a></h2><ul><li>/related-command1</li><li>/related-command2 <div class="highlight"><pre><span></span><code>## 6. Anti-Patterns and Mitigation
+
+### 6.1 Excessive Multi-Functionality
+
+**Anti-Pattern**
+```markdown
+# /super-command
+- Code formatting
+- Run tests
+- Deploy
+- Send emails
+- Make coffee
+</code></pre></div></li></ul><p><strong>Mitigation</strong> - Split functions into individual commands - Combine through pipeline-type orchestration</p><h3 id="62-implicit-side-effects">6.2 Implicit Side Effects<a class="headerlink" href="#62-implicit-side-effects" title="Permanent link">&para;</a></h3><p><strong>Anti-Pattern</strong> - File changes users don't expect - External API calls without confirmation</p><p><strong>Mitigation</strong> - Explicitly document all side effects - Add confirmation steps for destructive operations</p><h3 id="63-environment-dependency">6.3 Environment Dependency<a class="headerlink" href="#63-environment-dependency" title="Permanent link">&para;</a></h3><p><strong>Anti-Pattern</strong> - Dependence on specific OS/tools - Hard-coded paths</p><p><strong>Mitigation</strong> - Utilize environment variables and config files - Cross-platform support</p><h3 id="64-opaque-processing">6.4 Opaque Processing<a class="headerlink" href="#64-opaque-processing" title="Permanent link">&para;</a></h3><p><strong>Anti-Pattern</strong> - Black box where it's unclear what's happening - Progress status unknown</p><p><strong>Mitigation</strong> - Detailed log output - Progress bars or status displays</p><h3 id="65-excessive-automation">6.5 Excessive Automation<a class="headerlink" href="#65-excessive-automation" title="Permanent link">&para;</a></h3><p><strong>Anti-Pattern</strong> - Depriving users of decision opportunities - Irreversible automatic execution</p><p><strong>Mitigation</strong> - Leave important decisions to users - Provide dry-run mode</p><h2 id="7-implementation-guide">7. Implementation Guide<a class="headerlink" href="#7-implementation-guide" title="Permanent link">&para;</a></h2><h3 id="71-environment-setup">7.1 Environment Setup<a class="headerlink" href="#71-environment-setup" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># 1. Create command directory</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.claude/commands
+
+<span class="c1"># 2. Create first command</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>.claude/commands/hello.md<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s"># Hello Command</span>
+
+<span class="s">## Tasks</span>
+<span class="s">Simple greeting displaying current time and working directory</span>
+
+<span class="s">## Execution Details</span>
+<span class="s">- Display current time</span>
+<span class="s">- Check working directory</span>
+<span class="s">- Friendly greeting message</span>
+<span class="s">EOF</span>
+</code></pre></div><h3 id="72-command-structure">7.2 Command Structure<a class="headerlink" href="#72-command-structure" title="Permanent link">&para;</a></h3><p>Basic template:</p><div class="highlight"><pre><span></span><code><span class="gh"># Command Name</span>
+
+<span class="gu">## Tasks</span>
+Overview of work this command executes
+
+<span class="gu">## Parameters (Optional)</span>
+<span class="k">-</span><span class="w"> </span>param1: description
+<span class="k">-</span><span class="w"> </span>param2: description
+
+<span class="gu">## Execution Details</span>
+<span class="k">1.</span> Concrete step 1
+<span class="k">2.</span> Concrete step 2
+<span class="k">3.</span> Concrete step 3
+
+<span class="gu">## Output</span>
+Description of expected output
+</code></pre></div><h3 id="73-debugging-and-testing">7.3 Debugging and Testing<a class="headerlink" href="#73-debugging-and-testing" title="Permanent link">&para;</a></h3><ol><li><strong>Basic Testing</strong></li><li>Verify normal operation</li><li>Check error cases</li><li><p>Parameter validation</p></li><li><p><strong>Debugging Tips</strong></p></li><li>Confirm output at each step</li><li>Improve error messages</li><li><p>Adjust log levels</p></li><li><p><strong>Continuous Improvement</strong></p></li><li>Collect user feedback</li><li>Optimize execution time</li><li>Monitor error rates</li></ol><h2 id="8-advanced-applications">8. Advanced Applications<a class="headerlink" href="#8-advanced-applications" title="Permanent link">&para;</a></h2><h3 id="81-collaboration-with-ai">8.1 Collaboration with AI<a class="headerlink" href="#81-collaboration-with-ai" title="Permanent link">&para;</a></h3><p>Synergy between custom slash commands and Claude Code:</p><ol><li><strong>Context Awareness</strong></li><li>Understand current work</li><li><p>Timely suggestions</p></li><li><p><strong>Learning and Adaptation</strong></p></li><li>Learn usage patterns</li><li><p>Personalized responses</p></li><li><p><strong>Creative Combinations</strong></p></li><li>Unexpectedly useful orchestrations</li><li>Discover new workflows</li></ol><h3 id="82-team-development-applications">8.2 Team Development Applications<a class="headerlink" href="#82-team-development-applications" title="Permanent link">&para;</a></h3><ol><li><strong>Shared Command Library</strong></li><li>Team-specific command collection</li><li><p>Share best practices</p></li><li><p><strong>Workflow Standardization</strong></p></li><li>Unify development processes</li><li><p>Ensure quality standards</p></li><li><p><strong>Knowledge Sharing</strong></p></li><li>Onboarding new members</li><li>Formalize know-how</li></ol><h3 id="83-cicd-integration">8.3 CI/CD Integration<a class="headerlink" href="#83-cicd-integration" title="Permanent link">&para;</a></h3><ol><li><strong>Automation Pipeline</strong></li><li>Pre-build checks</li><li><p>Pre-deployment validation</p></li><li><p><strong>Quality Gates</strong></p></li><li>Code quality checks</li><li><p>Security audits</p></li><li><p><strong>Report Generation</strong></p></li><li>Build result summaries</li><li>Performance trends</li></ol><h2 id="summary-the-future-of-development-experience">Summary: The Future of Development Experience<a class="headerlink" href="#summary-the-future-of-development-experience" title="Permanent link">&para;</a></h2><p>Custom slash commands go beyond simple automation tools to become the foundation of AI-native development styles. The diverse application scenarios discovered through lateral thinking add a new dimension to traditional development processes.</p><h3 id="future-outlook">Future Outlook<a class="headerlink" href="#future-outlook" title="Permanent link">&para;</a></h3><ol><li><strong>Community-Driven Evolution</strong></li><li>Command sharing and forking</li><li><p>Accumulation of best practices</p></li><li><p><strong>Deep Integration with AI Technology</strong></p></li><li>More advanced context understanding</li><li><p>Predictive command suggestions</p></li><li><p><strong>Transformation of Development Culture</strong></p></li><li>From efficiency to creativity</li><li>Individual growth and team evolution</li></ol><p>By leveraging custom slash commands, developers are freed from repetitive tasks and can focus on more creative, high-value activities. Using the design patterns and best practices introduced in this article, create your own commands and explore new development experiences.</p><h2 id="reference-links">Reference Links<a class="headerlink" href="#reference-links" title="Permanent link">&para;</a></h2><ul><li><a href="https://docs.anthropic.com/claude-code/slash-commands">Claude Code Official Documentation - Custom Slash Commands</a></li><li><a href="https://github.com/anthropics/claude-code-commands">Implementation Examples and Template Collection</a></li><li><a href="https://claude-code-commands.dev">Community Shared Commands</a></li></ul><hr><p><em>This article was written utilizing Claude Code's custom slash command features. It is based on insights gained through actual command design and implementation.</em></p><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="March 13, 2026 21:27:58 JST">March 13, 2026 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../../javascripts/mermaid-init.js"></script><script src="../../../../javascripts/mobile-nav.js"></script><script src="../../../../javascripts/daily-progress.js"></script><script src="../../../../javascripts/fix-md-links.js"></script><script src="../../../../javascripts/mobile-category-tabs.js"></script></body></html>

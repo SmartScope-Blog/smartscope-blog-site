@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 420" width="840" height="420" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
+  <title id="title">/team-onboarding をチーム導入に組み込む4ステップ</title>
+  <desc id="desc">成熟したリポジトリで実行し、ノイズ除去とルール昇格を行い、新メンバーに配布し、学習を資産側に戻す4ステップの循環図</desc>
+
+  <defs>
+    <marker id="arrowb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect width="840" height="420" fill="#ffffff"/>
+  <text x="420" y="34" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#1f2937">/team-onboarding をチーム導入に組み込む4ステップ</text>
+  <text x="420" y="60" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#475569">一度生成して終わりではなく、暗黙知を設定資産へ戻すループとして回す</text>
+
+  <rect x="60" y="110" width="160" height="96" rx="16" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="140" y="140" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#9a3412">1. 実行</text>
+  <text x="140" y="164" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#7c2d12">成熟したリポジトリで</text>
+  <text x="140" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#7c2d12">/team-onboarding を走らせる</text>
+
+  <rect x="250" y="110" width="160" height="96" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="330" y="140" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#1d4ed8">2. 整理</text>
+  <text x="330" y="164" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">ローカル依存を削る</text>
+  <text x="330" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">安定ルールを資産へ昇格</text>
+
+  <rect x="440" y="110" width="160" height="96" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="520" y="140" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#047857">3. 配布</text>
+  <text x="520" y="164" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">初回メッセージ用の</text>
+  <text x="520" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">ガイドとして渡す</text>
+
+  <rect x="630" y="110" width="160" height="96" rx="16" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="710" y="140" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#6d28d9">4. 反映</text>
+  <text x="710" y="164" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">新メンバーのつまずきを</text>
+  <text x="710" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">CLAUDE.md 等に戻す</text>
+
+  <line x1="220" y1="158" x2="250" y2="158" stroke="#334155" stroke-width="2" marker-end="url(#arrowb)"/>
+  <line x1="410" y1="158" x2="440" y2="158" stroke="#334155" stroke-width="2" marker-end="url(#arrowb)"/>
+  <line x1="600" y1="158" x2="630" y2="158" stroke="#334155" stroke-width="2" marker-end="url(#arrowb)"/>
+
+  <path d="M710 206 C710 280 520 304 330 304 C170 304 94 272 94 214" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrowb)"/>
+  <text x="414" y="326" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">この循環が回るほど、オンボーディングが個人技からチーム資産に変わる</text>
+
+  <rect x="160" y="350" width="520" height="42" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="420" y="376" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">ポイント: /team-onboarding は終着点ではなく、設定資産を育てる入口として使う</text>
+</svg>

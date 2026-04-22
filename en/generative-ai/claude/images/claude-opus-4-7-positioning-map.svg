@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-weight="700" role="img" aria-labelledby="title desc">
+  <title id="title">Positioning of Claude Opus 4.7 and Mythos Preview</title>
+  <desc id="desc">A side-by-side comparison showing Opus 4.7 as the public production track and Mythos Preview as the limited frontier validation track.</desc>
+
+  <rect x="24" y="20" width="932" height="520" rx="20" fill="#F6F3EC" stroke="#C7C0B1"/>
+
+  <text x="490" y="58" text-anchor="middle" fill="#33312D" font-size="26" font-weight="700">Where Opus 4.7 Sits vs Mythos Preview</text>
+  <text x="490" y="86" text-anchor="middle" fill="#5F5E5A" font-size="14">Read these as parallel tracks: public production on one side, limited frontier validation on the other.</text>
+
+  <rect x="58" y="118" width="394" height="114" rx="18" fill="#E8F1FB" stroke="#378ADD" stroke-width="2.4"/>
+  <rect x="82" y="136" width="106" height="28" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="135" y="155" text-anchor="middle" fill="#1F5C94" font-size="12" font-weight="700">Public track</text>
+  <text x="255" y="170" text-anchor="middle" fill="#1F5C94" font-size="32" font-weight="700">Opus 4.7</text>
+  <text x="255" y="198" text-anchor="middle" fill="#1F5C94" font-size="14">Top general-access Claude model</text>
+  <text x="255" y="216" text-anchor="middle" fill="#5F5E5A" font-size="12">Direct successor to Opus 4.6 for broad use</text>
+
+  <rect x="528" y="118" width="394" height="114" rx="18" fill="#FAECE7" stroke="#D85A30" stroke-width="2.4"/>
+  <rect x="542" y="136" width="98" height="24" rx="12" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="591" y="152" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">Preview track</text>
+  <text x="740" y="176" text-anchor="middle" fill="#A6431F" font-size="26" font-weight="700">Mythos Preview</text>
+  <text x="725" y="198" text-anchor="middle" fill="#A6431F" font-size="14">Limited frontier preview</text>
+  <text x="725" y="216" text-anchor="middle" fill="#5F5E5A" font-size="12">Used to validate higher-risk capability bounds</text>
+
+  <rect x="58" y="262" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="285" text-anchor="middle" fill="#5F5E5A" font-size="12">Axis 1</text>
+  <text x="144" y="306" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">Access</text>
+
+  <rect x="236" y="262" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="281" text-anchor="middle" fill="#1F5C94" font-size="11.5" font-weight="700">Claude / API / Bedrock</text>
+  <text x="344" y="296" text-anchor="middle" fill="#1F5C94" font-size="11.5" font-weight="700">Vertex AI / Foundry</text>
+  <text x="344" y="311" text-anchor="middle" fill="#5F5E5A" font-size="11">Broadly accessible to users and builders</text>
+
+  <rect x="528" y="262" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="286" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">Not generally released</text>
+  <text x="725" y="306" text-anchor="middle" fill="#5F5E5A" font-size="11">Limited to partner and validation organizations</text>
+
+  <rect x="58" y="332" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="355" text-anchor="middle" fill="#5F5E5A" font-size="12">Axis 2</text>
+  <text x="144" y="376" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">Role</text>
+
+  <rect x="236" y="332" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="356" text-anchor="middle" fill="#1F5C94" font-size="13" font-weight="700">Successor to Opus 4.6</text>
+  <text x="344" y="376" text-anchor="middle" fill="#5F5E5A" font-size="11">Keeps pricing and goes into production</text>
+
+  <rect x="528" y="332" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="356" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">Cyber safeguard validation line</text>
+  <text x="725" y="376" text-anchor="middle" fill="#5F5E5A" font-size="11">Used to inspect high-risk behavior before release</text>
+
+  <rect x="58" y="402" width="172" height="56" rx="14" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="144" y="425" text-anchor="middle" fill="#5F5E5A" font-size="12">Axis 3</text>
+  <text x="144" y="446" text-anchor="middle" fill="#33312D" font-size="17" font-weight="700">Capability</text>
+
+  <rect x="236" y="402" width="216" height="56" rx="14" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="344" y="426" text-anchor="middle" fill="#1F5C94" font-size="12" font-weight="700">Top general-access tier</text>
+  <text x="344" y="444" text-anchor="middle" fill="#5F5E5A" font-size="11">The baseline most teams</text>
+  <text x="344" y="456" text-anchor="middle" fill="#5F5E5A" font-size="11">will compare against</text>
+
+  <rect x="528" y="402" width="394" height="56" rx="14" fill="#FFFFFF" stroke="#D85A30"/>
+  <text x="725" y="426" text-anchor="middle" fill="#A6431F" font-size="13" font-weight="700">Capability frontier remains here</text>
+  <text x="725" y="446" text-anchor="middle" fill="#5F5E5A" font-size="11">Stronger than 4.7, but not the public production line</text>
+
+  <rect x="108" y="486" width="764" height="30" rx="15" fill="#FFFFFF" stroke="#C7C0B1"/>
+  <text x="490" y="506" text-anchor="middle" fill="#33312D" font-size="14" font-weight="700">Read Opus 4.7 first, then use Mythos Preview as the separate frontier-reference track.</text>
+</svg>

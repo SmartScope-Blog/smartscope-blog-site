@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 620" width="680" height="620" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">新設計：Brain/Hands/Session を分離したハーネス構成</title>
+  <desc id="desc">セッションログ・頭脳・手足の3層を統一インターフェースで分離し、ハーネスがステートレスに水平スケールできる構造を示す</desc>
+
+  <!-- Layer 1: Session -->
+  <rect x="40" y="30" width="600" height="100" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="2"/>
+  <text x="60" y="58" fill="#8A5210" font-size="15" font-weight="700">セッションログ（永続・追記専用）</text>
+  <text x="60" y="78" fill="#8A5210" font-size="11">イベントの全量を保持 — 障害時も生存、復旧の起点</text>
+  <g font-size="10" fill="#8A5210">
+    <rect x="60"  y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="96"  y="108" text-anchor="middle">event 1</text>
+    <rect x="138" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="174" y="108" text-anchor="middle">event 2</text>
+    <rect x="216" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="252" y="108" text-anchor="middle">event 3</text>
+    <rect x="294" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="330" y="108" text-anchor="middle">event 4</text>
+    <rect x="372" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="408" y="108" text-anchor="middle">event 5</text>
+    <rect x="450" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="486" y="108" text-anchor="middle">…</text>
+  </g>
+
+  <!-- IF labels between session and brain -->
+  <line x1="220" y1="132" x2="220" y2="170" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="460" y1="170" x2="460" y2="132" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="232" y="155" fill="#5F5E5A" font-size="12" font-family="monospace">getEvents()</text>
+  <text x="380" y="155" fill="#5F5E5A" font-size="12" font-family="monospace">emitEvent()</text>
+
+  <!-- Layer 2: Brain -->
+  <rect x="40" y="180" width="600" height="120" rx="12" fill="#EEEDFE" stroke="#7F77DD" stroke-width="2"/>
+  <text x="60" y="208" fill="#463F9F" font-size="15" font-weight="700">頭脳（ハーネスがステートレス）</text>
+  <text x="60" y="228" fill="#463F9F" font-size="11">Claude + ハーネス — ハーネスが落ちても新インスタンスが <tspan font-family="monospace">wake(sessionId)</tspan> で再開</text>
+
+  <g>
+    <rect x="60"  y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
+    <text x="145" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">ハーネスA (cattle)</text>
+    <text x="145" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">水平スケール可</text>
+  </g>
+  <g>
+    <rect x="240" y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
+    <text x="325" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">ハーネスB (cattle)</text>
+    <text x="325" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">同じセッションを再開可</text>
+  </g>
+  <g>
+    <rect x="420" y="244" width="200" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD" stroke-dasharray="3 3"/>
+    <text x="520" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">将来のハーネス</text>
+    <text x="520" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">同じIFに差し替え可能</text>
+  </g>
+
+  <!-- IF labels brain → hands -->
+  <line x1="160" y1="302" x2="160" y2="338" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="340" y1="302" x2="340" y2="338" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="520" y1="302" x2="520" y2="338" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="340" y="322" text-anchor="middle" fill="#5F5E5A" font-size="12" font-family="monospace">execute(name, input) → string   /   provision({resources})</text>
+
+  <!-- Layer 3: Hands (3 items) -->
+  <rect x="40" y="348" width="600" height="130" rx="12" fill="#E1F5EE" stroke="#1D9E75" stroke-width="2"/>
+  <text x="60" y="376" fill="#0F6E56" font-size="15" font-weight="700">手足（統一 execute() で抽象化）</text>
+  <text x="60" y="394" fill="#0F6E56" font-size="11">コンテナが落ちても provision() で新コンテナを標準レシピで再構築</text>
+
+  <g>
+    <rect x="60"  y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
+    <text x="145" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">コンテナ</text>
+    <text x="145" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">bash / ファイル操作</text>
+  </g>
+  <g>
+    <rect x="240" y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
+    <text x="325" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">MCPサーバー</text>
+    <text x="325" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">外部ツール経由</text>
+  </g>
+  <g>
+    <rect x="420" y="406" width="200" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
+    <text x="520" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">顧客VPC</text>
+    <text x="520" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">ピアリング不要</text>
+  </g>
+
+  <!-- Vault -->
+  <rect x="190" y="500" width="300" height="50" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="340" y="522" text-anchor="middle" fill="#5F5E5A" font-size="12" font-weight="700">認証情報Vault</text>
+  <text x="340" y="540" text-anchor="middle" fill="#5F5E5A" font-size="10">手足からもハーネスからも隔離</text>
+
+  <!-- Bottom messages -->
+  <text x="340" y="580" text-anchor="middle" fill="#463F9F" font-size="13" font-weight="700">ハーネスが落ちる → 新ハーネスがセッションログから再開</text>
+  <text x="340" y="600" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">コンテナが落ちる → provision() で新コンテナ、推論は止まらない</text>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#888780" stroke-width="1"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 680" width="680" height="680" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">認証情報の隔離パターン：旧設計の脅威と新設計の2パターン</title>
+  <desc id="desc">旧設計ではプロンプトインジェクションでトークンが窃取されて新セッションを立ち上げられるリスクがあるのに対し、新設計ではGit方式とMCP方式で認証情報がサンドボックスからもハーネスからも到達不能になる構造を示す</desc>
+
+  <!-- Top: Old design threat -->
+  <rect x="20" y="30" width="640" height="230" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="2"/>
+  <text x="40" y="56" fill="#A6431F" font-size="15" font-weight="700">旧設計の脅威：トークン窃取 → セッション横取り</text>
+
+  <g>
+    <rect x="40"  y="78" width="130" height="50" rx="8" fill="#FFFFFF" stroke="#D85A30"/>
+    <text x="105" y="98" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">プロンプト</text>
+    <text x="105" y="116" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">インジェクション</text>
+  </g>
+  <line x1="172" y1="103" x2="205" y2="103" stroke="#A6431F" stroke-width="1.2" marker-end="url(#arrR)"/>
+  <g>
+    <rect x="207" y="78" width="130" height="50" rx="8" fill="#FFFFFF" stroke="#D85A30"/>
+    <text x="272" y="98" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">Claude が</text>
+    <text x="272" y="116" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">環境変数を読む</text>
+  </g>
+  <line x1="339" y1="103" x2="372" y2="103" stroke="#A6431F" stroke-width="1.2" marker-end="url(#arrR)"/>
+  <g>
+    <rect x="374" y="78" width="130" height="50" rx="8" fill="#FFFFFF" stroke="#D85A30"/>
+    <text x="439" y="98" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">攻撃者が</text>
+    <text x="439" y="116" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">トークン取得</text>
+  </g>
+  <line x1="506" y1="103" x2="538" y2="103" stroke="#A6431F" stroke-width="1.2" marker-end="url(#arrR)"/>
+  <g>
+    <rect x="540" y="78" width="110" height="50" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.8"/>
+    <text x="595" y="98" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">新セッション</text>
+    <text x="595" y="116" text-anchor="middle" fill="#A6431F" font-size="11" font-weight="700">立ち上げ</text>
+  </g>
+
+  <text x="40" y="160" fill="#A6431F" font-size="13" font-weight="700">→ 無制限セッションで作業委任が可能になる（スコープ制限は「Claudeが何もできない」前提に依存）</text>
+  <text x="40" y="180" fill="#A6431F" font-size="11" opacity="0.9">モデルが賢くなるほど前提が崩れ、トークン1つで任意の下流操作が実行可能に</text>
+
+  <rect x="40" y="198" width="610" height="48" rx="8" fill="#FFFFFF" stroke="#D85A30" stroke-width="1"/>
+  <text x="60" y="218" fill="#A6431F" font-size="11" font-weight="700">単なるトークン漏洩ではない：</text>
+  <text x="60" y="236" fill="#A6431F" font-size="11">攻撃者が <tspan font-style="italic">新しいエージェント自体</tspan> を起動してしまえる点が本質</text>
+
+  <!-- Dividing line -->
+  <line x1="20" y1="286" x2="660" y2="286" stroke="#888780" stroke-width="1"/>
+  <text x="340" y="304" text-anchor="middle" fill="#5F5E5A" font-size="14" font-weight="700">新設計：認証情報をサンドボックスからもハーネスからも隔離</text>
+
+  <!-- Pattern 1: Git -->
+  <rect x="20" y="320" width="310" height="330" rx="12" fill="#E1F5EE" stroke="#1D9E75" stroke-width="2"/>
+  <text x="175" y="346" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">パターン1：Git 方式</text>
+
+  <rect x="40" y="362" width="270" height="44" rx="6" fill="#F1EFE8" stroke="#888780" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="175" y="382" text-anchor="middle" fill="#5F5E5A" font-size="11" font-weight="700">Vault (リポジトリトークン)</text>
+  <text x="175" y="398" text-anchor="middle" fill="#5F5E5A" font-size="10">ハーネス・Claudeからは見えない</text>
+
+  <line x1="175" y1="408" x2="175" y2="432" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
+
+  <rect x="40" y="438" width="270" height="52" rx="6" fill="#FFFFFF" stroke="#1D9E75"/>
+  <text x="175" y="458" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">初期化時にクローン</text>
+  <text x="175" y="478" text-anchor="middle" fill="#0F6E56" font-size="10">リモートURLにトークンを埋め込み済み</text>
+
+  <line x1="175" y1="494" x2="175" y2="516" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
+
+  <rect x="40" y="522" width="270" height="52" rx="6" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="175" y="542" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">サンドボックス内</text>
+  <text x="175" y="562" text-anchor="middle" fill="#0F6E56" font-size="10">git push / pull がそのまま動く</text>
+
+  <text x="175" y="598" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">エージェントもハーネスも</text>
+  <text x="175" y="616" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">トークンに触れない</text>
+  <text x="175" y="636" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">（存在自体を知らない）</text>
+
+  <!-- Pattern 2: MCP -->
+  <rect x="350" y="320" width="310" height="330" rx="12" fill="#E6F1FB" stroke="#378ADD" stroke-width="2"/>
+  <text x="505" y="346" text-anchor="middle" fill="#1F5C94" font-size="14" font-weight="700">パターン2：MCP 方式</text>
+
+  <rect x="370" y="362" width="270" height="40" rx="6" fill="#EEEDFE" stroke="#7F77DD"/>
+  <text x="505" y="386" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">Claude（セッショントークンのみ保持）</text>
+
+  <line x1="505" y1="404" x2="505" y2="424" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
+
+  <rect x="370" y="428" width="270" height="52" rx="6" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="505" y="448" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">MCP プロキシ</text>
+  <text x="505" y="468" text-anchor="middle" fill="#1F5C94" font-size="10">session token を受け取る</text>
+
+  <line x1="505" y1="484" x2="505" y2="506" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
+
+  <rect x="370" y="512" width="270" height="44" rx="6" fill="#F1EFE8" stroke="#888780" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="505" y="532" text-anchor="middle" fill="#5F5E5A" font-size="11" font-weight="700">Vault (OAuth 認証情報)</text>
+  <text x="505" y="548" text-anchor="middle" fill="#5F5E5A" font-size="10">プロキシのみが参照</text>
+
+  <line x1="505" y1="560" x2="505" y2="582" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
+
+  <rect x="370" y="588" width="270" height="36" rx="6" fill="#FFFFFF" stroke="#378ADD"/>
+  <text x="505" y="611" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">外部サービスへ呼び出し</text>
+
+  <text x="505" y="644" text-anchor="middle" fill="#1F5C94" font-size="13" font-weight="700">ハーネスも認証情報を知らない</text>
+
+  <!-- Footer -->
+  <rect x="20" y="660" width="640" height="16" rx="0" fill="none" stroke="none"/>
+
+  <defs>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#A6431F" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#888780" stroke-width="1"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" width="800" height="280" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Score improvement driven by harness changes alone: Can.ac and LangChain</title>
+  <desc id="desc">Can.ac's experiment took Grok Code Fast 1 from 6.7% to 68.3% (about 10.2x). LangChain's experiment took Terminal Bench 2.0 from 30th to 5th place, a +13.7-point gain with the same model</desc>
+
+  <!-- Title -->
+  <text x="20" y="24" fill="#2C2C2A" font-size="14" font-weight="700">Score improvement driven by harness changes alone</text>
+
+  <!-- Card 1: Can.ac -->
+  <rect x="20" y="40" width="370" height="200" rx="12" fill="#FFFFFF" stroke="#0F6E56" stroke-width="2"/>
+  <text x="36" y="62" fill="#0F6E56" font-size="13" font-weight="700">Can.ac experiment: Grok Code Fast 1</text>
+  <text x="36" y="78" fill="#5F5E5A" font-size="10">No model weight changes. Only the tool format (edit method) was changed.</text>
+
+  <!-- Before bar -->
+  <text x="36" y="106" fill="#5F5E5A" font-size="11">Before</text>
+  <rect x="100" y="93" width="22" height="18" rx="3" fill="#9E9D98"/>
+  <text x="111" y="106" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700">6.7%</text>
+
+  <!-- After bar -->
+  <text x="36" y="138" fill="#1D9E75" font-size="11" font-weight="700">After</text>
+  <rect x="100" y="125" width="220" height="18" rx="3" fill="#1D9E75"/>
+  <text x="210" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">68.3%</text>
+
+  <!-- Multiplier badge -->
+  <rect x="280" y="158" width="86" height="40" rx="20" fill="#E1F5EE" stroke="#0F6E56" stroke-width="2"/>
+  <text x="323" y="183" text-anchor="middle" fill="#0F6E56" font-size="20" font-weight="700">x10.2</text>
+
+  <text x="36" y="172" fill="#5F5E5A" font-size="10">+ ~20% fewer output tokens</text>
+  <text x="36" y="188" fill="#5F5E5A" font-size="10">Improvements observed across many of 16 models</text>
+  <text x="36" y="220" fill="#0F6E56" font-size="10" font-style="italic">Source: Can.ac, "I Improved 15 LLMs..."</text>
+
+  <!-- Card 2: LangChain -->
+  <rect x="410" y="40" width="370" height="200" rx="12" fill="#FFFFFF" stroke="#185FA5" stroke-width="2"/>
+  <text x="426" y="62" fill="#185FA5" font-size="13" font-weight="700">LangChain experiment: Terminal Bench 2.0</text>
+  <text x="426" y="78" fill="#5F5E5A" font-size="10">Same model. +13.7pt from harness improvements alone.</text>
+
+  <!-- Before bar -->
+  <text x="426" y="106" fill="#5F5E5A" font-size="11">Before</text>
+  <rect x="490" y="93" width="36" height="18" rx="3" fill="#9E9D98"/>
+  <text x="508" y="106" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700">30th</text>
+
+  <!-- After bar -->
+  <text x="426" y="138" fill="#185FA5" font-size="11" font-weight="700">After</text>
+  <rect x="490" y="125" width="220" height="18" rx="3" fill="#185FA5"/>
+  <text x="600" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">5th</text>
+
+  <!-- Multiplier badge -->
+  <rect x="670" y="158" width="96" height="40" rx="20" fill="#E6F1FB" stroke="#185FA5" stroke-width="2"/>
+  <text x="718" y="183" text-anchor="middle" fill="#185FA5" font-size="18" font-weight="700">+13.7pt</text>
+
+  <text x="426" y="172" fill="#5F5E5A" font-size="10">Ranking 30th -&gt; 5th</text>
+  <text x="426" y="188" fill="#5F5E5A" font-size="10">Achieved with the same model</text>
+  <text x="426" y="220" fill="#185FA5" font-size="10" font-style="italic">Source: LangChain Blog, "Improving Deep Agents..."</text>
+
+  <!-- Common caption -->
+  <text x="400" y="266" text-anchor="middle" fill="#2C2C2A" font-size="12" font-weight="700">Revisit harness design before agonizing over model selection — the ROI is higher.</text>
+</svg>

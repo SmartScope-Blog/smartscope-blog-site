@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" width="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect x="16" y="34" width="164" height="108" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+  <text x="98" y="66" text-anchor="middle" font-size="18" font-weight="700" fill="#D85A30">CLI引数</text>
+  <text x="98" y="92" text-anchor="middle" font-size="14" fill="#6f6d67">-a / -s / -c</text>
+  <text x="98" y="114" text-anchor="middle" font-size="13" fill="#6f6d67">コマンド単位で上書き</text>
+
+  <line x1="180" y1="88" x2="210" y2="88" stroke="#888780" stroke-width="1"/>
+  <path d="M210 88 l-8 -6 M210 88 l-8 6" fill="none" stroke="#888780" stroke-width="1"/>
+  <text x="195" y="74" text-anchor="middle" font-size="12" fill="#888780">優先</text>
+
+  <rect x="218" y="34" width="164" height="108" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+  <text x="300" y="66" text-anchor="middle" font-size="18" font-weight="700" fill="#BA7517">プロファイル</text>
+  <text x="300" y="92" text-anchor="middle" font-size="14" fill="#6f6d67">-p</text>
+  <text x="300" y="114" text-anchor="middle" font-size="13" fill="#6f6d67">[profiles.auto]</text>
+
+  <line x1="382" y1="88" x2="412" y2="88" stroke="#888780" stroke-width="1"/>
+  <path d="M412 88 l-8 -6 M412 88 l-8 6" fill="none" stroke="#888780" stroke-width="1"/>
+  <text x="397" y="74" text-anchor="middle" font-size="12" fill="#888780">優先</text>
+
+  <rect x="420" y="34" width="164" height="108" rx="12" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="502" y="66" text-anchor="middle" font-size="18" font-weight="700" fill="#1D9E75">config.toml</text>
+  <text x="502" y="92" text-anchor="middle" font-size="14" fill="#6f6d67">~/.codex/</text>
+  <text x="502" y="114" text-anchor="middle" font-size="13" fill="#6f6d67">永続的な基本設定</text>
+
+  <line x1="584" y1="88" x2="614" y2="88" stroke="#888780" stroke-width="1"/>
+  <path d="M614 88 l-8 -6 M614 88 l-8 6" fill="none" stroke="#888780" stroke-width="1"/>
+  <text x="599" y="74" text-anchor="middle" font-size="12" fill="#888780">優先</text>
+
+  <rect x="622" y="34" width="122" height="108" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1"/>
+  <text x="683" y="66" text-anchor="middle" font-size="18" font-weight="700" fill="#6f6d67">デフォルト</text>
+  <text x="683" y="92" text-anchor="middle" font-size="14" fill="#6f6d67">untrusted</text>
+  <text x="683" y="114" text-anchor="middle" font-size="13" fill="#6f6d67">+ workspace-write</text>
+</svg>

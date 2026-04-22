@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チャート分析が効くメカニズム</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-background-info: #E6F1FB;
+  --color-text-info: #185FA5;
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --color-border-secondary: rgba(0,0,0,0.25);
+  --color-border-info: #85B7EB;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --color-accent: #2979FF;
+  --color-up: #26A69A;
+  --color-down: #EF5350;
+  --color-warning: #FF9800;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-background-info: #0C447C;
+  --color-text-info: #85B7EB;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --color-border-secondary: rgba(255,255,255,0.25);
+  --color-border-info: #378ADD;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) {
+    --color-text-primary: #D3D1C7;
+    --color-text-secondary: #B4B2A9;
+    --color-background-primary: #1e1e1e;
+    --color-background-secondary: #2a2a2a;
+    --color-background-info: #0C447C;
+    --color-text-info: #85B7EB;
+    --color-border-tertiary: rgba(255,255,255,0.12);
+    --color-border-secondary: rgba(255,255,255,0.25);
+    --color-border-info: #378ADD;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+.widget {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px;
+}
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  border-bottom: 2px solid var(--color-border-tertiary);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--color-text-primary); }
+.tab-btn.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  font-weight: 600;
+}
+.tab-panel {
+  display: none;
+  padding: 20px 4px;
+  animation: fadeIn 0.3s ease;
+}
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+.panel-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+.svg-container {
+  width: 100%;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-tertiary);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.svg-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.insight-box {
+  background: var(--color-background-info);
+  border-left: 3px solid var(--color-border-info);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--color-text-info);
+  line-height: 1.6;
+}
+.vs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.vs-card {
+  padding: 16px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.vs-card.wrong {
+  background: rgba(239,83,80,0.08);
+  border-color: var(--color-down);
+}
+.vs-card.right {
+  background: rgba(38,166,154,0.08);
+  border-color: var(--color-up);
+}
+.vs-card-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.vs-card.wrong .vs-card-title { color: var(--color-down); }
+.vs-card.right .vs-card-title { color: var(--color-up); }
+.hypothesis-list {
+  list-style: none;
+  padding: 0;
+}
+.hypothesis-list li {
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+  border-left: 3px solid var(--color-accent);
+  line-height: 1.5;
+}
+.hypothesis-list li strong {
+  color: var(--color-accent);
+}
+@media (max-width: 480px) {
+  .tab-btn { padding: 6px 10px; font-size: 12px; }
+  .panel-title { font-size: 14px; }
+  .panel-desc { font-size: 13px; }
+  .vs-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="overview">全体像</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="prophecy">自己成就</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="bias">行動バイアス</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="institutional">大口の制約</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="delay">情報の遅延</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="conclusion">結論</button>
+  </div>
+
+  <!-- Tab 1: 全体像 -->
+  <div class="tab-panel active" id="panel-overview" role="tabpanel">
+    <div class="panel-title">チャートが「効く」全体像</div>
+    <div class="panel-desc">チャートの線自体に予測力はない。線の裏にいる参加者の行動パターンが繰り返されるから、読む意味が生まれる。</div>
+    <div class="svg-container">
+      <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background -->
+        <rect width="700" height="340" fill="none"/>
+        <!-- Price Chart box -->
+        <rect x="30" y="20" width="140" height="56" rx="8" fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+        <text x="100" y="45" text-anchor="middle" font-size="12" font-weight="600" fill="#1565C0">価格チャート</text>
+        <text x="100" y="62" text-anchor="middle" font-size="10" fill="#1976D2">ローソク足・出来高</text>
+        <!-- Arrow 1 -->
+        <line x1="170" y1="48" x2="210" y2="48" stroke="#90CAF9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <!-- Composite box -->
+        <rect x="210" y="12" width="170" height="72" rx="8" fill="#FFF3E0" stroke="#FF9800" stroke-width="1.5"/>
+        <text x="295" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#E65100">参加者全員の</text>
+        <text x="295" y="52" text-anchor="middle" font-size="12" font-weight="600" fill="#E65100">売買行動の合成結果</text>
+        <text x="295" y="70" text-anchor="middle" font-size="10" fill="#EF6C00">期待・恐怖・損切り・利確…</text>
+        <!-- Arrow 2 -->
+        <line x1="380" y1="48" x2="420" y2="48" stroke="#FFCC80" stroke-width="2" marker-end="url(#arrowOrange)"/>
+        <!-- 4 Mechanisms header -->
+        <rect x="420" y="12" width="260" height="36" rx="8" fill="#E8F5E9" stroke="#66BB6A" stroke-width="1.5"/>
+        <text x="550" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">行動が繰り返される 4つの理由</text>
+        <!-- 4 mechanism boxes -->
+        <rect x="420" y="60" width="120" height="44" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+        <text x="480" y="78" text-anchor="middle" font-size="11" font-weight="600" fill="#2E7D32">1. 自己成就予言</text>
+        <text x="480" y="94" text-anchor="middle" font-size="9" fill="#388E3C">皆が信じて行動する</text>
+        <rect x="560" y="60" width="120" height="44" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+        <text x="620" y="78" text-anchor="middle" font-size="11" font-weight="600" fill="#2E7D32">2. 行動バイアス</text>
+        <text x="620" y="94" text-anchor="middle" font-size="9" fill="#388E3C">人間の心理的な癖</text>
+        <rect x="420" y="114" width="120" height="44" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+        <text x="480" y="132" text-anchor="middle" font-size="11" font-weight="600" fill="#2E7D32">3. 大口の制約</text>
+        <text x="480" y="148" text-anchor="middle" font-size="9" fill="#388E3C">分割売買の物理的必然</text>
+        <rect x="560" y="114" width="120" height="44" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+        <text x="620" y="132" text-anchor="middle" font-size="11" font-weight="600" fill="#2E7D32">4. 情報の遅延</text>
+        <text x="620" y="148" text-anchor="middle" font-size="9" fill="#388E3C">反応速度の差</text>
+        <!-- Big arrow down -->
+        <line x1="550" y1="168" x2="550" y2="200" stroke="#66BB6A" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        <!-- Result box -->
+        <rect x="380" y="200" width="300" height="56" rx="8" fill="#E8EAF6" stroke="#5C6BC0" stroke-width="1.5"/>
+        <text x="530" y="224" text-anchor="middle" font-size="12" font-weight="600" fill="#283593">注文フローに偏りが生まれる</text>
+        <text x="530" y="242" text-anchor="middle" font-size="10" fill="#3949AB">→ 確率的な優位性の源泉</text>
+        <!-- Left side: thought experiment -->
+        <rect x="30" y="110" width="180" height="80" rx="8" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="120" y="132" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-text-primary)">思考実験</text>
+        <text x="120" y="150" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">世界に1人だけチャートを</text>
+        <text x="120" y="164" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">見ていても何も起きない</text>
+        <text x="120" y="180" text-anchor="middle" font-size="10" font-weight="600" fill="var(--color-down)">→ 線に魔法はない</text>
+        <!-- Left side: key insight -->
+        <rect x="30" y="210" width="320" height="50" rx="8" fill="var(--color-background-info)" stroke="var(--color-border-info)" stroke-width="1"/>
+        <text x="190" y="232" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-text-info)">大勢が同じ線を見ているとき</text>
+        <text x="190" y="248" text-anchor="middle" font-size="11" fill="var(--color-text-info)">行動の集中が価格を動かす → これが本質</text>
+        <!-- Arrows defs -->
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#42A5F5"/></marker>
+          <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FF9800"/></marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="3" refY="8" orient="auto"><path d="M0,0 L3,8 L6,0" fill="#66BB6A"/></marker>
+        </defs>
+        <!-- Footer note -->
+        <text x="350" y="290" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">チャート分析の本質：線を読むのではなく、線の裏にいる参加者の行動パターンを読む</text>
+      </svg>
+    </div>
+    <div class="insight-box">チャートが機能する条件は「多くの参加者が同じパターンを認識し、似た行動をとること」。この条件が満たされるメカニズムが4つある。各タブで詳しく見ていく。</div>
+  </div>
+
+  <!-- Tab 2: 自己成就予言 -->
+  <div class="tab-panel" id="panel-prophecy" role="tabpanel">
+    <div class="panel-title">メカニズム1：自己成就予言</div>
+    <div class="panel-desc">パターンが「当たった」のではない。皆が信じて行動したから現実になった。</div>
+    <div class="svg-container">
+      <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Price line -->
+        <polyline points="40,60 100,80 160,120 220,150 280,180 340,220 380,240 400,250"
+                  fill="none" stroke="var(--color-down)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Support line -->
+        <line x1="30" y1="255" x2="500" y2="255" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="510" y="259" font-size="11" fill="#FF9800" font-weight="600">支持線</text>
+        <!-- Price bouncing -->
+        <polyline points="400,250 420,252 440,248 460,235 500,210 540,190 580,170 620,155"
+                  fill="none" stroke="var(--color-up)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 3 Traders -->
+        <!-- Trader A -->
+        <rect x="300" y="268" width="70" height="42" rx="6" fill="#E3F2FD" stroke="#42A5F5" stroke-width="1"/>
+        <text x="335" y="284" text-anchor="middle" font-size="10" font-weight="600" fill="#1565C0">トレーダーA</text>
+        <text x="335" y="300" text-anchor="middle" font-size="10" fill="#1976D2">「ここで買い」</text>
+        <line x1="335" y1="268" x2="380" y2="250" stroke="#42A5F5" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Trader B -->
+        <rect x="395" y="268" width="70" height="42" rx="6" fill="#E8F5E9" stroke="#66BB6A" stroke-width="1"/>
+        <text x="430" y="284" text-anchor="middle" font-size="10" font-weight="600" fill="#2E7D32">トレーダーB</text>
+        <text x="430" y="300" text-anchor="middle" font-size="10" fill="#388E3C">「ここで買い」</text>
+        <line x1="430" y1="268" x2="420" y2="252" stroke="#66BB6A" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Trader C -->
+        <rect x="490" y="268" width="70" height="42" rx="6" fill="#FFF3E0" stroke="#FF9800" stroke-width="1"/>
+        <text x="525" y="284" text-anchor="middle" font-size="10" font-weight="600" fill="#E65100">トレーダーC</text>
+        <text x="525" y="300" text-anchor="middle" font-size="10" fill="#EF6C00">「ここで買い」</text>
+        <line x1="525" y1="268" x2="450" y2="246" stroke="#FF9800" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Buy orders accumulate -->
+        <rect x="350" y="108" width="220" height="60" rx="8" fill="rgba(38,166,154,0.1)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="460" y="128" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-up)">買い注文が集中</text>
+        <text x="460" y="146" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">同じ場所で需要が急増</text>
+        <text x="460" y="160" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">→ 本当に反発する</text>
+        <!-- Arrow from buy zone to price -->
+        <path d="M460,168 Q460,190 500,210" fill="none" stroke="var(--color-up)" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowTeal)"/>
+        <!-- Sequence labels -->
+        <rect x="50" y="30" width="16" height="16" rx="8" fill="var(--color-down)"/>
+        <text x="58" y="42" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">1</text>
+        <text x="74" y="42" font-size="10" fill="var(--color-text-secondary)">価格が支持線に近づく</text>
+        <rect x="290" y="250" width="16" height="16" rx="8" fill="#42A5F5"/>
+        <text x="298" y="262" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">2</text>
+        <rect x="550" y="145" width="16" height="16" rx="8" fill="var(--color-up)"/>
+        <text x="558" y="157" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">3</text>
+        <text x="574" y="157" font-size="10" fill="var(--color-text-secondary)">反発</text>
+        <defs>
+          <marker id="arrowTeal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#26A69A"/></marker>
+        </defs>
+      </svg>
+    </div>
+    <div class="insight-box">テクニカル分析の教科書が広く読まれるほど、同じ支持線・抵抗線を認識するトレーダーが増える。「予測が当たる」のではなく「予測が行動を揃える」ことで結果が生まれる。これが自己成就予言のメカニズム。</div>
+  </div>
+
+  <!-- Tab 3: 行動バイアス -->
+  <div class="tab-panel" id="panel-bias" role="tabpanel">
+    <div class="panel-title">メカニズム2：行動バイアス（人間の癖）</div>
+    <div class="panel-desc">含み損を抱えた人は戻りで売る。高値更新で乗り遅れた人は焦って買う。この癖は繰り返される。</div>
+    <div class="svg-container">
+      <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- Price line: up, peak, down, recovery -->
+        <polyline points="40,200 80,180 120,140 160,100 200,70 220,60 240,80 280,130 320,170 360,200 400,180 440,140 480,100 500,80 520,70"
+                  fill="none" stroke="var(--color-border-secondary)" stroke-width="2" stroke-linecap="round"/>
+        <!-- High point marker -->
+        <circle cx="220" cy="60" r="5" fill="var(--color-down)" stroke="#fff" stroke-width="1.5"/>
+        <text x="220" y="45" text-anchor="middle" font-size="10" font-weight="600" fill="var(--color-down)">高値で購入</text>
+        <!-- Person buys at high -->
+        <rect x="160" y="16" width="120" height="32" rx="6" fill="rgba(239,83,80,0.1)" stroke="var(--color-down)" stroke-width="1"/>
+        <text x="220" y="36" text-anchor="middle" font-size="10" fill="var(--color-down)">投資家X：1,200円で買い</text>
+        <!-- Phase: holding through loss -->
+        <rect x="260" y="100" width="100" height="50" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="310" y="118" text-anchor="middle" font-size="10" font-weight="600" fill="var(--color-text-primary)">含み損に耐える</text>
+        <text x="310" y="134" text-anchor="middle" font-size="10" fill="var(--color-down)">-15%...</text>
+        <text x="310" y="148" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">「戻ったら売ろう」</text>
+        <!-- Arrow from loss to recovery -->
+        <path d="M360,140 Q380,160 400,180" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Recovery zone -->
+        <rect x="420" y="58" width="110" height="50" rx="6" fill="rgba(239,83,80,0.1)" stroke="var(--color-down)" stroke-width="1"/>
+        <text x="475" y="76" text-anchor="middle" font-size="10" font-weight="600" fill="var(--color-down)">やれやれ売り</text>
+        <text x="475" y="92" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">「やっと戻った…売り！」</text>
+        <text x="475" y="104" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">→ 戻り売り圧力の正体</text>
+        <!-- Sell arrow -->
+        <line x1="475" y1="108" x2="500" y2="80" stroke="var(--color-down)" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <!-- Sequence numbers -->
+        <rect x="195" y="52" width="16" height="16" rx="8" fill="var(--color-down)"/>
+        <text x="203" y="64" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">1</text>
+        <rect x="285" y="92" width="16" height="16" rx="8" fill="#FF9800"/>
+        <text x="293" y="104" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">2</text>
+        <rect x="495" y="50" width="16" height="16" rx="8" fill="var(--color-down)"/>
+        <text x="503" y="62" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">3</text>
+        <!-- Other biases -->
+        <line x1="0" y1="210" x2="700" y2="210" stroke="var(--color-border-tertiary)" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="350" y="235" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-text-primary)">繰り返される3つの行動パターン</text>
+        <!-- FOMO -->
+        <rect x="30" y="252" width="200" height="70" rx="8" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="130" y="272" text-anchor="middle" font-size="11" font-weight="600" fill="#FF9800">FOMO（乗り遅れ恐怖）</text>
+        <text x="130" y="290" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">高値更新 → 焦って買い</text>
+        <text x="130" y="306" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">→ ブレイクアウトの燃料</text>
+        <!-- Loss aversion -->
+        <rect x="250" y="252" width="200" height="70" rx="8" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="350" y="272" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-down)">損失回避</text>
+        <text x="350" y="290" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">含み損を抱え続ける</text>
+        <text x="350" y="306" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">→ 戻り売りの源泉</text>
+        <!-- Panic -->
+        <rect x="470" y="252" width="200" height="70" rx="8" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="570" y="272" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-down)">狼狽売り</text>
+        <text x="570" y="290" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">急落 → パニック売り</text>
+        <text x="570" y="306" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">→ 投げ売り出尽くしの形</text>
+      </svg>
+    </div>
+    <div class="insight-box">行動ファイナンスの研究（Kahneman & Tversky, 1979）が示すとおり、人間は利益より損失に約2倍強く反応する。この非対称性がチャート上の「形」として繰り返し現れる。チャートを見ている人がいなくても、人間の心理が変わらない限りこのパターンは残る。</div>
+  </div>
+
+  <!-- Tab 4: 大口の制約 -->
+  <div class="tab-panel" id="panel-institutional" role="tabpanel">
+    <div class="panel-title">メカニズム3：大口投資家の物理制約</div>
+    <div class="panel-desc">100億円分を一度に買うと、自分の注文で価格が跳ねてしまう。だから何日もかけて分割する。この制約がトレンドの一因になる。</div>
+    <div class="svg-container">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid lines -->
+        <line x1="80" y1="40" x2="80" y2="240" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <line x1="80" y1="240" x2="660" y2="240" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <!-- Y axis label -->
+        <text x="30" y="140" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)" transform="rotate(-90,30,140)">株価</text>
+        <!-- Day labels -->
+        <text x="140" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 1</text>
+        <text x="230" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 2</text>
+        <text x="320" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 3</text>
+        <text x="410" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 4</text>
+        <text x="500" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 5</text>
+        <text x="590" y="260" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">Day 6</text>
+        <!-- Price trend line (gradual uptrend) -->
+        <polyline points="100,220 140,215 180,205 220,198 260,188 300,182 340,170 380,162 420,152 460,145 500,135 540,128 580,118 620,112"
+                  fill="none" stroke="var(--color-up)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Buy blocks for each day -->
+        <rect x="115" y="205" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="140" y="216" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <rect x="205" y="188" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="230" y="199" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <rect x="295" y="170" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="320" y="181" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <rect x="385" y="152" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="410" y="163" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <rect x="475" y="135" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="500" y="146" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <rect x="565" y="118" width="50" height="15" rx="3" fill="rgba(38,166,154,0.3)" stroke="var(--color-up)" stroke-width="1"/>
+        <text x="590" y="129" text-anchor="middle" font-size="8" fill="var(--color-up)" font-weight="600">買い</text>
+        <!-- Institutional investor label -->
+        <rect x="200" y="55" width="300" height="50" rx="8" fill="var(--color-background-info)" stroke="var(--color-border-info)" stroke-width="1"/>
+        <text x="350" y="74" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-text-info)">機関投資家：100億円分を6日間で分割買い</text>
+        <text x="350" y="92" text-anchor="middle" font-size="10" fill="var(--color-text-info)">1日あたり約17億円ずつ → 緩やかな上昇トレンド形成</text>
+        <!-- Annotation -->
+        <text x="350" y="286" text-anchor="middle" font-size="10" fill="var(--color-text-secondary)">チャートを見ている人がいるかどうかに関係なく、この構造は生まれる</text>
+      </svg>
+    </div>
+    <div class="insight-box">Almgren & Chriss (2000) の最適執行理論が示すとおり、大口注文は市場インパクトを最小化するために時間分散される。この物理制約が「トレンド」の一部を構造的に生み出す。テクニカル分析とは無関係に存在するメカニズムだ。</div>
+  </div>
+
+  <!-- Tab 5: 情報の遅延 -->
+  <div class="tab-panel" id="panel-delay" role="tabpanel">
+    <div class="panel-title">メカニズム4：情報の拡散に時間がかかる</div>
+    <div class="panel-desc">好決算でも全員が同時に反応しない。この時間差がモメンタムの一因。</div>
+    <div class="svg-container">
+      <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Timeline base -->
+        <line x1="60" y1="150" x2="660" y2="150" stroke="var(--color-border-tertiary)" stroke-width="2"/>
+        <!-- Event: Earnings -->
+        <rect x="60" y="110" width="90" height="40" rx="6" fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+        <text x="105" y="128" text-anchor="middle" font-size="10" font-weight="700" fill="#1565C0">好決算発表</text>
+        <text x="105" y="142" text-anchor="middle" font-size="9" fill="#1976D2">Day 0</text>
+        <!-- Pro reaction -->
+        <rect x="180" y="60" width="110" height="70" rx="8" fill="rgba(38,166,154,0.1)" stroke="var(--color-up)" stroke-width="1.5"/>
+        <text x="235" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="var(--color-up)">プロ・機関</text>
+        <text x="235" y="96" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">即日〜翌日に反応</text>
+        <text x="235" y="112" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">アルゴリズム・</text>
+        <text x="235" y="124" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">専門アナリスト</text>
+        <line x1="235" y1="130" x2="235" y2="148" stroke="var(--color-up)" stroke-width="1.5"/>
+        <circle cx="235" cy="150" r="6" fill="var(--color-up)"/>
+        <text x="235" y="170" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">Day 0-1</text>
+        <!-- General investor reaction -->
+        <rect x="330" y="60" width="110" height="70" rx="8" fill="rgba(255,152,0,0.1)" stroke="#FF9800" stroke-width="1.5"/>
+        <text x="385" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="#E65100">一般投資家</text>
+        <text x="385" y="96" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">数日後に反応</text>
+        <text x="385" y="112" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">証券会社レポート</text>
+        <text x="385" y="124" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">投資ブログ経由</text>
+        <line x1="385" y1="130" x2="385" y2="148" stroke="#FF9800" stroke-width="1.5"/>
+        <circle cx="385" cy="150" r="6" fill="#FF9800"/>
+        <text x="385" y="170" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">Day 3-5</text>
+        <!-- Late adopters -->
+        <rect x="480" y="60" width="110" height="70" rx="8" fill="rgba(239,83,80,0.1)" stroke="var(--color-down)" stroke-width="1.5"/>
+        <text x="535" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="var(--color-down)">遅延層</text>
+        <text x="535" y="96" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">1-2週間後に反応</text>
+        <text x="535" y="112" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">テレビニュース</text>
+        <text x="535" y="124" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">SNSの話題で知る</text>
+        <line x1="535" y1="130" x2="535" y2="148" stroke="var(--color-down)" stroke-width="1.5"/>
+        <circle cx="535" cy="150" r="6" fill="var(--color-down)"/>
+        <text x="535" y="170" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">Day 7-14</text>
+        <!-- Price response curve -->
+        <text x="350" y="205" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-text-primary)">価格への影響</text>
+        <polyline points="120,280 180,275 235,255 280,245 330,238 385,225 430,218 480,212 535,208 600,205 650,204"
+                  fill="none" stroke="var(--color-up)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Momentum label -->
+        <path d="M180,260 L600,200" fill="none" stroke="var(--color-accent)" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="620" y="198" font-size="10" font-weight="600" fill="var(--color-accent)">モメンタム</text>
+        <!-- Axes for price curve -->
+        <line x1="100" y1="210" x2="100" y2="290" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <line x1="100" y1="290" x2="660" y2="290" stroke="var(--color-border-tertiary)" stroke-width="1"/>
+        <text x="90" y="250" text-anchor="end" font-size="9" fill="var(--color-text-secondary)">価格</text>
+        <text x="380" y="305" text-anchor="middle" font-size="9" fill="var(--color-text-secondary)">時間 →</text>
+      </svg>
+    </div>
+    <div class="insight-box">Hong & Stein (1999) のモデルが示すとおり、情報は市場参加者に均一には届かない。この拡散速度の差が「モメンタム」として価格に現れる。Jegadeesh & Titman (1993) は、過去3-12ヶ月の勝者を買い敗者を売る戦略が有意にリターンを生むことを実証した。</div>
+  </div>
+
+  <!-- Tab 6: 結論 -->
+  <div class="tab-panel" id="panel-conclusion" role="tabpanel">
+    <div class="panel-title">チャートで問うべき本当の問い</div>
+    <div class="panel-desc">パターン名ではなく「その形の後に非対称な注文フローが続くか」を問う。</div>
+    <div class="vs-grid">
+      <div class="vs-card wrong">
+        <div class="vs-card-title">&#x2717; 間違った考え方</div>
+        <p>「ダブルボトムだから買い」</p>
+        <p>「ゴールデンクロスは上昇サイン」</p>
+        <p>「三角持ち合い後は上に抜ける」</p>
+        <br>
+        <p style="font-size:12px;color:var(--color-text-secondary)">パターン名を暗記し、形が出たら機械的に売買する。<strong>なぜそうなるかの仮説がない。</strong></p>
+      </div>
+      <div class="vs-card right">
+        <div class="vs-card-title">&#x2713; 正しい考え方</div>
+        <p>「この形の後に、非対称な注文フローが続くか？」</p>
+        <p>「その注文フローを生む参加者の行動は、今回も再現されるか？」</p>
+        <br>
+        <p style="font-size:12px;color:var(--color-text-secondary)">パターンを<strong>「予測している注文フローの仮説」</strong>として読み直す。</p>
+      </div>
+    </div>
+    <div class="panel-title" style="font-size:14px;margin-top:8px;">パターンを注文フロー仮説に翻訳する</div>
+    <ul class="hypothesis-list">
+      <li><strong>ブレイクアウト</strong> = 高値更新で追随買い + ショートの買い戻しが入る仮説</li>
+      <li><strong>ダブルボトム</strong> = 安値圏の投げ売りが尽き、戻り売りをこなしやすい仮説</li>
+      <li><strong>三角持ち合い</strong> = 売り圧力と買い圧力が収束後、どちらかに放出される仮説</li>
+    </ul>
+    <div class="insight-box" style="margin-top:12px;">最終的な優位性は、勝率だけでは決まらない。<strong>勝つときの伸び × 負けるときの損失 × 回数 × コスト</strong>の積で決まる。パターンが「仮説」であることを忘れなければ、過信も盲信もせずに使える。</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var btns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      var target = document.getElementById('panel-' + btn.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+  // Inherit MkDocs Material color scheme
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) { /* cross-origin or no parent */ }
+})();
+</script>
+</body>
+</html>

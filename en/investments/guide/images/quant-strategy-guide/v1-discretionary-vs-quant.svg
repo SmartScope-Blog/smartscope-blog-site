@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+  <title id="title">Discretionary Trading vs Quant Strategy</title>
+  <desc id="desc">Side-by-side comparison of discretionary trading and quant strategy.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .panel-left { fill: #f7f7f5; stroke: #d8d7d2; stroke-width: 2; }
+    .panel-right { fill: #f1fbf7; stroke: #1d9e75; stroke-width: 2; }
+    .title { font: 700 34px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .subtitle { font: 700 24px 'Segoe UI', 'Noto Sans JP', sans-serif; }
+    .label { font: 700 17px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #3d3d38; }
+    .body { font: 15px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4c4c46; }
+    .small { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+    .divider { stroke: #888780; stroke-width: 2; stroke-dasharray: 10 8; }
+    .pro { fill: #e8f5ef; stroke: #1d9e75; stroke-width: 1.2; }
+    .con { fill: #fce9e4; stroke: #e24b4a; stroke-width: 1.2; }
+    .protext { font: 700 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #177a5b; }
+    .context { fill: #ffffff; stroke: #d7d6d0; stroke-width: 1.2; }
+  </style>
+  <rect class="bg" width="920" height="520" rx="28"/>
+  <text x="460" y="50" text-anchor="middle" class="title">How Decisions Are Made</text>
+  <line x1="460" y1="84" x2="460" y2="456" class="divider"/>
+
+  <rect x="40" y="96" width="380" height="360" rx="28" class="panel-left"/>
+  <text x="70" y="138" class="subtitle" fill="#66655f">Discretionary</text>
+  <text x="70" y="168" class="label">Decision Basis</text>
+  <text x="70" y="194" class="body">Experience, intuition, news</text>
+
+  <rect x="70" y="220" width="320" height="68" rx="18" class="context"/>
+  <rect x="88" y="238" width="76" height="24" rx="12" class="pro"/>
+  <text x="126" y="254" text-anchor="middle" class="protext">Pros</text>
+  <text x="182" y="244" class="body">Handles sharp moves</text>
+  <text x="182" y="264" class="body">and exceptions flexibly</text>
+
+  <rect x="70" y="302" width="320" height="68" rx="18" class="context"/>
+  <rect x="88" y="320" width="76" height="24" rx="12" class="con"/>
+  <text x="126" y="336" text-anchor="middle" class="protext" fill="#b53d3c">Cons</text>
+  <text x="182" y="326" class="body">Judgment can vary</text>
+  <text x="182" y="346" class="body">from trader to trader</text>
+
+  <text x="70" y="402" class="label">Best Fit</text>
+  <text x="70" y="428" class="small">News shocks and structural shifts</text>
+
+  <rect x="500" y="96" width="380" height="360" rx="28" class="panel-right"/>
+  <text x="530" y="138" class="subtitle" fill="#1d9e75">Quant Strategy</text>
+  <text x="530" y="168" class="label">Decision Basis</text>
+  <text x="530" y="194" class="body">Rules, statistics, algorithms</text>
+
+  <rect x="530" y="220" width="320" height="68" rx="18" class="context"/>
+  <rect x="548" y="238" width="76" height="24" rx="12" class="pro"/>
+  <text x="586" y="254" text-anchor="middle" class="protext">Pros</text>
+  <text x="642" y="244" class="body">The same setup can be</text>
+  <text x="642" y="264" class="body">tested repeatedly</text>
+
+  <rect x="530" y="302" width="320" height="68" rx="18" class="context"/>
+  <rect x="548" y="320" width="76" height="24" rx="12" class="con"/>
+  <text x="586" y="336" text-anchor="middle" class="protext" fill="#b53d3c">Cons</text>
+  <text x="642" y="326" class="body">Overfitting to history</text>
+  <text x="642" y="346" class="body">hurts future results</text>
+
+  <text x="530" y="402" class="label">Best Fit</text>
+  <text x="530" y="428" class="small">Repeatable rules across many stocks</text>
+</svg>

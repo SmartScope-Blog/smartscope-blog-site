@@ -1,0 +1,1200 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="From Claude Sonnet 4's hybrid mode to ChatGPT Agent's Kua model and MCP integration. Complete guide to professional AI development agent implementation with real code examples and workflow automation."><meta name="author" content="Claude Code"><link rel="canonical" href="https://smartscope.blog/en/ai-development/ai-agent-practical-implementation-deep-dive-2025/"><link rel="alternate" href="../../../ai-development/ai-agent-practical-implementation-deep-dive-2025/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>【2025 Practical Edition】AI Development Agent Complete Implementation Guide - Professional Claude Sonnet 4 & ChatGPT Agent Implementation - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="【2025 Practical Edition】AI Development Agent Complete Implementation Guide - Professional Claude Sonnet 4 & ChatGPT Agent Implementation"><meta property="og:description" content="From Claude Sonnet 4's hybrid mode to ChatGPT Agent's Kua model and MCP integration. Complete guide to professional AI development agent implementation with real code examples and workflow automation."><meta property="og:url" content="https://smartscope.blog/en/ai-development/ai-agent-practical-implementation-deep-dive-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="【2025 Practical Edition】AI Development Agent Complete Implementation Guide - Professional Claude Sonnet 4 & ChatGPT Agent Implementation"><meta name="twitter:description" content="From Claude Sonnet 4's hybrid mode to ChatGPT Agent's Kua model and MCP integration. Complete guide to professional AI development agent implementation with real code examples and workflow automation."><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#2025-practical-editionai-development-agent-complete-implementation-guide" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> 【2025 Practical Edition】AI Development Agent Complete Implementation Guide - Professional Claude Sonnet 4 & ChatGPT Agent Implementation </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../ai-development/ai-agent-practical-implementation-deep-dive-2025/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#introduction" class="md-nav__link"><span class="md-ellipsis"> Introduction </span></a></li><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#claude-sonnet-4-hybrid-mode-implementation-deep-dive" class="md-nav__link"><span class="md-ellipsis"> Claude Sonnet 4 Hybrid Mode Implementation Deep Dive </span></a><nav class="md-nav" aria-label="Claude Sonnet 4 Hybrid Mode Implementation Deep Dive"><ul class="md-nav__list"><li class="md-nav__item"><a href="#architecture-design-and-implementation-patterns" class="md-nav__link"><span class="md-ellipsis"> Architecture Design and Implementation Patterns </span></a></li><li class="md-nav__item"><a href="#production-environment-configuration-and-deployment" class="md-nav__link"><span class="md-ellipsis"> Production Environment Configuration and Deployment </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#chatgpt-agent-kua-implementation-deep-dive" class="md-nav__link"><span class="md-ellipsis"> ChatGPT Agent (Kua) Implementation Deep Dive </span></a><nav class="md-nav" aria-label="ChatGPT Agent (Kua) Implementation Deep Dive"><ul class="md-nav__list"><li class="md-nav__item"><a href="#kua-model-integration-and-workflow-automation" class="md-nav__link"><span class="md-ellipsis"> Kua Model Integration and Workflow Automation </span></a></li><li class="md-nav__item"><a href="#enterprise-integration-and-security-implementation" class="md-nav__link"><span class="md-ellipsis"> Enterprise Integration and Security Implementation </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#mcp-model-context-protocol-integration-implementation" class="md-nav__link"><span class="md-ellipsis"> MCP (Model Context Protocol) Integration Implementation </span></a><nav class="md-nav" aria-label="MCP (Model Context Protocol) Integration Implementation"><ul class="md-nav__list"><li class="md-nav__item"><a href="#advanced-context-management-and-tool-integration" class="md-nav__link"><span class="md-ellipsis"> Advanced Context Management and Tool Integration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#integrated-workflows-and-orchestration" class="md-nav__link"><span class="md-ellipsis"> Integrated Workflows and Orchestration </span></a><nav class="md-nav" aria-label="Integrated Workflows and Orchestration"><ul class="md-nav__list"><li class="md-nav__item"><a href="#multi-agent-collaboration-system" class="md-nav__link"><span class="md-ellipsis"> Multi-Agent Collaboration System </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#performance-optimization-and-monitoring" class="md-nav__link"><span class="md-ellipsis"> Performance Optimization and Monitoring </span></a><nav class="md-nav" aria-label="Performance Optimization and Monitoring"><ul class="md-nav__list"><li class="md-nav__item"><a href="#production-environment-optimization-techniques" class="md-nav__link"><span class="md-ellipsis"> Production Environment Optimization Techniques </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#summary" class="md-nav__link"><span class="md-ellipsis"> Summary </span></a><nav class="md-nav" aria-label="Summary"><ul class="md-nav__list"><li class="md-nav__item"><a href="#key-points_1" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#recommended-next-steps" class="md-nav__link"><span class="md-ellipsis"> Recommended Next Steps </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#related-articles" class="md-nav__link"><span class="md-ellipsis"> Related Articles </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../tags/#tag:ai-implementation" class="md-tag">AI Implementation</a><a href="../../tags/#tag:automation" class="md-tag">Automation</a><a href="../../tags/#tag:chatgpt-agent" class="md-tag">ChatGPT Agent</a><a href="../../tags/#tag:claude-sonnet-4" class="md-tag">Claude Sonnet 4</a><a href="../../tags/#tag:hybrid-mode" class="md-tag">Hybrid Mode</a><a href="../../tags/#tag:kua-model" class="md-tag">Kua Model</a><a href="../../tags/#tag:mcp-integration" class="md-tag">MCP Integration</a><a href="../../tags/#tag:practical-guide" class="md-tag">Practical Guide</a><a href="../../tags/#tag:agent-kua" class="md-tag">agent-kua</a><a href="../../tags/#tag:claude-sonnet-4" class="md-tag">claude-sonnet-4</a><a href="../../tags/#tag:practical" class="md-tag">practical</a></nav><h1 id="2025-practical-editionai-development-agent-complete-implementation-guide">【2025 Practical Edition】AI Development Agent Complete Implementation Guide<a class="headerlink" href="#2025-practical-editionai-development-agent-complete-implementation-guide" title="Permanent link">&para;</a></h1><h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2><p>Building on our morning articles "<a href="../../generative-ai/claude/claude-sonnet-4-github-copilot-2025/">Claude Sonnet 4 and GitHub Copilot's New Features Transform AI Development Experience [July 2025 Latest]</a>" and "<a href="../../generative-ai/chatgpt/chatgpt-agent-comprehensive-guide-2025/">【2025 Latest】ChatGPT Agent Feature Complete Guide</a>", this article provides <strong>implementation-level deep dive</strong> into AI development agent technologies.</p><p>We cover practical content that can be used immediately in development environments, including concrete code examples for production environments, workflow design, error handling, and performance optimization.</p><h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>Professional Hybrid AI Development</strong></p><p>Advanced development systems combining Claude Sonnet 4's hybrid mode with ChatGPT agents</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m14.6 16.6 4.6-4.6-4.6-4.6L16 6l6 6-6 6zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6z"/></svg></span> <strong>Production-Ready Automation</strong></p><p>Building robust workflow automation systems for real business environments</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12h7c-.53 4.11-3.28 7.78-7 8.92zH5V6.3l7-3.11M12 1 3 5v6c0 5.55 3.84 10.73 9 12 5.16-1.27 9-6.45 9-12V5z"/></svg></span> <strong>Enterprise Integration</strong></p><p>Implementation of MCP integration and multi-tenant support meeting security requirements</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>Performance Optimization</strong></p><p>Production systems optimized for response time, cost efficiency, and resource usage</p></li></ul></div><h2 id="claude-sonnet-4-hybrid-mode-implementation-deep-dive">Claude Sonnet 4 Hybrid Mode Implementation Deep Dive<a class="headerlink" href="#claude-sonnet-4-hybrid-mode-implementation-deep-dive" title="Permanent link">&para;</a></h2><h3 id="architecture-design-and-implementation-patterns">Architecture Design and Implementation Patterns<a class="headerlink" href="#architecture-design-and-implementation-patterns" title="Permanent link">&para;</a></h3><p>Detailed explanation of practical implementation patterns using Claude Sonnet 4's hybrid mode.</p><div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anthropic.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ResponseMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">INSTANT</span> <span class="o">=</span> <span class="s2">&quot;instant&quot;</span>
+    <span class="n">THINKING</span> <span class="o">=</span> <span class="s2">&quot;thinking&quot;</span>
+    <span class="n">HYBRID</span> <span class="o">=</span> <span class="s2">&quot;hybrid&quot;</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskContext</span><span class="p">:</span>
+    <span class="n">complexity_score</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">urgency_level</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">context_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">requires_deep_analysis</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClaudeHybridManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for managing Claude Sonnet 4&#39;s hybrid mode</span>
+<span class="sd">    Implementation designed for production environment use</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_concurrent_requests</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">anthropic</span><span class="o">.</span><span class="n">Anthropic</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">max_concurrent_requests</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># Performance monitoring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_tracking</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;instant&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;thinking&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">intelligent_mode_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">TaskContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResponseMode</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Automatically select optimal mode based on task characteristics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Complexity scoring</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">complexity_score</span> <span class="o">&gt;</span> <span class="mf">0.8</span> <span class="ow">or</span> <span class="n">context</span><span class="o">.</span><span class="n">requires_deep_analysis</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ResponseMode</span><span class="o">.</span><span class="n">THINKING</span>
+        <span class="k">elif</span> <span class="n">context</span><span class="o">.</span><span class="n">urgency_level</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">context</span><span class="o">.</span><span class="n">context_size</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ResponseMode</span><span class="o">.</span><span class="n">INSTANT</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ResponseMode</span><span class="o">.</span><span class="n">HYBRID</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_hybrid_request</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> 
+        <span class="n">context</span><span class="p">:</span> <span class="n">TaskContext</span><span class="p">,</span>
+        <span class="n">fallback_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute request in hybrid mode</span>
+<span class="sd">        With fallback functionality</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="p">:</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">intelligent_mode_selection</span><span class="p">(</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">],</span> <span class="n">context</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+                <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">,</span>
+                    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+                    <span class="n">response_mode</span><span class="o">=</span><span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+                    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">ResponseMode</span><span class="o">.</span><span class="n">THINKING</span> <span class="k">else</span> <span class="mf">0.3</span>
+                <span class="p">)</span>
+
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">response_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+                <span class="c1"># Performance tracking</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">response_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response_time</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cost_tracking</span><span class="p">[</span><span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                    <span class="s2">&quot;mode_used&quot;</span><span class="p">:</span> <span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">response_time</span><span class="p">,</span>
+                    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;tokens_used&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">input_tokens</span> <span class="o">+</span> <span class="n">response</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">output_tokens</span>
+                <span class="p">}</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hybrid request failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">fallback_enabled</span> <span class="ow">and</span> <span class="n">mode</span> <span class="o">!=</span> <span class="n">ResponseMode</span><span class="o">.</span><span class="n">INSTANT</span><span class="p">:</span>
+                    <span class="c1"># Execute fallback</span>
+                    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_fallback</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+                <span class="k">raise</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_fallback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">original_error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fallback processing for errors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Executing fallback with instant mode&quot;</span><span class="p">)</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">,</span>
+                <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+                <span class="n">response_mode</span><span class="o">=</span><span class="s2">&quot;instant&quot;</span><span class="p">,</span>
+                <span class="n">messages</span><span class="o">=</span><span class="n">messages</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;mode_used&quot;</span><span class="p">:</span> <span class="s2">&quot;instant_fallback&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;fallback_reason&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">original_error</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">fallback_error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fallback also failed: </span><span class="si">{</span><span class="n">fallback_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">original_error</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cost calculation (applying actual rates)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_tokens</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">input_tokens</span>
+        <span class="n">output_tokens</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">output_tokens</span>
+
+        <span class="c1"># Rates as of July 2025 (example)</span>
+        <span class="n">input_rate</span> <span class="o">=</span> <span class="mf">0.003</span>  <span class="c1"># per 1K tokens</span>
+        <span class="n">output_rate</span> <span class="o">=</span> <span class="mf">0.015</span>  <span class="c1"># per 1K tokens</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">input_tokens</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">input_rate</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">output_tokens</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">output_rate</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get performance metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_times</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;avg_response_time&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response_times</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response_times</span><span class="p">),</span>
+            <span class="s2">&quot;total_cost&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_tracking</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="s2">&quot;total_requests&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response_times</span><span class="p">),</span>
+            <span class="s2">&quot;cost_breakdown&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_tracking</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">}</span>
+</code></pre></div><h3 id="production-environment-configuration-and-deployment">Production Environment Configuration and Deployment<a class="headerlink" href="#production-environment-configuration-and-deployment" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">claude-hybrid-service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL=INFO</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAX_CONCURRENT_REQUESTS=10</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDIS_URL=redis://redis:6379</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2G</span>
+<span class="w">        </span><span class="nt">reservations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1G</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7-alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;6379:6379&quot;</span>
+
+<span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/prometheus</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9090:9090&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+</code></pre></div><div class="highlight"><pre><span></span><code><span class="c1"># FastAPI Service Implementation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">BackgroundTasks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">redis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Histogram</span><span class="p">,</span> <span class="n">generate_latest</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Claude Hybrid Service&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">)</span>
+
+<span class="c1"># Metrics</span>
+<span class="n">REQUEST_COUNT</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s1">&#39;claude_requests_total&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Claude requests&#39;</span><span class="p">)</span>
+<span class="n">REQUEST_DURATION</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span><span class="s1">&#39;claude_request_duration_seconds&#39;</span><span class="p">,</span> <span class="s1">&#39;Claude request duration&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HybridRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClaudeHybridService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">ClaudeHybridManager</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">),</span>
+            <span class="n">max_concurrent_requests</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MAX_CONCURRENT_REQUESTS&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;REDIS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">))</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">HybridRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Request processing and cache management</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate request key</span>
+        <span class="n">request_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_cache_key</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+
+        <span class="c1"># Cache check</span>
+        <span class="n">cached_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached_response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cached_response</span><span class="p">)</span>
+
+        <span class="c1"># Generate context</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">TaskContext</span><span class="p">(</span>
+            <span class="n">complexity_score</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;complexity_score&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">urgency_level</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;urgency_level&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+            <span class="n">context_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">messages</span><span class="p">)),</span>
+            <span class="n">requires_deep_analysis</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deep_analysis&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Hybrid execution</span>
+        <span class="k">with</span> <span class="n">REQUEST_DURATION</span><span class="o">.</span><span class="n">time</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">execute_hybrid_request</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">messages</span><span class="p">,</span> 
+                <span class="n">context</span>
+            <span class="p">)</span>
+
+        <span class="n">REQUEST_COUNT</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+
+        <span class="c1"># Cache storage (1 hour)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span>
+            <span class="n">request_key</span><span class="p">,</span> 
+            <span class="mi">3600</span><span class="p">,</span> 
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate cache key</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;claude_hybrid:</span><span class="si">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">service</span> <span class="o">=</span> <span class="n">ClaudeHybridService</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/v1/claude/hybrid&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_hybrid_request</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">HybridRequest</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">service</span><span class="o">.</span><span class="n">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/metrics&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_metrics</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">generate_latest</span><span class="p">(),</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+</code></pre></div><h2 id="chatgpt-agent-kua-implementation-deep-dive">ChatGPT Agent (Kua) Implementation Deep Dive<a class="headerlink" href="#chatgpt-agent-kua-implementation-deep-dive" title="Permanent link">&para;</a></h2><h3 id="kua-model-integration-and-workflow-automation">Kua Model Integration and Workflow Automation<a class="headerlink" href="#kua-model-integration-and-workflow-automation" title="Permanent link">&para;</a></h3><p>Implementation of practical automation systems using ChatGPT Agent's Kua model.</p><div class="highlight"><pre><span></span><code><span class="c1">// TypeScript Implementation Example</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">KuaAgentConfig</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;kua-1.0&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;kua-1.5&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentTool</span><span class="p">[];</span>
+<span class="w">  </span><span class="nx">maxSteps</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">timeoutMs</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">securityLevel</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;standard&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;enhanced&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">AgentTool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">parameters</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">ChatGPTAgentManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">openai</span><span class="o">:</span><span class="w"> </span><span class="kt">OpenAI</span><span class="p">;</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">KuaAgentConfig</span><span class="p">;</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">taskQueue</span><span class="o">:</span><span class="w"> </span><span class="kt">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">AgentTask</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">KuaAgentConfig</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">openai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OpenAI</span><span class="p">({</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">executeAgentWorkflow</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">instruction</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">WorkflowContext</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AgentExecutionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">taskId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateTaskId</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Task initialization</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">initializeTask</span><span class="p">(</span><span class="nx">taskId</span><span class="p">,</span><span class="w"> </span><span class="nx">instruction</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">taskQueue</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">taskId</span><span class="p">,</span><span class="w"> </span><span class="nx">task</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// Agent execution</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">runAgentLoop</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">taskId</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="kt">result.output</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">steps</span><span class="o">:</span><span class="w"> </span><span class="kt">result.steps</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">result.executionTime</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">toolsUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">result.toolsUsed</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">tokensConsumed</span><span class="o">:</span><span class="w"> </span><span class="kt">result.tokensConsumed</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">};</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">handleExecutionError</span><span class="p">(</span><span class="nx">taskId</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">taskQueue</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">taskId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">runAgentLoop</span><span class="p">(</span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentTask</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExecutionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">steps</span><span class="o">:</span><span class="w"> </span><span class="kt">ExecutionStep</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">currentState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">task</span><span class="p">.</span><span class="nx">initialState</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">stepCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">stepCount</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">maxSteps</span><span class="p">;</span><span class="w"> </span><span class="nx">stepCount</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Timeout check</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">timeoutMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Agent execution timeout&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// Decide next action</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">decideNextAction</span><span class="p">(</span><span class="nx">currentState</span><span class="p">,</span><span class="w"> </span><span class="nx">task</span><span class="p">.</span><span class="nx">context</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;complete&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">output</span><span class="o">:</span><span class="w"> </span><span class="kt">action.result</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">steps</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">toolsUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">steps.map</span><span class="p">(</span><span class="nx">s</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">tool</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">),</span>
+<span class="w">          </span><span class="nx">tokensConsumed</span><span class="o">:</span><span class="w"> </span><span class="kt">steps.reduce</span><span class="p">((</span><span class="nx">sum</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">sum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">tokensUsed</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0</span><span class="p">),</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// Execute action</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">stepResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">executeStep</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span><span class="w"> </span><span class="nx">task</span><span class="p">.</span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">steps</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">stepResult</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// Update state</span>
+<span class="w">      </span><span class="nx">currentState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">updateState</span><span class="p">(</span><span class="nx">currentState</span><span class="p">,</span><span class="w"> </span><span class="nx">stepResult</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Maximum steps exceeded without completion&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">decideNextAction</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentState</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">WorkflowContext</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AgentAction</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">openai</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">this.config.model</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;system&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">this.buildSystemPrompt</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">this.buildStatePrompt</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="kt">this.buildToolDefinitions</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">tool_choice</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">max_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">2048</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">parseAgentResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">executeStep</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentAction</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">WorkflowContext</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExecutionStep</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Security check</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">validateActionSecurity</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// Tool execution</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">tools</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">action</span><span class="p">.</span><span class="nx">tool</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">tool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Unknown tool: </span><span class="si">${</span><span class="nx">action</span><span class="p">.</span><span class="nx">tool</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">tool</span><span class="p">.</span><span class="nx">handler</span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">parameters</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">stepId</span><span class="o">:</span><span class="w"> </span><span class="kt">this.generateStepId</span><span class="p">(),</span>
+<span class="w">        </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="kt">action.tool</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">parameters</span><span class="o">:</span><span class="w"> </span><span class="kt">action.parameters</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">result</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">tokensUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">action.estimatedTokens</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span>
+<span class="w">      </span><span class="p">};</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">stepId</span><span class="o">:</span><span class="w"> </span><span class="kt">this.generateStepId</span><span class="p">(),</span>
+<span class="w">        </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="kt">action.tool</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">parameters</span><span class="o">:</span><span class="w"> </span><span class="kt">action.parameters</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">error.message</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;error&#39;</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">validateActionSecurity</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentAction</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">WorkflowContext</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">securityLevel</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;standard&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Check dangerous actions</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">dangerousActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s1">&#39;file_delete&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="s1">&#39;system_command&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="s1">&#39;network_request_external&#39;</span>
+<span class="w">    </span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dangerousActions</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">tool</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// User confirmation required</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">approval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">requestUserApproval</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">approval</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Action denied by security policy&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="enterprise-integration-and-security-implementation">Enterprise Integration and Security Implementation<a class="headerlink" href="#enterprise-integration-and-security-implementation" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Enterprise Security Layer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.fernet</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fernet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EnterpriseSecurityManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Security management for enterprise environments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SecurityConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cipher</span> <span class="o">=</span> <span class="n">Fernet</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">encryption_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jwt_secret</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">jwt_secret</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">authenticate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UserContext</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        JWT token authentication</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+                <span class="n">token</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">jwt_secret</span><span class="p">,</span> 
+                <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HS256&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">UserContext</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">],</span>
+                <span class="n">organization_id</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;org_id&#39;</span><span class="p">],</span>
+                <span class="n">permissions</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;permissions&#39;</span><span class="p">],</span>
+                <span class="n">expires_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;exp&#39;</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">ExpiredSignatureError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SecurityException</span><span class="p">(</span><span class="s2">&quot;Token expired&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">InvalidTokenError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SecurityException</span><span class="p">(</span><span class="s2">&quot;Invalid token&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encrypt_sensitive_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encrypt sensitive data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decrypt_sensitive_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encrypted_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decrypt sensitive data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_action_permissions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">user_context</span><span class="p">:</span> <span class="n">UserContext</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">resource</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate action execution permissions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">required_permission</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">resource</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">required_permission</span> <span class="ow">in</span> <span class="n">user_context</span><span class="o">.</span><span class="n">permissions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">audit_log</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_context</span><span class="p">:</span> <span class="n">UserContext</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">resource</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Record audit logs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log_entry</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">user_context</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+            <span class="s2">&quot;organization_id&quot;</span><span class="p">:</span> <span class="n">user_context</span><span class="o">.</span><span class="n">organization_id</span><span class="p">,</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span>
+            <span class="s2">&quot;resource&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="p">,</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="p">{},</span>
+            <span class="s2">&quot;ip_address&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_client_ip</span><span class="p">(),</span>
+            <span class="s2">&quot;user_agent&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_agent</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Record to secure audit log storage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_audit_log</span><span class="p">(</span><span class="n">log_entry</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiTenantAgentManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multi-tenant agent management</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security_manager</span><span class="p">:</span> <span class="n">EnterpriseSecurityManager</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">security</span> <span class="o">=</span> <span class="n">security_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tenant_configs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TenantConfig</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_limits</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResourceLimits</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_tenant_workflow</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">user_context</span><span class="p">:</span> <span class="n">UserContext</span><span class="p">,</span>
+        <span class="n">workflow_request</span><span class="p">:</span> <span class="n">WorkflowRequest</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute tenant-isolated workflow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Resource limits check</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_resource_limits</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">,</span> <span class="n">workflow_request</span><span class="p">)</span>
+
+        <span class="c1"># Get tenant configuration</span>
+        <span class="n">tenant_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tenant_config</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
+
+        <span class="c1"># Security validation</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">validate_action_permissions</span><span class="p">(</span>
+            <span class="n">user_context</span><span class="p">,</span>
+            <span class="n">workflow_request</span><span class="o">.</span><span class="n">action</span><span class="p">,</span>
+            <span class="n">workflow_request</span><span class="o">.</span><span class="n">resource</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">PermissionException</span><span class="p">(</span><span class="s2">&quot;Insufficient permissions&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Workflow execution (tenant-isolated environment)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_isolated_workflow</span><span class="p">(</span>
+                <span class="n">tenant_config</span><span class="p">,</span>
+                <span class="n">workflow_request</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Record audit log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">audit_log</span><span class="p">(</span>
+                <span class="n">user_context</span><span class="p">,</span>
+                <span class="n">workflow_request</span><span class="o">.</span><span class="n">action</span><span class="p">,</span>
+                <span class="n">workflow_request</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">&quot;workflow_id&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">workflow_id</span><span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Error audit log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">audit_log</span><span class="p">(</span>
+                <span class="n">user_context</span><span class="p">,</span>
+                <span class="n">workflow_request</span><span class="o">.</span><span class="n">action</span><span class="p">,</span>
+                <span class="n">workflow_request</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+            <span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_isolated_workflow</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tenant_config</span><span class="p">:</span> <span class="n">TenantConfig</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">WorkflowRequest</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute workflow in tenant-isolated environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Tenant-specific agent configuration</span>
+        <span class="n">agent_config</span> <span class="o">=</span> <span class="n">KuaAgentConfig</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">tenant_config</span><span class="o">.</span><span class="n">preferred_model</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_filter_tools_by_tenant</span><span class="p">(</span><span class="n">tenant_config</span><span class="p">),</span>
+            <span class="n">maxSteps</span><span class="o">=</span><span class="n">tenant_config</span><span class="o">.</span><span class="n">max_steps</span><span class="p">,</span>
+            <span class="n">timeoutMs</span><span class="o">=</span><span class="n">tenant_config</span><span class="o">.</span><span class="n">timeout_ms</span><span class="p">,</span>
+            <span class="n">securityLevel</span><span class="o">=</span><span class="n">tenant_config</span><span class="o">.</span><span class="n">security_level</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create isolated AgentManager</span>
+        <span class="n">agent_manager</span> <span class="o">=</span> <span class="n">ChatGPTAgentManager</span><span class="p">(</span>
+            <span class="n">tenant_config</span><span class="o">.</span><span class="n">api_key</span><span class="p">,</span>
+            <span class="n">agent_config</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">agent_manager</span><span class="o">.</span><span class="n">executeAgentWorkflow</span><span class="p">(</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">instruction</span><span class="p">,</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+</code></pre></div><h2 id="mcp-model-context-protocol-integration-implementation">MCP (Model Context Protocol) Integration Implementation<a class="headerlink" href="#mcp-model-context-protocol-integration-implementation" title="Permanent link">&para;</a></h2><h3 id="advanced-context-management-and-tool-integration">Advanced Context Management and Tool Integration<a class="headerlink" href="#advanced-context-management-and-tool-integration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># MCP Integration Implementation Example</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">runtime_checkable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="nd">@runtime_checkable</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MCPTool</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MCP-compliant tool interface&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get tool schema&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute tool&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get tool description&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MCPServer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model Context Protocol server implementation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MCPTool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prompts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">MCPTool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register tool&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register resource&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">resource</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle MCP request&quot;&quot;&quot;</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;tools/list&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_tools</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;tools/call&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_tool</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;resources/list&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_resources</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;resources/read&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_resource</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_list_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List available tools&quot;&quot;&quot;</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">tool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">tools</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">get_description</span><span class="p">(),</span>
+                <span class="s2">&quot;inputSchema&quot;</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">get_schema</span><span class="p">()</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="n">tools</span><span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_call_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute tool&quot;&quot;&quot;</span>
+        <span class="n">tool_name</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arguments&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown tool: </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">tool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+
+<span class="c1"># Actual Tool Implementation Example</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CodebaseAnalyzerTool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Codebase analysis tool (MCP compliant)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to codebase for analysis&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;structure&quot;</span><span class="p">,</span> <span class="s2">&quot;dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;complexity&quot;</span><span class="p">,</span> <span class="s2">&quot;security&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Type of analysis&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;include_tests&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to include test code&quot;</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;analysis_type&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Tool for analyzing codebase structure, dependencies, complexity, etc.&quot;</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;analysis_type&quot;</span><span class="p">]</span>
+        <span class="n">include_tests</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_tests&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;structure&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_structure</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">include_tests</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;dependencies&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_dependencies</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;complexity&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_complexity</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">include_tests</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;security&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_security</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown analysis type: </span><span class="si">{</span><span class="n">analysis_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">include_tests</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze codebase structure&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+        <span class="n">structure</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;total_files&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;languages&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;directories&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;file_types&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;largest_files&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">include_tests</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">test_dir</span> <span class="ow">in</span> <span class="n">root</span> <span class="k">for</span> <span class="n">test_dir</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;tests&quot;</span><span class="p">,</span> <span class="s2">&quot;__pycache__&quot;</span><span class="p">]):</span>
+                <span class="k">continue</span>
+
+            <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;directories&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span>
+                <span class="s2">&quot;file_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+            <span class="p">})</span>
+
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">/</span> <span class="n">file</span>
+                <span class="n">extension</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span>
+
+                <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;total_files&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;file_types&quot;</span><span class="p">][</span><span class="n">extension</span><span class="p">]</span> <span class="o">=</span> <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;file_types&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+                <span class="c1"># File size check</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">size</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+                    <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;largest_files&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
+                        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span>
+                    <span class="p">})</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="c1"># Sort largest files</span>
+        <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;largest_files&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">structure</span><span class="p">[</span><span class="s2">&quot;largest_files&quot;</span><span class="p">],</span> 
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">],</span> 
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">structure</span>
+</code></pre></div><h2 id="integrated-workflows-and-orchestration">Integrated Workflows and Orchestration<a class="headerlink" href="#integrated-workflows-and-orchestration" title="Permanent link">&para;</a></h2><h3 id="multi-agent-collaboration-system">Multi-Agent Collaboration System<a class="headerlink" href="#multi-agent-collaboration-system" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MultiAgentOrchestrator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orchestrator for coordinating multiple AI agents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">claude_manager</span> <span class="o">=</span> <span class="n">ClaudeHybridManager</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chatgpt_manager</span> <span class="o">=</span> <span class="n">ChatGPTAgentManager</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_kua_config</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcp_server</span> <span class="o">=</span> <span class="n">MCPServer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_mcp_tools</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_complex_workflow</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">workflow_definition</span><span class="p">:</span> <span class="n">WorkflowDefinition</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute complex multi-agent workflow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">execution_context</span> <span class="o">=</span> <span class="n">ExecutionContext</span><span class="p">(</span>
+            <span class="n">workflow_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generate_workflow_id</span><span class="p">(),</span>
+            <span class="n">start_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">agents_used</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">intermediate_results</span><span class="o">=</span><span class="p">{}</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">workflow_definition</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+                <span class="n">step_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_workflow_step</span><span class="p">(</span>
+                    <span class="n">step</span><span class="p">,</span> 
+                    <span class="n">execution_context</span>
+                <span class="p">)</span>
+
+                <span class="n">execution_context</span><span class="o">.</span><span class="n">intermediate_results</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_result</span>
+
+                <span class="c1"># Handle conditional branching</span>
+                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_condition</span><span class="p">(</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> 
+                    <span class="n">execution_context</span>
+                <span class="p">):</span>
+                    <span class="k">break</span>
+
+            <span class="k">return</span> <span class="n">WorkflowResult</span><span class="p">(</span>
+                <span class="n">workflow_id</span><span class="o">=</span><span class="n">execution_context</span><span class="o">.</span><span class="n">workflow_id</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
+                <span class="n">final_result</span><span class="o">=</span><span class="n">execution_context</span><span class="o">.</span><span class="n">intermediate_results</span><span class="p">,</span>
+                <span class="n">execution_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">execution_context</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
+                <span class="n">agents_used</span><span class="o">=</span><span class="n">execution_context</span><span class="o">.</span><span class="n">agents_used</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">WorkflowResult</span><span class="p">(</span>
+                <span class="n">workflow_id</span><span class="o">=</span><span class="n">execution_context</span><span class="o">.</span><span class="n">workflow_id</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="n">execution_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">execution_context</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
+                <span class="n">agents_used</span><span class="o">=</span><span class="n">execution_context</span><span class="o">.</span><span class="n">agents_used</span>
+            <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_workflow_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="n">WorkflowStep</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute individual workflow step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="s2">&quot;claude&quot;</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">agents_used</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_claude_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="s2">&quot;chatgpt&quot;</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">agents_used</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;chatgpt-kua&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_chatgpt_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">step</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_hybrid_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown agent type: </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">agent_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_hybrid_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="n">WorkflowStep</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ExecutionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hybrid execution (multi-agent collaboration)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 1. Strategy planning with Claude Sonnet 4</span>
+        <span class="n">strategy_task</span> <span class="o">=</span> <span class="n">TaskContext</span><span class="p">(</span>
+            <span class="n">complexity_score</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+            <span class="n">urgency_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">context_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">input</span><span class="p">)),</span>
+            <span class="n">requires_deep_analysis</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">strategy_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">claude_manager</span><span class="o">.</span><span class="n">execute_hybrid_request</span><span class="p">(</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Please develop an execution strategy for the following task: </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">}],</span>
+            <span class="n">context</span><span class="o">=</span><span class="n">strategy_task</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 2. Execution with ChatGPT Agent</span>
+        <span class="n">execution_context</span> <span class="o">=</span> <span class="n">WorkflowContext</span><span class="p">(</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy_result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span>
+            <span class="n">available_tools</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">tools</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="p">)</span>
+
+        <span class="n">execution_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">chatgpt_manager</span><span class="o">.</span><span class="n">executeAgentWorkflow</span><span class="p">(</span>
+            <span class="n">instruction</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">input</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="n">execution_context</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 3. Result validation with Claude Sonnet 4</span>
+        <span class="n">validation_messages</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Please validate the execution results:</span>
+
+<span class="s2">            Strategy: </span><span class="si">{</span><span class="n">strategy_result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">            Execution Result: </span><span class="si">{</span><span class="n">execution_result</span><span class="o">.</span><span class="n">result</span><span class="si">}</span>
+
+<span class="s2">            If there are issues, please suggest corrections.</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">}]</span>
+
+        <span class="n">validation_task</span> <span class="o">=</span> <span class="n">TaskContext</span><span class="p">(</span>
+            <span class="n">complexity_score</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">urgency_level</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+            <span class="n">context_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">validation_messages</span><span class="p">)),</span>
+            <span class="n">requires_deep_analysis</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">validation_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">claude_manager</span><span class="o">.</span><span class="n">execute_hybrid_request</span><span class="p">(</span>
+            <span class="n">validation_messages</span><span class="p">,</span>
+            <span class="n">validation_task</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;strategy&quot;</span><span class="p">:</span> <span class="n">strategy_result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;execution&quot;</span><span class="p">:</span> <span class="n">execution_result</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;validation&quot;</span><span class="p">:</span> <span class="n">validation_result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;final_status&quot;</span><span class="p">:</span> <span class="s2">&quot;completed&quot;</span> <span class="k">if</span> <span class="s2">&quot;no issues&quot;</span> <span class="ow">in</span> <span class="n">validation_result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;needs_review&quot;</span>
+        <span class="p">}</span>
+
+<span class="c1"># Usage Example</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">orchestrator</span> <span class="o">=</span> <span class="n">MultiAgentOrchestrator</span><span class="p">()</span>
+
+    <span class="c1"># Complex workflow definition</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">WorkflowDefinition</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;AI-powered Code Review and Improvement&quot;</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">WorkflowStep</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;analysis&quot;</span><span class="p">,</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;claude&quot;</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;Please analyze the overall code quality of the project&quot;</span><span class="p">,</span>
+                <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;codebase_analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;dependency_tracker&quot;</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">WorkflowStep</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;improvement&quot;</span><span class="p">,</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;hybrid&quot;</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;Execute code improvements based on analysis results&quot;</span><span class="p">,</span>
+                <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_editor&quot;</span><span class="p">,</span> <span class="s2">&quot;test_runner&quot;</span><span class="p">,</span> <span class="s2">&quot;github_integration&quot;</span><span class="p">],</span>
+                <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;analysis.quality_score &lt; 0.8&quot;</span>
+            <span class="p">),</span>
+            <span class="n">WorkflowStep</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;documentation&quot;</span><span class="p">,</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;chatgpt&quot;</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;Document the improvement changes&quot;</span><span class="p">,</span>
+                <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;markdown_generator&quot;</span><span class="p">,</span> <span class="s2">&quot;diagram_creator&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">execute_complex_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Workflow completed: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Execution time: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">execution_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agents used: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">agents_used</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div><h2 id="performance-optimization-and-monitoring">Performance Optimization and Monitoring<a class="headerlink" href="#performance-optimization-and-monitoring" title="Permanent link">&para;</a></h2><h3 id="production-environment-optimization-techniques">Production Environment Optimization Techniques<a class="headerlink" href="#production-environment-optimization-techniques" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PerformanceOptimizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performance optimization for AI agent systems</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_collector</span> <span class="o">=</span> <span class="n">MetricsCollector</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_manager</span> <span class="o">=</span> <span class="n">CacheManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_balancer</span> <span class="o">=</span> <span class="n">LoadBalancer</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">optimize_request_routing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">AgentRequest</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptimizedRequest</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimal request routing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 1. Request analysis</span>
+        <span class="n">complexity</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_request_complexity</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">urgency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_urgency</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">cost_sensitivity</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">cost_sensitivity</span>
+
+        <span class="c1"># 2. Optimal agent selection</span>
+        <span class="n">optimal_agent</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_optimal_agent</span><span class="p">(</span>
+            <span class="n">complexity</span><span class="p">,</span> <span class="n">urgency</span><span class="p">,</span> <span class="n">cost_sensitivity</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 3. Cache check</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_cache_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">cached_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_manager</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cached_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OptimizedRequest</span><span class="p">(</span>
+                <span class="n">original_request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+                <span class="n">routing_decision</span><span class="o">=</span><span class="s2">&quot;cache_hit&quot;</span><span class="p">,</span>
+                <span class="n">estimated_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">estimated_time</span><span class="o">=</span><span class="mf">0.1</span>
+            <span class="p">)</span>
+
+        <span class="c1"># 4. Load balancing</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_balancer</span><span class="o">.</span><span class="n">get_optimal_endpoint</span><span class="p">(</span>
+            <span class="n">optimal_agent</span><span class="o">.</span><span class="n">agent_type</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">OptimizedRequest</span><span class="p">(</span>
+            <span class="n">original_request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">selected_agent</span><span class="o">=</span><span class="n">optimal_agent</span><span class="p">,</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+            <span class="n">routing_decision</span><span class="o">=</span><span class="s2">&quot;optimized&quot;</span><span class="p">,</span>
+            <span class="n">estimated_cost</span><span class="o">=</span><span class="n">optimal_agent</span><span class="o">.</span><span class="n">estimated_cost</span><span class="p">,</span>
+            <span class="n">estimated_time</span><span class="o">=</span><span class="n">optimal_agent</span><span class="o">.</span><span class="n">estimated_time</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_select_optimal_agent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">complexity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">urgency</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cost_sensitivity</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentOption</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select optimal agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get historical performance data</span>
+        <span class="n">performance_data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics_collector</span><span class="o">.</span><span class="n">get_agent_performance</span><span class="p">()</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">AgentOption</span><span class="p">(</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-instant&quot;</span><span class="p">,</span>
+                <span class="n">estimated_cost</span><span class="o">=</span><span class="n">complexity</span> <span class="o">*</span> <span class="mf">0.003</span><span class="p">,</span>
+                <span class="n">estimated_time</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+                <span class="n">quality_score</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span>
+                <span class="n">suitable_for_urgency</span><span class="o">=</span><span class="n">urgency</span> <span class="o">&gt;=</span> <span class="mi">7</span>
+            <span class="p">),</span>
+            <span class="n">AgentOption</span><span class="p">(</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-thinking&quot;</span><span class="p">,</span>
+                <span class="n">estimated_cost</span><span class="o">=</span><span class="n">complexity</span> <span class="o">*</span> <span class="mf">0.015</span><span class="p">,</span>
+                <span class="n">estimated_time</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span>
+                <span class="n">quality_score</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                <span class="n">suitable_for_urgency</span><span class="o">=</span><span class="n">urgency</span> <span class="o">&lt;=</span> <span class="mi">5</span>
+            <span class="p">),</span>
+            <span class="n">AgentOption</span><span class="p">(</span>
+                <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;chatgpt-kua&quot;</span><span class="p">,</span>
+                <span class="n">estimated_cost</span><span class="o">=</span><span class="n">complexity</span> <span class="o">*</span> <span class="mf">0.008</span><span class="p">,</span>
+                <span class="n">estimated_time</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span>
+                <span class="n">quality_score</span><span class="o">=</span><span class="mf">0.90</span><span class="p">,</span>
+                <span class="n">suitable_for_urgency</span><span class="o">=</span><span class="mi">3</span> <span class="o">&lt;=</span> <span class="n">urgency</span> <span class="o">&lt;=</span> <span class="mi">8</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Score calculation</span>
+        <span class="n">best_option</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_option_score</span><span class="p">(</span>
+                <span class="n">option</span><span class="p">,</span> <span class="n">complexity</span><span class="p">,</span> <span class="n">urgency</span><span class="p">,</span> <span class="n">cost_sensitivity</span><span class="p">,</span> <span class="n">performance_data</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
+                <span class="n">best_score</span> <span class="o">=</span> <span class="n">score</span>
+                <span class="n">best_option</span> <span class="o">=</span> <span class="n">option</span>
+
+        <span class="k">return</span> <span class="n">best_option</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RealTimeMonitoring</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Real-time monitoring system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_client</span> <span class="o">=</span> <span class="n">PrometheusClient</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alert_manager</span> <span class="o">=</span> <span class="n">AlertManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dashboard</span> <span class="o">=</span> <span class="n">GrafanaDashboard</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_monitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Start monitoring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Metrics collection tasks</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_system_metrics</span><span class="p">())</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_agent_metrics</span><span class="p">())</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_cost_metrics</span><span class="p">())</span>
+
+        <span class="c1"># Alert monitoring tasks</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor_alerts</span><span class="p">())</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_collect_agent_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Collect agent-specific metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Response times</span>
+                <span class="n">response_times</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_agent_response_times</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">times</span> <span class="ow">in</span> <span class="n">response_times</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_client</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+                        <span class="s1">&#39;agent_response_time_seconds&#39;</span><span class="p">,</span>
+                        <span class="n">times</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;agent_type&#39;</span><span class="p">:</span> <span class="n">agent_type</span><span class="p">}</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Success rates</span>
+                <span class="n">success_rates</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_agent_success_rates</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">success_rates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_client</span><span class="o">.</span><span class="n">gauge</span><span class="p">(</span>
+                        <span class="s1">&#39;agent_success_rate&#39;</span><span class="p">,</span>
+                        <span class="n">rate</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;agent_type&#39;</span><span class="p">:</span> <span class="n">agent_type</span><span class="p">}</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Token usage</span>
+                <span class="n">token_usage</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_token_usage</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">usage</span> <span class="ow">in</span> <span class="n">token_usage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_client</span><span class="o">.</span><span class="n">counter</span><span class="p">(</span>
+                        <span class="s1">&#39;agent_tokens_used_total&#39;</span><span class="p">,</span>
+                        <span class="n">usage</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;agent_type&#39;</span><span class="p">:</span> <span class="n">agent_type</span><span class="p">}</span>
+                    <span class="p">)</span>
+
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># 30-second interval</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metrics collection error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_monitor_alerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alert monitoring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alert_rules</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">AlertRule</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;high_response_time&quot;</span><span class="p">,</span>
+                <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;agent_response_time_seconds &gt; 30&quot;</span><span class="p">,</span>
+                <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_high_response_time</span>
+            <span class="p">),</span>
+            <span class="n">AlertRule</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;low_success_rate&quot;</span><span class="p">,</span> 
+                <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;agent_success_rate &lt; 0.9&quot;</span><span class="p">,</span>
+                <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;critical&quot;</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_low_success_rate</span>
+            <span class="p">),</span>
+            <span class="n">AlertRule</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;high_token_usage&quot;</span><span class="p">,</span>
+                <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;rate(agent_tokens_used_total[5m]) &gt; 10000&quot;</span><span class="p">,</span>
+                <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_high_token_usage</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">alert_rules</span><span class="p">:</span>
+                <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_alert_condition</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">condition</span><span class="p">):</span>
+                    <span class="k">await</span> <span class="n">rule</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># 1-minute interval</span>
+</code></pre></div><h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2><p>This article provided detailed implementation methods for practical AI development agent systems utilizing Claude Sonnet 4's hybrid mode and ChatGPT Agent's Kua model.</p><h3 id="key-points_1">Key Points<a class="headerlink" href="#key-points_1" title="Permanent link">&para;</a></h3><ul><li><strong>Hybrid Approach</strong>: Efficient system design combining the strengths of multiple AI models</li><li><strong>Security Focus</strong>: Robust security implementation required for enterprise environments</li><li><strong>Performance Optimization</strong>: Balancing response time and cost efficiency crucial for production</li><li><strong>Scalability</strong>: Ensuring extensibility through multi-tenant support and load balancing</li></ul><h3 id="recommended-next-steps">Recommended Next Steps<a class="headerlink" href="#recommended-next-steps" title="Permanent link">&para;</a></h3><ol><li><strong>Gradual Introduction</strong>: Start with small projects and gradually expand application scope</li><li><strong>Continuous Optimization</strong>: Ongoing performance metrics monitoring and improvement</li><li><strong>Team Education</strong>: Improving AI agent utilization skills across development teams</li><li><strong>Security Audits</strong>: Regular security audits and compliance verification</li></ol><p>Use these implementation patterns as reference to build the optimal AI development agent system for your development environment.</p><h2 id="related-articles">Related Articles<a class="headerlink" href="#related-articles" title="Permanent link">&para;</a></h2><ul><li><a href="../../generative-ai/claude/claude-sonnet-4-github-copilot-2025/">Claude Sonnet 4 and GitHub Copilot's New Features Transform AI Development Experience [July 2025 Latest]</a></li><li><a href="../../generative-ai/chatgpt/chatgpt-agent-comprehensive-guide-2025/">【2025 Latest】ChatGPT Agent Feature Complete Guide</a></li><li><a href="/AI/ai-agent-development-updates-2025-july">AI Development Agent Latest Updates July 2025</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="February 17, 2026 23:29:52 JST">February 17, 2026 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="280" viewBox="0 0 800 280" role="img" aria-labelledby="title desc">
+  <title id="title">個人投資家のクオンツ導入ステップ</title>
+  <desc id="desc">ルール化、検証、自動化の3ステップでクオンツ的アプローチを導入する流れを示す図。</desc>
+  <style>
+    .title { font: 700 24px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .step1 { fill: #effaf6; stroke: #1d9e75; stroke-width: 1.5; }
+    .step2 { fill: #eef5fd; stroke: #378add; stroke-width: 1.5; }
+    .step3 { fill: #f4f1fd; stroke: #7f77dd; stroke-width: 1.5; }
+    .label { font: 700 18px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .small { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4f4f49; }
+    .arrow { stroke: #888780; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+    .note { font: 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#888780"/>
+    </marker>
+  </defs>
+  <rect width="800" height="280" fill="#ffffff" rx="24"/>
+  <text x="30" y="34" class="title">個人投資家のクオンツ導入ステップ</text>
+
+  <rect x="40" y="78" width="200" height="98" rx="22" class="step1"/>
+  <text x="140" y="114" text-anchor="middle" class="label">Step 1: ルール化</text>
+  <text x="140" y="142" text-anchor="middle" class="small">既存の売買判断を</text>
+  <text x="140" y="160" text-anchor="middle" class="small">明文化する</text>
+
+  <rect x="300" y="78" width="200" height="98" rx="22" class="step2"/>
+  <text x="400" y="114" text-anchor="middle" class="label">Step 2: 検証</text>
+  <text x="400" y="142" text-anchor="middle" class="small">過去データでルールを</text>
+  <text x="400" y="160" text-anchor="middle" class="small">テストする</text>
+
+  <rect x="560" y="78" width="200" height="98" rx="22" class="step3"/>
+  <text x="660" y="114" text-anchor="middle" class="label">Step 3: 自動化</text>
+  <text x="660" y="142" text-anchor="middle" class="small">シグナル通知から始め、</text>
+  <text x="660" y="160" text-anchor="middle" class="small">段階的に執行自動化へ</text>
+
+  <path d="M240 127 L300 127" class="arrow"/>
+  <path d="M500 127 L560 127" class="arrow"/>
+
+  <text x="30" y="226" class="note">注: いきなり完全自動化を目指さない。まず手動の売買判断をルール化し、検証で確信を持ってから段階的に自動化する</text>
+</svg>

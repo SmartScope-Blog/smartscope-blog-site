@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect x="240" y="16" width="280" height="64" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1"/>
+  <text x="380" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#44433f">Session running</text>
+  <text x="380" y="64" text-anchor="middle" font-size="13" fill="#888780">No-approval session is active</text>
+
+  <line x1="380" y1="80" x2="380" y2="112" stroke="#888780" stroke-width="1"/>
+  <path d="M380 112 l-6 8 M380 112 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="226" y="124" width="308" height="62" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+  <text x="380" y="149" text-anchor="middle" font-size="18" font-weight="700" fill="#BA7517">Issue detected</text>
+  <text x="380" y="171" text-anchor="middle" font-size="13" fill="#8a6a2c">Watch the signal and choose the matching recovery path</text>
+
+  <line x1="250" y1="186" x2="132" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M132 220 l2 -10 M132 220 l9 -2" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="380" y1="186" x2="380" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M380 220 l-6 8 M380 220 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="510" y1="186" x2="628" y2="220" stroke="#888780" stroke-width="1"/>
+  <path d="M628 220 l-9 -2 M628 220 l-2 -10" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="28" y="232" width="208" height="84" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+  <text x="132" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#D85A30">re-connecting...</text>
+  <text x="132" y="280" text-anchor="middle" font-size="13" fill="#7d6c67">The stream keeps reconnecting</text>
+  <text x="132" y="298" text-anchor="middle" font-size="13" fill="#7d6c67">and resubmits the same work</text>
+
+  <rect x="276" y="232" width="208" height="84" rx="12" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+  <text x="380" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#534AB7">Context overflow</text>
+  <text x="380" y="280" text-anchor="middle" font-size="13" fill="#6c6890">Prompt or transcript has grown</text>
+  <text x="380" y="298" text-anchor="middle" font-size="13" fill="#6c6890">beyond the active limit</text>
+
+  <rect x="524" y="232" width="208" height="84" rx="12" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1"/>
+  <text x="628" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#E24B4A">Approvals revived</text>
+  <text x="628" y="280" text-anchor="middle" font-size="13" fill="#8d6a6a">Approval prompts started to</text>
+  <text x="628" y="298" text-anchor="middle" font-size="13" fill="#8d6a6a">appear again during auto runs</text>
+
+  <line x1="132" y1="316" x2="132" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M132 336 l-6 8 M132 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="380" y1="316" x2="380" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M380 336 l-6 8 M380 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+  <line x1="628" y1="316" x2="628" y2="336" stroke="#888780" stroke-width="1"/>
+  <path d="M628 336 l-6 8 M628 336 l6 8" fill="none" stroke="#888780" stroke-width="1"/>
+
+  <rect x="28" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="132" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">/status + session restart</text>
+  <text x="132" y="388" text-anchor="middle" font-size="12" fill="#54766a">Follow reconnect guide</text>
+
+  <rect x="276" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="380" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">Split tasks + trim transcript</text>
+  <text x="380" y="388" text-anchor="middle" font-size="12" fill="#54766a">Reduce active context</text>
+
+  <rect x="524" y="346" width="208" height="56" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+  <text x="628" y="368" text-anchor="middle" font-size="15" font-weight="700" fill="#1D9E75">Exit and re-run with -a on-request</text>
+  <text x="628" y="388" text-anchor="middle" font-size="12" fill="#54766a">Isolate only the risky steps</text>
+</svg>

@@ -1,0 +1,812 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="GitHub Copilot Agentの企業導入における実装パターン、セキュリティ設定、チーム管理の完全ガイド。実際のコード例とYAML設定、運用ノウハウを通じて大規模組織での成功事例を詳解します。"><meta name="author" content="Claude Code"><link rel="canonical" href="https://smartscope.blog/ai-development/github-copilot-agent-enterprise-implementation-guide/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../en/ai-development/github-copilot-agent-enterprise-implementation-guide/" hreflang="en"><link rel="icon" href="../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>GitHub Copilot Agent企業導入実戦ガイド【昼実行】- AI技術フォローアップ記事 - SmartScope</title><link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../stylesheets/extra.css"><link rel="stylesheet" href="../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="GitHub Copilot Agent企業導入実戦ガイド【昼実行】- AI技術フォローアップ記事"><meta property="og:description" content="GitHub Copilot Agentの企業導入における実装パターン、セキュリティ設定、チーム管理の完全ガイド。実際のコード例とYAML設定、運用ノウハウを通じて大規模組織での成功事例を詳解します。"><meta property="og:url" content="https://smartscope.blog/ai-development/github-copilot-agent-enterprise-implementation-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GitHub Copilot Agent企業導入実戦ガイド【昼実行】- AI技術フォローアップ記事"><meta name="twitter:description" content="GitHub Copilot Agentの企業導入における実装パターン、セキュリティ設定、チーム管理の完全ガイド。実際のコード例とYAML設定、運用ノウハウを通じて大規模組織での成功事例を詳解します。"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#github-copilot-agent企業導入実戦ガイド昼実行--ai技術フォローアップ記事" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> GitHub Copilot Agent企業導入実戦ガイド【昼実行】- AI技術フォローアップ記事 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../en/ai-development/github-copilot-agent-enterprise-implementation-guide/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#はじめに" class="md-nav__link"><span class="md-ellipsis"> はじめに </span></a></li><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#エンタープライズ導入アーキテクチャ" class="md-nav__link"><span class="md-ellipsis"> エンタープライズ導入アーキテクチャ </span></a><nav class="md-nav" aria-label="エンタープライズ導入アーキテクチャ"><ul class="md-nav__list"><li class="md-nav__item"><a href="#組織レベルのセットアップ" class="md-nav__link"><span class="md-ellipsis"> 組織レベルのセットアップ </span></a></li><li class="md-nav__item"><a href="#実装パターン1-段階的ロールアウト" class="md-nav__link"><span class="md-ellipsis"> 実装パターン1: 段階的ロールアウト </span></a></li><li class="md-nav__item"><a href="#実装パターン2-github-actions完全統合" class="md-nav__link"><span class="md-ellipsis"> 実装パターン2: GitHub Actions完全統合 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#セキュリティとコンプライアンス" class="md-nav__link"><span class="md-ellipsis"> セキュリティとコンプライアンス </span></a><nav class="md-nav" aria-label="セキュリティとコンプライアンス"><ul class="md-nav__list"><li class="md-nav__item"><a href="#sox法対応設定" class="md-nav__link"><span class="md-ellipsis"> SOX法対応設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#運用最適化とコスト管理" class="md-nav__link"><span class="md-ellipsis"> 運用最適化とコスト管理 </span></a><nav class="md-nav" aria-label="運用最適化とコスト管理"><ul class="md-nav__list"><li class="md-nav__item"><a href="#使用量監視システム" class="md-nav__link"><span class="md-ellipsis"> 使用量監視システム </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#トラブルシューティング実戦ケース" class="md-nav__link"><span class="md-ellipsis"> トラブルシューティング実戦ケース </span></a><nav class="md-nav" aria-label="トラブルシューティング実戦ケース"><ul class="md-nav__list"><li class="md-nav__item"><a href="#ケース1-大量api制限エラーの対処" class="md-nav__link"><span class="md-ellipsis"> ケース1: 大量API制限エラーの対処 </span></a></li><li class="md-nav__item"><a href="#ケース2-セキュリティインシデント対応" class="md-nav__link"><span class="md-ellipsis"> ケース2: セキュリティインシデント対応 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#まとめ" class="md-nav__link"><span class="md-ellipsis"> まとめ </span></a></li><li class="md-nav__item"><a href="#関連記事" class="md-nav__link"><span class="md-ellipsis"> 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../tags/#tag:github-copilot-agent" class="md-tag">GitHub Copilot Agent</a><a href="../../tags/#tag:agent" class="md-tag">agent</a><a href="../../tags/#tag:github-copilot" class="md-tag">github-copilot</a><a href="../../tags/#tag:ready" class="md-tag">ready</a><a href="../../tags/#tag:エンタープライズ" class="md-tag">エンタープライズ</a><a href="../../tags/#tag:セキュリティ設定" class="md-tag">セキュリティ設定</a><a href="../../tags/#tag:チーム管理" class="md-tag">チーム管理</a><a href="../../tags/#tag:企業導入" class="md-tag">企業導入</a></nav><h1 id="github-copilot-agent企業導入実戦ガイド昼実行--ai技術フォローアップ記事">GitHub Copilot Agent企業導入実戦ガイド【昼実行】- AI技術フォローアップ記事<a class="headerlink" href="#github-copilot-agent企業導入実戦ガイド昼実行--ai技術フォローアップ記事" title="Permanent link">&para;</a></h1><h2 id="はじめに">はじめに<a class="headerlink" href="#はじめに" title="Permanent link">&para;</a></h2><p><strong>前提記事</strong>: <a href="../../generative-ai/claude/claude-sonnet-4-github-copilot-2025/">Claude Sonnet 4とGitHub Copilot新機能で変わるAI開発体験</a>で紹介した新機能を踏まえ、企業での実際の導入・運用に特化した実戦ガイドを提供します。大規模チームでの導入課題、セキュリティ要件、運用最適化に焦点を当てます。</p><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>エンタープライズ級セキュリティ</strong></p><p>SOX法、GDPR、ISO27001準拠の完全なセキュリティ設定とデータ保護</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg></span> <strong>大規模チーム管理</strong></p><p>数百人規模の開発チームでのライセンス管理と権限制御の自動化</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M18.41 4 16 6.41v.18L18.41 9H22v2h-4.41L16 9.41V12h-1a2 2 0 0 1-2-2V7.5H9.86c-.09.37-.24.72-.44 1.05L15.18 19H20a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2h6.61l-4.69-8.5a4.006 4.006 0 0 1-3.81-3A4 4 0 0 1 5 2.63c2.13-.55 4.31.73 4.86 2.87H13V3a2 2 0 0 1 2-2h1v2.59L17.59 2H22v2zM6 4.5a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg></span> <strong>CI/CD完全統合</strong></p><p>GitHub ActionsとCopilot Agentの高度な連携による完全自動化パイプライン</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m3 14 .5.07L8.07 9.5a1.95 1.95 0 0 1 .52-1.91c.78-.79 2.04-.79 2.82 0 .53.52.7 1.26.52 1.91l2.57 2.57.5-.07c.18 0 .35 0 .5.07l3.57-3.57C19 8.35 19 8.18 19 8a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2c-.18 0-.35 0-.5-.07l-3.57 3.57c.07.15.07.32.07.5a2 2 0 0 1-2 2 2 2 0 0 1-2-2l.07-.5-2.57-2.57c-.32.07-.68.07-1 0L4.93 15.5 5 16a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2"/></svg></span> <strong>コスト最適化</strong></p><p>使用量監視とコスト予測による効率的なリソース管理</p></li></ul></div><h2 id="エンタープライズ導入アーキテクチャ">エンタープライズ導入アーキテクチャ<a class="headerlink" href="#エンタープライズ導入アーキテクチャ" title="Permanent link">&para;</a></h2><h3 id="組織レベルのセットアップ">組織レベルのセットアップ<a class="headerlink" href="#組織レベルのセットアップ" title="Permanent link">&para;</a></h3><p>GitHub Organization全体でのCopilot Agent設定：</p><div class="highlight"><pre><span></span><code><span class="c1"># .github/copilot-enterprise-config.yml</span>
+<span class="nt">organization</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-enterprise&quot;</span>
+<span class="w">  </span><span class="nt">copilot_business_settings</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled_models</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;claude-opus-4-preview&quot;</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;github-copilot-gpt-4&quot;</span>
+
+<span class="w">    </span><span class="nt">security_policies</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;code_scanning_integration&quot;</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">auto_fix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret_detection&quot;</span><span class="w">  </span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">block_commits</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vulnerability_assessment&quot;</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">severity_threshold</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;medium&quot;</span>
+
+<span class="w">    </span><span class="nt">team_permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">admin_teams</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;platform-engineering&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;security-team&quot;</span>
+<span class="w">      </span><span class="nt">agent_access</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;backend-developers&quot;</span>
+<span class="w">          </span><span class="nt">models</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;claude-sonnet-4&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;github-copilot-gpt-4&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">features</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;code_generation&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pr_review&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;issue_resolution&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;frontend-developers&quot;</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">models</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;claude-sonnet-4&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">features</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;code_generation&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;refactoring&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;qa-engineers&quot;</span>
+<span class="w">          </span><span class="nt">models</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;claude-sonnet-4&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">features</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;test_generation&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;bug_analysis&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">usage_limits</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">monthly_requests_per_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">      </span><span class="nt">concurrent_agents_per_team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">cost_alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span><span class="w">  </span><span class="c1"># USD</span>
+
+<span class="w">    </span><span class="nt">compliance</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">data_residency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eu-west-1&quot;</span>
+<span class="w">      </span><span class="nt">encryption_at_rest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">audit_logging</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">retention_policy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2_years&quot;</span>
+</code></pre></div><h3 id="実装パターン1-段階的ロールアウト">実装パターン1: 段階的ロールアウト<a class="headerlink" href="#実装パターン1-段階的ロールアウト" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># copilot_enterprise_manager.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">github</span><span class="w"> </span><span class="kn">import</span> <span class="n">Github</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TeamConfig</span><span class="p">:</span>
+    <span class="n">team_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">members</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">copilot_features</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">usage_quota</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">security_level</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CopilotEnterpriseManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">github_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">org_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">github</span> <span class="o">=</span> <span class="n">Github</span><span class="p">(</span><span class="n">github_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">org</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">get_organization</span><span class="p">(</span><span class="n">org_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">phase_1_pilot_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pilot_teams</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TeamConfig</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        フェーズ1: パイロットチームでの限定導入</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;successful&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+        <span class="k">for</span> <span class="n">team_config</span> <span class="ow">in</span> <span class="n">pilot_teams</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># チームレベルでのCopilot Agent有効化</span>
+                <span class="n">team</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">get_team_by_slug</span><span class="p">(</span><span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="p">)</span>
+
+                <span class="c1"># エージェント設定の適用</span>
+                <span class="n">agent_config</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;models&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">copilot_features</span><span class="p">,</span>
+                    <span class="s2">&quot;security_level&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">security_level</span><span class="p">,</span>
+                    <span class="s2">&quot;usage_quota&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">usage_quota</span>
+                <span class="p">}</span>
+
+                <span class="c1"># GitHub Enterprise API経由での設定</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_team_copilot</span><span class="p">(</span><span class="n">team</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">)</span>
+
+                <span class="c1"># 使用量監視の設定</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_usage_monitoring</span><span class="p">(</span><span class="n">team_config</span><span class="p">)</span>
+
+                <span class="n">results</span><span class="p">[</span><span class="s2">&quot;successful&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully configured </span><span class="si">{</span><span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="s2">&quot;failed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;team&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to configure </span><span class="si">{</span><span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">phase_2_security_integration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        フェーズ2: セキュリティ統合とコンプライアンス設定</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">security_configs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;code_scanning&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;sarif_upload&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;auto_fix_enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;copilot_integration&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;secret_scanning&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;push_protection&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;copilot_remediation&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;dependency_review&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;vulnerability_alerts&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;auto_security_updates&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;copilot_analysis&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">get_repos</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">private</span><span class="p">:</span>  <span class="c1"># エンタープライズリポジトリのみ</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_security_configs</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">security_configs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;repos_configured&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">public_repos</span><span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">phase_3_full_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_teams</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TeamConfig</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        フェーズ3: 全社展開とガバナンス設定</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">governance_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;approval_workflows&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;high_risk_changes&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;external_dependencies&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;security_sensitive_files&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;audit_logging&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;copilot_usage&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;code_generation&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;security_events&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;cost_management&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;budget_alerts&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;usage_optimization&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;model_selection&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1"># 全チームへの展開</span>
+        <span class="n">deployment_results</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase_1_pilot_deployment</span><span class="p">(</span><span class="n">all_teams</span><span class="p">)</span>
+
+        <span class="c1"># ガバナンス設定の適用</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_governance_config</span><span class="p">(</span><span class="n">governance_config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;deployment_results&quot;</span><span class="p">:</span> <span class="n">deployment_results</span><span class="p">,</span>
+            <span class="s2">&quot;governance_status&quot;</span><span class="p">:</span> <span class="s2">&quot;active&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;monitoring_enabled&quot;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_configure_team_copilot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">team</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GitHub Enterprise API経由でのチーム設定&quot;&quot;&quot;</span>
+        <span class="c1"># 実際のGitHub Enterprise API呼び出し</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;token </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">_Github__requester</span><span class="o">.</span><span class="n">_Requester__authorizationHeader</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/vnd.github.v3+json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;X-GitHub-Api-Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2022-11-28&quot;</span>
+        <span class="p">}</span>
+
+        <span class="c1"># チームレベルでのCopilot設定API呼び出し</span>
+        <span class="c1"># (実際のAPIエンドポイントは現在開発中)</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_setup_usage_monitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">team_config</span><span class="p">:</span> <span class="n">TeamConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;使用量監視の設定&quot;&quot;&quot;</span>
+        <span class="n">monitoring_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;team&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="p">,</span>
+            <span class="s2">&quot;quota&quot;</span><span class="p">:</span> <span class="n">team_config</span><span class="o">.</span><span class="n">usage_quota</span><span class="p">,</span>
+            <span class="s2">&quot;alert_threshold&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+            <span class="s2">&quot;cost_center&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;engineering-</span><span class="si">{</span><span class="n">team_config</span><span class="o">.</span><span class="n">team_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+        <span class="c1"># 監視システムへの設定登録</span>
+        <span class="k">pass</span>
+</code></pre></div><h3 id="実装パターン2-github-actions完全統合">実装パターン2: GitHub Actions完全統合<a class="headerlink" href="#実装パターン2-github-actions完全統合" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/copilot-enterprise-integration.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enterprise Copilot Integration</span>
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issues</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">labeled</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">synchronize</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">MON&#39;</span><span class="w">  </span><span class="c1"># 毎週月曜9時に定期実行</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">COPILOT_ENTERPRISE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">SECURITY_SCANNING</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">security-pre-check</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">security_cleared</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.security-scan.outputs.cleared }}</span>
+<span class="w">      </span><span class="nt">risk_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.security-scan.outputs.risk_level }}</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security Pre-scan</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security-scan</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># セキュリティ事前スキャン</span>
+<span class="w">          </span><span class="no">security_score=$(gh api repos/${{ github.repository }}/code-scanning/analyses \</span>
+<span class="w">            </span><span class="no">--jq &#39;[.[] | select(.state == &quot;open&quot;)] | length&#39;)</span>
+
+<span class="w">          </span><span class="no">if [ $security_score -gt 5 ]; then</span>
+<span class="w">            </span><span class="no">echo &quot;cleared=false&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="w">            </span><span class="no">echo &quot;risk_level=high&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="w">          </span><span class="no">else</span>
+<span class="w">            </span><span class="no">echo &quot;cleared=true&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="w">            </span><span class="no">echo &quot;risk_level=low&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="w">          </span><span class="no">fi</span>
+
+<span class="w">  </span><span class="nt">copilot-agent-assignment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security-pre-check</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ needs.security-pre-check.outputs.security_cleared == &#39;true&#39; }}</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Assign Issue to Copilot Agent</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event_name == &#39;issues&#39; &amp;&amp; contains(github.event.issue.labels.*.name, &#39;copilot-agent&#39;)</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># 適切なCopilot Agentモデルを選択</span>
+<span class="w">          </span><span class="no">if [[ &quot;${{ github.event.issue.labels }}&quot; == *&quot;complex&quot;* ]]; then</span>
+<span class="w">            </span><span class="no">AGENT_MODEL=&quot;claude-opus-4-preview&quot;</span>
+<span class="w">          </span><span class="no">else</span>
+<span class="w">            </span><span class="no">AGENT_MODEL=&quot;claude-sonnet-4&quot;</span>
+<span class="w">          </span><span class="no">fi</span>
+
+<span class="w">          </span><span class="no"># エージェントにイシューをアサイン</span>
+<span class="w">          </span><span class="no">gh issue edit ${{ github.event.issue.number }} \</span>
+<span class="w">            </span><span class="no">--assignee @copilot-agent \</span>
+<span class="w">            </span><span class="no">--add-label &quot;agent-model:$AGENT_MODEL&quot; \</span>
+<span class="w">            </span><span class="no">--add-label &quot;auto-assigned&quot;</span>
+
+<span class="w">          </span><span class="no"># プロジェクト管理システムに通知</span>
+<span class="w">          </span><span class="no">curl -X POST &quot;${{ secrets.PROJECT_WEBHOOK_URL }}&quot; \</span>
+<span class="w">            </span><span class="no">-H &quot;Content-Type: application/json&quot; \</span>
+<span class="w">            </span><span class="no">-d &#39;{</span>
+<span class="w">              </span><span class="no">&quot;event&quot;: &quot;copilot_agent_assigned&quot;,</span>
+<span class="w">              </span><span class="no">&quot;issue&quot;: ${{ github.event.issue.number }},</span>
+<span class="w">              </span><span class="no">&quot;model&quot;: &quot;&#39;$AGENT_MODEL&#39;&quot;,</span>
+<span class="w">              </span><span class="no">&quot;team&quot;: &quot;${{ github.repository_owner }}&quot;</span>
+<span class="w">            </span><span class="no">}&#39;</span>
+
+<span class="w">  </span><span class="nt">automated-pr-review</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security-pre-check</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event_name == &#39;pull_request&#39;</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enhanced Copilot Review</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># プルリクエストの複雑度分析</span>
+<span class="w">          </span><span class="no">complexity=$(git diff --name-only origin/main...HEAD | wc -l)</span>
+
+<span class="w">          </span><span class="no">if [ $complexity -gt 20 ]; then</span>
+<span class="w">            </span><span class="no"># 高複雑度の場合はOpus 4を使用</span>
+<span class="w">            </span><span class="no">REVIEW_MODEL=&quot;claude-opus-4-preview&quot;</span>
+<span class="w">            </span><span class="no">echo &quot;high-complexity=true&quot; &gt;&gt; $GITHUB_ENV</span>
+<span class="w">          </span><span class="no">else</span>
+<span class="w">            </span><span class="no"># 通常の場合はSonnet 4を使用</span>
+<span class="w">            </span><span class="no">REVIEW_MODEL=&quot;claude-sonnet-4&quot;</span>
+<span class="w">            </span><span class="no">echo &quot;high-complexity=false&quot; &gt;&gt; $GITHUB_ENV</span>
+<span class="w">          </span><span class="no">fi</span>
+
+<span class="w">          </span><span class="no"># Copilot Agentによる詳細レビュー実行</span>
+<span class="w">          </span><span class="no">gh pr review ${{ github.event.pull_request.number }} \</span>
+<span class="w">            </span><span class="no">--body &quot;Automated review by $REVIEW_MODEL&quot; \</span>
+<span class="w">            </span><span class="no">--approve \</span>
+<span class="w">            </span><span class="no">--copilot-model &quot;$REVIEW_MODEL&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security Impact Assessment</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ needs.security-pre-check.outputs.risk_level == &#39;high&#39; }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># セキュリティ影響度の詳細分析</span>
+<span class="w">          </span><span class="no">gh pr comment ${{ github.event.pull_request.number }} \</span>
+<span class="w">            </span><span class="no">--body &quot;🚨 High-risk changes detected. Enhanced security review required.&quot;</span>
+
+<span class="w">          </span><span class="no"># セキュリティチームに自動通知</span>
+<span class="w">          </span><span class="no">gh issue create \</span>
+<span class="w">            </span><span class="no">--title &quot;Security Review Required: PR #${{ github.event.pull_request.number }}&quot; \</span>
+<span class="w">            </span><span class="no">--body &quot;Automatic security review request for high-risk changes&quot; \</span>
+<span class="w">            </span><span class="no">--assignee &quot;@security-team&quot; \</span>
+<span class="w">            </span><span class="no">--label &quot;security-review&quot;</span>
+
+<span class="w">  </span><span class="nt">cost-optimization</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event.schedule</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Weekly Cost Analysis</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># 週次コスト分析とレポート生成</span>
+<span class="w">          </span><span class="no">cost_report=$(curl -H &quot;Authorization: token ${{ secrets.GITHUB_TOKEN }}&quot; \</span>
+<span class="w">            </span><span class="no">&quot;https://api.github.com/enterprises/${{ github.enterprise }}/copilot/usage&quot; \</span>
+<span class="w">            </span><span class="no">| jq &#39;.total_cost_usd&#39;)</span>
+
+<span class="w">          </span><span class="no">if (( $(echo &quot;$cost_report &gt; 10000&quot; | bc -l) )); then</span>
+<span class="w">            </span><span class="no"># 高コストアラート</span>
+<span class="w">            </span><span class="no">echo &quot;::warning::Weekly Copilot costs exceed $10,000: $cost_report&quot;</span>
+
+<span class="w">            </span><span class="no"># Slackに通知</span>
+<span class="w">            </span><span class="no">curl -X POST ${{ secrets.SLACK_WEBHOOK }} \</span>
+<span class="w">              </span><span class="no">-H &#39;Content-type: application/json&#39; \</span>
+<span class="w">              </span><span class="no">--data &#39;{</span>
+<span class="w">                </span><span class="no">&quot;text&quot;: &quot;⚠️ Copilot Enterprise cost alert: $&#39;$cost_report&#39; this week&quot;,</span>
+<span class="w">                </span><span class="no">&quot;channel&quot;: &quot;#platform-engineering&quot;</span>
+<span class="w">              </span><span class="no">}&#39;</span>
+<span class="w">          </span><span class="no">fi</span>
+
+<span class="w">  </span><span class="nt">model-optimization</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model Usage Optimization</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># モデル使用状況の最適化提案</span>
+<span class="w">          </span><span class="no">usage_stats=$(gh api /enterprises/${{ github.enterprise }}/copilot/metrics \</span>
+<span class="w">            </span><span class="no">--jq &#39;.model_usage&#39;)</span>
+
+<span class="w">          </span><span class="no"># 使用統計に基づく最適化レコメンデーション</span>
+<span class="w">          </span><span class="no">echo &quot;$usage_stats&quot; | jq -r &#39;</span>
+<span class="w">            </span><span class="no">.[] | select(.efficiency_score &lt; 0.7) | </span>
+<span class="w">            </span><span class="no">&quot;Team: \(.team_name) - Consider switching from \(.current_model) to \(.recommended_model)&quot;</span>
+<span class="w">          </span><span class="no">&#39; &gt; optimization_recommendations.txt</span>
+
+<span class="w">          </span><span class="no">if [ -s optimization_recommendations.txt ]; then</span>
+<span class="w">            </span><span class="no"># 最適化提案をissueとして作成</span>
+<span class="w">            </span><span class="no">gh issue create \</span>
+<span class="w">              </span><span class="no">--title &quot;Weekly Model Optimization Recommendations&quot; \</span>
+<span class="w">              </span><span class="no">--body-file optimization_recommendations.txt \</span>
+<span class="w">              </span><span class="no">--assignee &quot;@platform-engineering&quot; \</span>
+<span class="w">              </span><span class="no">--label &quot;optimization&quot;</span>
+<span class="w">          </span><span class="no">fi</span>
+</code></pre></div><h2 id="セキュリティとコンプライアンス">セキュリティとコンプライアンス<a class="headerlink" href="#セキュリティとコンプライアンス" title="Permanent link">&para;</a></h2><h3 id="sox法対応設定">SOX法対応設定<a class="headerlink" href="#sox法対応設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># sox_compliance_config.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SOXComplianceConfig</span><span class="p">:</span>
+    <span class="n">financial_code_patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">approval_matrix</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="n">audit_retention_years</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">segregation_of_duties</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SOXCopilotIntegration</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compliance_config</span> <span class="o">=</span> <span class="n">SOXComplianceConfig</span><span class="p">(</span>
+            <span class="n">financial_code_patterns</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;*/financial/*&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;*/accounting/*&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot;*/billing/*&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;*/payment/*&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;*/audit/*&quot;</span>
+            <span class="p">],</span>
+            <span class="n">approval_matrix</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;financial_code_changes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cfo-team&quot;</span><span class="p">,</span> <span class="s2">&quot;compliance-team&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;audit_related_changes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;audit-committee&quot;</span><span class="p">,</span> <span class="s2">&quot;security-team&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;billing_system_changes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;finance-team&quot;</span><span class="p">,</span> <span class="s2">&quot;platform-engineering&quot;</span><span class="p">]</span>
+            <span class="p">},</span>
+            <span class="n">audit_retention_years</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+            <span class="n">segregation_of_duties</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;developer&quot;</span><span class="p">:</span> <span class="s2">&quot;cannot_approve_own_financial_changes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reviewer&quot;</span><span class="p">:</span> <span class="s2">&quot;cannot_review_own_changes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;approver&quot;</span><span class="p">:</span> <span class="s2">&quot;must_have_sox_certification&quot;</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_sox_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;SOX法対応のGitHub Actionsワークフローを生成&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">name: SOX Compliance Workflow</span>
+<span class="s2">on:</span>
+<span class="s2">  pull_request:</span>
+<span class="s2">    paths: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compliance_config</span><span class="o">.</span><span class="n">financial_code_patterns</span><span class="p">)</span><span class="si">}</span>
+
+<span class="s2">jobs:</span>
+<span class="s2">  sox-compliance-check:</span>
+<span class="s2">    runs-on: ubuntu-latest</span>
+<span class="s2">    steps:</span>
+<span class="s2">      - name: SOX Pre-validation</span>
+<span class="s2">        run: |</span>
+<span class="s2">          # 財務関連コードの変更検出</span>
+<span class="s2">          financial_files=$(gh pr diff $</span><span class="se">{{</span><span class="s2"> github.event.pull_request.number </span><span class="se">}}</span><span class="s2"> --name-only | </span><span class="se">\\</span>
+<span class="s2">            grep -E &quot;</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.*&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">compliance_config</span><span class="o">.</span><span class="n">financial_code_patterns</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;)</span>
+
+<span class="s2">          if [ ! -z &quot;$financial_files&quot; ]; then</span>
+<span class="s2">            echo &quot;sox_review_required=true&quot; &gt;&gt; $GITHUB_ENV</span>
+<span class="s2">            echo &quot;Financial code changes detected: $financial_files&quot;</span>
+<span class="s2">          fi</span>
+
+<span class="s2">      - name: Require SOX Approvals  </span>
+<span class="s2">        if: env.sox_review_required == &#39;true&#39;</span>
+<span class="s2">        run: |</span>
+<span class="s2">          # SOX承認者の自動アサイン</span>
+<span class="s2">          for approver_team in </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compliance_config</span><span class="o">.</span><span class="n">approval_matrix</span><span class="p">[</span><span class="s2">&quot;financial_code_changes&quot;</span><span class="p">])</span><span class="si">}</span><span class="s2">; do</span>
+<span class="s2">            gh pr edit $</span><span class="se">{{</span><span class="s2"> github.event.pull_request.number </span><span class="se">}}</span><span class="s2"> --add-reviewer &quot;@$approver_team&quot;</span>
+<span class="s2">          done</span>
+
+<span class="s2">          # 職務分離チェック</span>
+<span class="s2">          pr_author=$</span><span class="se">{{</span><span class="s2"> github.event.pull_request.user.login </span><span class="se">}}</span>
+<span class="s2">          if gh pr review $</span><span class="se">{{</span><span class="s2"> github.event.pull_request.number </span><span class="se">}}</span><span class="s2"> --json reviews | </span><span class="se">\\</span>
+<span class="s2">             jq -e &#39;.reviews[] | select(.author.login == &quot;&#39;$pr_author&#39;&quot;)&#39;; then</span>
+<span class="s2">            echo &quot;::error::SOX Violation: Author cannot approve own financial code changes&quot;</span>
+<span class="s2">            exit 1</span>
+<span class="s2">          fi</span>
+
+<span class="s2">      - name: Audit Trail Creation</span>
+<span class="s2">        if: env.sox_review_required == &#39;true&#39;</span>
+<span class="s2">        run: |</span>
+<span class="s2">          # 監査証跡の作成</span>
+<span class="s2">          audit_entry=$(cat &lt;&lt;EOF</span>
+<span class="s2">          </span><span class="si">{</span>
+<span class="w">            </span><span class="s2">&quot;timestamp&quot;</span><span class="si">:</span><span class="s2"> &quot;$(date -u +%Y-%m-%dT%H:%M:%SZ)&quot;,</span>
+<span class="s2">            &quot;event&quot;: &quot;financial_code_review&quot;,</span>
+<span class="s2">            &quot;pr_number&quot;: &quot;$</span><span class="se">{{</span><span class="s2"> github.event.pull_request.number </span><span class="se">}}</span><span class="s2">&quot;,</span>
+<span class="s2">            &quot;author&quot;: &quot;$</span><span class="se">{{</span><span class="s2"> github.event.pull_request.user.login </span><span class="se">}}</span><span class="s2">&quot;,</span>
+<span class="s2">            &quot;files_changed&quot;: $financial_files,</span>
+<span class="s2">            &quot;compliance_status&quot;: &quot;pending_approval&quot;,</span>
+<span class="s2">            &quot;retention_until&quot;: &quot;$(date -u -d &#39;+</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">compliance_config</span><span class="o">.</span><span class="n">audit_retention_years</span><span class="si">}</span><span class="s2"> years&#39; +%Y-%m-%d)&quot;</span>
+<span class="s2">          </span><span class="si">}</span>
+<span class="s2">          EOF</span>
+<span class="s2">          )</span>
+
+<span class="s2">          # 監査ログシステムに送信</span>
+<span class="s2">          curl -X POST &quot;$</span><span class="se">{{</span><span class="s2"> secrets.AUDIT_SYSTEM_URL </span><span class="se">}}</span><span class="s2">/sox-events&quot; </span><span class="se">\\</span>
+<span class="s2">            -H &quot;Content-Type: application/json&quot; </span><span class="se">\\</span>
+<span class="s2">            -H &quot;Authorization: Bearer $</span><span class="se">{{</span><span class="s2"> secrets.AUDIT_TOKEN </span><span class="se">}}</span><span class="s2">&quot; </span><span class="se">\\</span>
+<span class="s2">            -d &quot;$audit_entry&quot;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_copilot_sox_restrictions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copilot AgentのSOX法制限設定&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;restricted_operations&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;financial_code_generation&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;requires_human_review&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;max_automation_level&quot;</span><span class="p">:</span> <span class="s2">&quot;suggestion_only&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;mandatory_approvers&quot;</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;audit_trail_modification&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;prohibited&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;alert_on_attempt&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;compliance_code_changes&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;requires_certification&quot;</span><span class="p">:</span> <span class="s2">&quot;sox_developer&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;dual_approval&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;monitoring&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;log_all_financial_interactions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;real_time_compliance_alerts&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;quarterly_usage_reports&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</code></pre></div><h2 id="運用最適化とコスト管理">運用最適化とコスト管理<a class="headerlink" href="#運用最適化とコスト管理" title="Permanent link">&para;</a></h2><h3 id="使用量監視システム">使用量監視システム<a class="headerlink" href="#使用量監視システム" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// copilot-usage-monitor.ts</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">UsageMetrics</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">teamName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">modelUsage</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">number</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">costPerDay</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">efficiencyScore</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">recommendedActions</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">BudgetAlert</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">severity</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;low&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;medium&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;high&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;critical&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">currentSpend</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">budgetLimit</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">projectedMonthlySpend</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">recommendedActions</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">CopilotUsageMonitor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">alertThresholds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">low</span><span class="o">:</span><span class="w"> </span><span class="kt">0.7</span><span class="p">,</span><span class="w">     </span><span class="c1">// 70%予算使用</span>
+<span class="w">    </span><span class="nx">medium</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span><span class="w">  </span><span class="c1">// 80%予算使用 </span>
+<span class="w">    </span><span class="nx">high</span><span class="o">:</span><span class="w"> </span><span class="kt">0.9</span><span class="p">,</span><span class="w">    </span><span class="c1">// 90%予算使用</span>
+<span class="w">    </span><span class="nx">critical</span><span class="o">:</span><span class="w"> </span><span class="kt">1.0</span><span class="w"> </span><span class="c1">// 100%予算使用</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getTeamUsageMetrics</span><span class="p">(</span><span class="nx">teamName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">UsageMetrics</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// GitHub Enterprise API経由での使用量取得</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">usage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fetchGitHubUsageData</span><span class="p">(</span><span class="nx">teamName</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">metrics</span><span class="o">:</span><span class="w"> </span><span class="kt">UsageMetrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">teamName</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">modelUsage</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s1">&#39;claude-sonnet-4&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">claude_sonnet_4_requests</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;claude-opus-4&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">claude_opus_4_requests</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;github-copilot-gpt-4&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">github_gpt_4_requests</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">costPerDay</span><span class="o">:</span><span class="w"> </span><span class="kt">this.calculateDailyCost</span><span class="p">(</span><span class="nx">usage</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">efficiencyScore</span><span class="o">:</span><span class="w"> </span><span class="kt">this.calculateEfficiencyScore</span><span class="p">(</span><span class="nx">usage</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">recommendedActions</span><span class="o">:</span><span class="w"> </span><span class="kt">this.generateRecommendations</span><span class="p">(</span><span class="nx">usage</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">metrics</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">generateBudgetAlert</span><span class="p">(</span><span class="nx">currentSpend</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">budgetLimit</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">BudgetAlert</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentSpend</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">budgetLimit</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">projectedMonthlySpend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">projectMonthlySpend</span><span class="p">(</span><span class="nx">currentSpend</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">severity</span><span class="o">:</span><span class="w"> </span><span class="kt">BudgetAlert</span><span class="p">[</span><span class="s1">&#39;severity&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;low&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">recommendedActions</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">alertThresholds</span><span class="p">.</span><span class="nx">critical</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;critical&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">recommendedActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s1">&#39;⛔ 即座にCopilot使用を制限&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;📊 緊急コストレビュー会議の設定&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s1">&#39;🔄 低コストモデルへの自動切り替え&#39;</span>
+<span class="w">      </span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">alertThresholds</span><span class="p">.</span><span class="nx">high</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;high&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">recommendedActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s1">&#39;⚠️ 高頻度ユーザーの使用パターン分析&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;📈 効率性の低いチームの特定&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;🎯 モデル選択の最適化提案&#39;</span>
+<span class="w">      </span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">alertThresholds</span><span class="p">.</span><span class="nx">medium</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;medium&#39;</span><span class="p">;</span><span class="w"> </span>
+<span class="w">      </span><span class="nx">recommendedActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s1">&#39;📋 週次使用量レビューの実施&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;💡 効率化トレーニングの提供&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;⚖️ チーム間でのクォータ再配分&#39;</span>
+<span class="w">      </span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">alertThresholds</span><span class="p">.</span><span class="nx">low</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;low&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">recommendedActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s1">&#39;📊 使用傾向の継続監視&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;🎓 活用促進のための教育施策&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;💰 予算配分の見直し検討&#39;</span>
+<span class="w">      </span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">utilizationRatio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">alertThresholds</span><span class="p">.</span><span class="nx">low</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">severity</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">currentSpend</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">budgetLimit</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">projectedMonthlySpend</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">recommendedActions</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">calculateEfficiencyScore</span><span class="p">(</span><span class="nx">usage</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 効率性スコアの計算ロジック</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">successfulRequests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">successful_requests</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalRequests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">total_requests</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">averageResponseTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">average_response_time</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">userSatisfactionScore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">user_satisfaction_score</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">completionRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">successfulRequests</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">totalRequests</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">speedScore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="mf">5000</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">averageResponseTime</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">5000</span><span class="p">);</span><span class="w"> </span><span class="c1">// 5秒以内を基準</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="nx">completionRate</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">speedScore</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">userSatisfactionScore</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.3</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">generateRecommendations</span><span class="p">(</span><span class="nx">usage</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">recommendations</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">usage</span><span class="p">.</span><span class="nx">claude_opus_usage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">usage</span><span class="p">.</span><span class="nx">claude_sonnet_usage</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">recommendations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;💡 簡単なタスクはSonnet 4の使用を推奨&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">usage</span><span class="p">.</span><span class="nx">peak_usage_hours</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;non_business_hours&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">recommendations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;⏰ 営業時間外の使用制限を検討&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">usage</span><span class="p">.</span><span class="nx">error_rate</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">recommendations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;🔧 プロンプト品質の改善が必要&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">recommendations</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">setupAutomatedOptimization</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 自動最適化ルールの設定</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">optimizationRules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">model_switching</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 簡単なタスクは自動的にSonnet 4に切り替え</span>
+<span class="w">        </span><span class="nx">simple_tasks</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude-sonnet-4&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">complex_tasks</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude-opus-4&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">cost_threshold</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="w">  </span><span class="c1">// 日額$1000を超えた場合</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">usage_limits</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">per_user_daily</span><span class="o">:</span><span class="w"> </span><span class="kt">200</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">per_team_daily</span><span class="o">:</span><span class="w"> </span><span class="kt">2000</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">emergency_brake</span><span class="o">:</span><span class="w"> </span><span class="kt">5000</span><span class="w">  </span><span class="c1">// 緊急停止閾値</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">scheduling</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">peak_hours_limit</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span><span class="w">   </span><span class="c1">// ピーク時間は80%制限</span>
+<span class="w">        </span><span class="nx">off_hours_unlimited</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="c1">// オフピーク時は制限なし</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// GitHub Enterprise設定に自動最適化ルールを適用</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">applyOptimizationRules</span><span class="p">(</span><span class="nx">optimizationRules</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">applyOptimizationRules</span><span class="p">(</span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 実際のGitHub Enterprise API経由での設定適用</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Applying optimization rules:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">rules</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用例</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">monitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CopilotUsageMonitor</span><span class="p">();</span>
+
+<span class="c1">// 定期実行されるコスト監視</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">teams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;backend-team&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;frontend-team&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;platform-team&#39;</span><span class="p">];</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">team</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">teams</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">monitor</span><span class="p">.</span><span class="nx">getTeamUsageMetrics</span><span class="p">(</span><span class="nx">team</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">budgetAlert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">monitor</span><span class="p">.</span><span class="nx">generateBudgetAlert</span><span class="p">(</span>
+<span class="w">      </span><span class="nx">metrics</span><span class="p">.</span><span class="nx">costPerDay</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">30</span><span class="p">,</span><span class="w"> </span><span class="c1">// 月次予測</span>
+<span class="w">      </span><span class="mf">5000</span><span class="w"> </span><span class="c1">// 月次予算$5,000</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">budgetAlert</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">sendSlackAlert</span><span class="p">(</span><span class="nx">budgetAlert</span><span class="p">,</span><span class="w"> </span><span class="nx">team</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`🚨 Budget alert for </span><span class="si">${</span><span class="nx">team</span><span class="si">}</span><span class="sb">:`</span><span class="p">,</span><span class="w"> </span><span class="nx">budgetAlert</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">},</span><span class="w"> </span><span class="mf">3600000</span><span class="p">);</span><span class="w"> </span><span class="c1">// 1時間ごと</span>
+</code></pre></div><h2 id="トラブルシューティング実戦ケース">トラブルシューティング実戦ケース<a class="headerlink" href="#トラブルシューティング実戦ケース" title="Permanent link">&para;</a></h2><h3 id="ケース1-大量api制限エラーの対処">ケース1: 大量API制限エラーの対処<a class="headerlink" href="#ケース1-大量api制限エラーの対処" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># copilot_emergency_fallback.sh</span>
+
+<span class="c1"># 緊急時のフォールバック対応スクリプト</span>
+<span class="nv">CURRENT_USAGE</span><span class="o">=</span><span class="k">$(</span>gh<span class="w"> </span>api<span class="w"> </span>/enterprises/<span class="nv">$GITHUB_ENTERPRISE</span>/copilot/usage<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.current_usage.requests&#39;</span><span class="k">)</span>
+<span class="nv">RATE_LIMIT</span><span class="o">=</span><span class="k">$(</span>gh<span class="w"> </span>api<span class="w"> </span>/enterprises/<span class="nv">$GITHUB_ENTERPRISE</span>/copilot/rate_limits<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.hourly_limit&#39;</span><span class="k">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Current usage: </span><span class="nv">$CURRENT_USAGE</span><span class="s2"> / </span><span class="nv">$RATE_LIMIT</span><span class="s2">&quot;</span>
+
+<span class="c1"># 80%を超えた場合の自動対処</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CURRENT_USAGE</span><span class="s2"> &gt; </span><span class="nv">$RATE_LIMIT</span><span class="s2"> * 0.8&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🚨 Rate limit approaching. Implementing emergency measures...&quot;</span>
+
+<span class="w">    </span><span class="c1"># 1. 優先度の低いチームを一時制限</span>
+<span class="w">    </span><span class="nv">TEAMS_TO_LIMIT</span><span class="o">=(</span><span class="s2">&quot;qa-team&quot;</span><span class="w"> </span><span class="s2">&quot;documentation-team&quot;</span><span class="w"> </span><span class="s2">&quot;training-team&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span>team<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TEAMS_TO_LIMIT</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span>gh<span class="w"> </span>api<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;/orgs/</span><span class="nv">$GITHUB_ORG</span><span class="s2">/teams/</span><span class="nv">$team</span><span class="s2">/copilot&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>-f<span class="w"> </span><span class="nv">enabled</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>-f<span class="w"> </span><span class="nv">reason</span><span class="o">=</span><span class="s2">&quot;Emergency rate limit management&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;⏸️ Temporarily disabled Copilot for </span><span class="nv">$team</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">done</span>
+
+<span class="w">    </span><span class="c1"># 2. 高優先度チームを効率モデルに切り替え</span>
+<span class="w">    </span><span class="nv">HIGH_PRIORITY_TEAMS</span><span class="o">=(</span><span class="s2">&quot;backend-team&quot;</span><span class="w"> </span><span class="s2">&quot;security-team&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span>team<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HIGH_PRIORITY_TEAMS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span>gh<span class="w"> </span>api<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;/orgs/</span><span class="nv">$GITHUB_ORG</span><span class="s2">/teams/</span><span class="nv">$team</span><span class="s2">/copilot&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>-f<span class="w"> </span><span class="nv">preferred_model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>-f<span class="w"> </span><span class="nv">fallback_model</span><span class="o">=</span><span class="s2">&quot;github-copilot-gpt-4&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;⚡ Switched </span><span class="nv">$team</span><span class="s2"> to efficiency mode&quot;</span>
+<span class="w">    </span><span class="k">done</span>
+
+<span class="w">    </span><span class="c1"># 3. Slack通知</span>
+<span class="w">    </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="nv">$SLACK_WEBHOOK_URL</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-H<span class="w"> </span><span class="s1">&#39;Content-type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--data<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">            &quot;text&quot;: &quot;🚨 Copilot Enterprise rate limit emergency procedures activated&quot;,</span>
+<span class="s1">            &quot;channel&quot;: &quot;#platform-engineering&quot;,</span>
+<span class="s1">            &quot;blocks&quot;: [</span>
+<span class="s1">                {</span>
+<span class="s1">                    &quot;type&quot;: &quot;section&quot;, </span>
+<span class="s1">                    &quot;text&quot;: {</span>
+<span class="s1">                        &quot;type&quot;: &quot;mrkdwn&quot;,</span>
+<span class="s1">                        &quot;text&quot;: &quot;*Emergency Copilot Management Active*\n• Current usage: &#39;</span><span class="nv">$CURRENT_USAGE</span><span class="s1">&#39;/&#39;</span><span class="nv">$RATE_LIMIT</span><span class="s1">&#39;\n• Limited teams: qa, docs, training\n• Priority teams switched to efficiency mode&quot;</span>
+<span class="s1">                    }</span>
+<span class="s1">                }</span>
+<span class="s1">            ]</span>
+<span class="s1">        }&#39;</span>
+
+<span class="w">    </span><span class="c1"># 4. 2時間後の自動回復設定</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 */2 * * * /path/to/copilot_recovery.sh&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>crontab<span class="w"> </span>-
+<span class="k">fi</span>
+</code></pre></div><h3 id="ケース2-セキュリティインシデント対応">ケース2: セキュリティインシデント対応<a class="headerlink" href="#ケース2-セキュリティインシデント対応" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># security_incident_response.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CopilotSecurityIncidentResponse</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">github_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">security_webhook</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">github_token</span> <span class="o">=</span> <span class="n">github_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">security_webhook</span> <span class="o">=</span> <span class="n">security_webhook</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incident_levels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;escalation&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+            <span class="s1">&#39;medium&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;escalation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> 
+            <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;escalation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="s1">&#39;critical&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;escalation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_secret_leak_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incident_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;秘密情報漏洩インシデントの自動対応&quot;&quot;&quot;</span>
+        <span class="n">severity</span> <span class="o">=</span> <span class="n">incident_data</span><span class="p">[</span><span class="s1">&#39;severity&#39;</span><span class="p">]</span>
+        <span class="n">affected_repositories</span> <span class="o">=</span> <span class="n">incident_data</span><span class="p">[</span><span class="s1">&#39;repositories&#39;</span><span class="p">]</span>
+        <span class="n">leaked_patterns</span> <span class="o">=</span> <span class="n">incident_data</span><span class="p">[</span><span class="s1">&#39;secret_patterns&#39;</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🚨 Secret leak incident detected: </span><span class="si">{</span><span class="n">severity</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 1. 即座にCopilot Agentを無効化</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_copilot_for_repos</span><span class="p">(</span><span class="n">affected_repositories</span><span class="p">)</span>
+
+        <span class="c1"># 2. 影響範囲の分析</span>
+        <span class="n">impact_analysis</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyze_secret_impact</span><span class="p">(</span><span class="n">leaked_patterns</span><span class="p">)</span>
+
+        <span class="c1"># 3. 自動修復の実行</span>
+        <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">affected_repositories</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_remediate_secrets</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">leaked_patterns</span><span class="p">)</span>
+
+        <span class="c1"># 4. インシデントレポートの生成</span>
+        <span class="n">incident_report</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;severity&#39;</span><span class="p">:</span> <span class="n">severity</span><span class="p">,</span>
+            <span class="s1">&#39;affected_repositories&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">affected_repositories</span><span class="p">),</span>
+            <span class="s1">&#39;leaked_secrets_count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">leaked_patterns</span><span class="p">),</span>
+            <span class="s1">&#39;auto_remediation_status&#39;</span><span class="p">:</span> <span class="s1">&#39;completed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;manual_review_required&#39;</span><span class="p">:</span> <span class="n">impact_analysis</span><span class="p">[</span><span class="s1">&#39;requires_manual_review&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># 5. セキュリティチームに緊急通知</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_security_alert</span><span class="p">(</span><span class="n">incident_report</span><span class="p">)</span>
+
+        <span class="c1"># 6. Copilotの段階的再有効化（安全確認後）</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># 1時間待機</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradual_copilot_re_enablement</span><span class="p">(</span><span class="n">affected_repositories</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">disable_copilot_for_repos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repositories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;指定リポジトリでのCopilot無効化&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">repositories</span><span class="p">:</span>
+            <span class="c1"># GitHub Security API経由での緊急無効化</span>
+            <span class="n">disable_config</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;copilot_enabled&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;reason&#39;</span><span class="p">:</span> <span class="s1">&#39;security_incident&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;disabled_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                <span class="s1">&#39;requires_security_approval&#39;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔒 Disabled Copilot for repository: </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">auto_remediate_secrets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;自動秘密情報修復&quot;&quot;&quot;</span>
+        <span class="n">remediation_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">secret_patterns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;api_key&#39;</span><span class="p">:</span>
+                <span class="c1"># APIキーの自動ローテーション</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_api_key</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;service&#39;</span><span class="p">],</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;key_id&#39;</span><span class="p">])</span>
+                <span class="n">remediation_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rotated API key for </span><span class="si">{</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;service&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;database_password&#39;</span><span class="p">:</span>
+                <span class="c1"># データベースパスワードの緊急変更</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_db_password</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">],</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">])</span>
+                <span class="n">remediation_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rotated DB password for </span><span class="si">{</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;private_key&#39;</span><span class="p">:</span>
+                <span class="c1"># 秘密鍵の緊急無効化</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">revoke_private_key</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;key_fingerprint&#39;</span><span class="p">])</span>
+                <span class="n">remediation_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revoked private key: </span><span class="si">{</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;key_fingerprint&#39;</span><span class="p">][:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 修復履歴の記録</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_remediation_actions</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">remediation_actions</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">gradual_copilot_re_enablement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repositories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;段階的Copilot再有効化&quot;&quot;&quot;</span>
+        <span class="c1"># セキュリティクリアランス確認</span>
+        <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">repositories</span><span class="p">:</span>
+            <span class="n">security_cleared</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_security_clearance</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">security_cleared</span><span class="p">:</span>
+                <span class="c1"># 制限モードでの再有効化</span>
+                <span class="n">restricted_config</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;copilot_enabled&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;security_restrictions&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;secret_scanning_enhanced&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s1">&#39;code_review_mandatory&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s1">&#39;external_api_blocked&#39;</span><span class="p">:</span> <span class="kc">True</span>
+                    <span class="p">},</span>
+                    <span class="s1">&#39;monitoring_level&#39;</span><span class="p">:</span> <span class="s1">&#39;high&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;re_enabled_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+                <span class="p">}</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Re-enabled Copilot with restrictions for: </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Security clearance failed for: </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div><h2 id="まとめ">まとめ<a class="headerlink" href="#まとめ" title="Permanent link">&para;</a></h2><p>朝の記事で紹介したClaude Sonnet 4とGitHub Copilot新機能を踏まえ、企業での実装に必要な要素を網羅しました：</p><ul><li><strong>段階的導入戦略</strong>: パイロット→セキュリティ統合→全社展開の3フェーズ</li><li><strong>エンタープライズセキュリティ</strong>: SOX法対応、データ保護、監査証跡の完全実装</li><li><strong>運用最適化</strong>: 自動コスト管理、使用量監視、効率化推奨の自動化システム</li><li><strong>緊急時対応</strong>: セキュリティインシデント、API制限、サービス障害への自動対処</li></ul><p>これらの実装パターンにより、大規模組織でも安全かつ効率的にAI開発ツールを活用できます。</p><h2 id="関連記事">関連記事<a class="headerlink" href="#関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../../generative-ai/claude/claude-sonnet-4-github-copilot-2025/">Claude Sonnet 4とGitHub Copilot新機能で変わるAI開発体験</a> - 朝記事（基礎編）</li><li><a href="/ai-development/claude-code-practical-guide/">Claude Code実践活用術</a></li><li><a href="/インフラ・運用/github-copilot-enterprise-guide">GitHub Copilot企業導入ガイド</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年2月17日 23:29:52 JST">2026年2月17日 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../javascripts/mermaid-init.js"></script><script src="../../javascripts/mobile-nav.js"></script><script src="../../javascripts/daily-progress.js"></script><script src="../../javascripts/fix-md-links.js"></script><script src="../../javascripts/mobile-category-tabs.js"></script></body></html>

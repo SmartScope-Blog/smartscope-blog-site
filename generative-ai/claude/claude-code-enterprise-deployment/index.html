@@ -1,0 +1,759 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/generative-ai/claude/claude-code-enterprise-deployment/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../../en/generative-ai/claude/claude-code-enterprise-deployment/" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude code enterprise deployment - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude code enterprise deployment"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/generative-ai/claude/claude-code-enterprise-deployment/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude code enterprise deployment"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-エンタープライズ展開---企業環境での安全な導入" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude code enterprise deployment </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../../en/generative-ai/claude/claude-code-enterprise-deployment/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#-エンタープライズ展開の概要" class="md-nav__link"><span class="md-ellipsis"> 📖 エンタープライズ展開の概要 </span></a><nav class="md-nav" aria-label="📖 エンタープライズ展開の概要"><ul class="md-nav__list"><li class="md-nav__item"><a href="#主要な導入パターン" class="md-nav__link"><span class="md-ellipsis"> 主要な導入パターン </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-統制ポイント一覧" class="md-nav__link"><span class="md-ellipsis"> 🛡️ 統制ポイント一覧 </span></a><nav class="md-nav" aria-label="🛡️ 統制ポイント一覧"><ul class="md-nav__list"><li class="md-nav__item"><a href="#managed-settingsjson-の配置パス" class="md-nav__link"><span class="md-ellipsis"> managed-settings.json の配置パス </span></a></li><li class="md-nav__item"><a href="#統制機能一覧" class="md-nav__link"><span class="md-ellipsis"> 統制機能一覧 </span></a></li><li class="md-nav__item"><a href="#設定例" class="md-nav__link"><span class="md-ellipsis"> 設定例 </span></a></li><li class="md-nav__item"><a href="#組織レベルの-claudemdマネージド-claudemd" class="md-nav__link"><span class="md-ellipsis"> 組織レベルの CLAUDE.md（マネージド CLAUDE.md） </span></a></li><li class="md-nav__item"><a href="#サンドボックス設定" class="md-nav__link"><span class="md-ellipsis"> サンドボックス設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-aws-bedrock-統合" class="md-nav__link"><span class="md-ellipsis"> 🔧 AWS Bedrock 統合 </span></a><nav class="md-nav" aria-label="🔧 AWS Bedrock 統合"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-基本設定" class="md-nav__link"><span class="md-ellipsis"> 1. 基本設定 </span></a></li><li class="md-nav__item"><a href="#2-企業向け設定" class="md-nav__link"><span class="md-ellipsis"> 2. 企業向け設定 </span></a></li><li class="md-nav__item"><a href="#3-terraform-での自動化" class="md-nav__link"><span class="md-ellipsis"> 3. Terraform での自動化 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-google-vertex-ai-統合" class="md-nav__link"><span class="md-ellipsis"> 🌐 Google Vertex AI 統合 </span></a><nav class="md-nav" aria-label="🌐 Google Vertex AI 統合"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-基本設定_1" class="md-nav__link"><span class="md-ellipsis"> 1. 基本設定 </span></a></li><li class="md-nav__item"><a href="#2-企業向け設定_1" class="md-nav__link"><span class="md-ellipsis"> 2. 企業向け設定 </span></a></li><li class="md-nav__item"><a href="#3-kubernetes-での運用" class="md-nav__link"><span class="md-ellipsis"> 3. Kubernetes での運用 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-セキュリティ対策" class="md-nav__link"><span class="md-ellipsis"> 🔐 セキュリティ対策 </span></a><nav class="md-nav" aria-label="🔐 セキュリティ対策"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-ネットワークセキュリティ" class="md-nav__link"><span class="md-ellipsis"> 1. ネットワークセキュリティ </span></a></li><li class="md-nav__item"><a href="#2-llm-gateway-の実装" class="md-nav__link"><span class="md-ellipsis"> 2. LLM Gateway の実装 </span></a></li><li class="md-nav__item"><a href="#3-データ保護" class="md-nav__link"><span class="md-ellipsis"> 3. データ保護 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-組織的な導入" class="md-nav__link"><span class="md-ellipsis"> 🏢 組織的な導入 </span></a><nav class="md-nav" aria-label="🏢 組織的な導入"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-段階的展開" class="md-nav__link"><span class="md-ellipsis"> 1. 段階的展開 </span></a></li><li class="md-nav__item"><a href="#2-ガバナンス体制" class="md-nav__link"><span class="md-ellipsis"> 2. ガバナンス体制 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-運用監視" class="md-nav__link"><span class="md-ellipsis"> 📊 運用監視 </span></a><nav class="md-nav" aria-label="📊 運用監視"><ul class="md-nav__list"><li class="md-nav__item"><a href="#opentelemetry-によるオブザーバビリティ" class="md-nav__link"><span class="md-ellipsis"> OpenTelemetry によるオブザーバビリティ </span></a><nav class="md-nav" aria-label="OpenTelemetry によるオブザーバビリティ"><ul class="md-nav__list"><li class="md-nav__item"><a href="#環境変数による有効化" class="md-nav__link"><span class="md-ellipsis"> 環境変数による有効化 </span></a></li><li class="md-nav__item"><a href="#収集されるメトリクス" class="md-nav__link"><span class="md-ellipsis"> 収集されるメトリクス </span></a></li><li class="md-nav__item"><a href="#収集されるイベント" class="md-nav__link"><span class="md-ellipsis"> 収集されるイベント </span></a></li><li class="md-nav__item"><a href="#マルチチーム対応" class="md-nav__link"><span class="md-ellipsis"> マルチチーム対応 </span></a></li><li class="md-nav__item"><a href="#動的ヘッダー設定" class="md-nav__link"><span class="md-ellipsis"> 動的ヘッダー設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#1-メトリクス収集" class="md-nav__link"><span class="md-ellipsis"> 1. メトリクス収集 </span></a></li><li class="md-nav__item"><a href="#2-アラート設定" class="md-nav__link"><span class="md-ellipsis"> 2. アラート設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-roi-とコスト最適化" class="md-nav__link"><span class="md-ellipsis"> 💰 ROI とコスト最適化 </span></a><nav class="md-nav" aria-label="💰 ROI とコスト最適化"><ul class="md-nav__list"><li class="md-nav__item"><a href="#導入効果の測定" class="md-nav__link"><span class="md-ellipsis"> 導入効果の測定 </span></a></li><li class="md-nav__item"><a href="#コスト最適化戦略" class="md-nav__link"><span class="md-ellipsis"> コスト最適化戦略 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-関連記事" class="md-nav__link"><span class="md-ellipsis"> 🔗 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:deployment" class="md-tag">deployment</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code 完全ガイド</a></p><h1 id="claude-code-エンタープライズ展開---企業環境での安全な導入">Claude Code エンタープライズ展開 - 企業環境での安全な導入<a class="headerlink" href="#claude-code-エンタープライズ展開---企業環境での安全な導入" title="Permanent link">&para;</a></h1><div class="admonition abstract"><p class="admonition-title">この記事の対象者</p><ul><li>プラットフォーム/SREエンジニア</li><li>セキュリティ/GRC担当者</li><li>開発マネージャー（AWS/GCP・IAMの基礎知識前提）</li></ul></div><div class="admonition tip"><p class="admonition-title">導入パス - あなたに最適なルートを選択</p><div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Quick Start (5分)</label><label for="__tabbed_1_2">Enterprise Hardening (本番環境)</label></div><div class="tabbed-content"><div class="tabbed-block"><ol><li>IDE に Claude Code 拡張機能を追加</li><li>環境変数でベンダー設定（Bedrock/Vertex）</li><li>動作確認とテスト実行</li></ol><p>→ <a href="#-aws-bedrock-統合">Bedrock 基本設定へジャンプ</a></p></div><div class="tabbed-block"><ol><li>IAM 最小権限設定</li><li>VPC/プライベートエンドポイント構成</li><li>LLM Gateway 導入</li><li>監査ログ・コスト監視設定</li></ol><p>→ <a href="#-セキュリティ対策">セキュリティ対策へジャンプ</a></p></div></div></div></div><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M7.64 10.38c0 .25.02.45.07.62.05.12.12.28.21.46.04.04.05.1.05.15 0 .07-.04.13-.13.2l-.42.28c-.06.04-.12.06-.17.06-.07 0-.13-.04-.2-.1-.09-.1-.17-.2-.24-.31-.06-.11-.13-.24-.2-.39-.52.61-1.17.92-1.96.92-.56 0-1-.16-1.33-.48-.32-.32-.49-.75-.49-1.29 0-.55.2-1 .6-1.36.41-.34.95-.52 1.63-.52.23 0 .44.02.71.06.23.03.5.08.76.14v-.48c0-.51-.1-.84-.31-1.07-.22-.21-.57-.3-1.08-.3-.24 0-.48.03-.72.08-.25.06-.49.13-.72.23-.11.04-.2.07-.23.08-.05.02-.08.02-.11.02-.09 0-.14-.06-.14-.2v-.33c0-.1.01-.18.05-.23q.045-.075.18-.12c.24-.14.51-.24.84-.32a4 4 0 0 1 1.04-.13q1.185 0 1.74.54c.37.36.55.91.55 1.64v2.15zm-2.7 1.02c.22 0 .44-.04.68-.12s.45-.23.63-.43c.11-.13.19-.27.25-.43 0-.16.05-.35.05-.58v-.27c-.2-.07-.4-.07-.62-.12a7 7 0 0 0-.62-.04c-.45 0-.77.09-.99.27s-.32.43-.32.76c0 .32.07.56.24.71.16.17.39.25.7.25m5.34.71a.6.6 0 0 1-.28-.06c-.03-.05-.08-.14-.12-.26L8.32 6.65c-.04-.15-.06-.22-.06-.27 0-.11.05-.17.16-.17h.65c.13 0 .22.02.26.07.06.04.1.13.14.26l1.11 4.4 1.04-4.4c.03-.13.07-.22.13-.26.05-.04.14-.07.25-.07h.55c.12 0 .21.02.26.07.05.04.1.13.13.26L14 11l1.14-4.46c.04-.13.09-.22.13-.26.06-.04.14-.07.26-.07h.62c.11 0 .17.06.17.17 0 .03-.01.07-.02.12 0 0-.02.08-.04.15l-1.61 5.14c-.04.14-.08.21-.15.26-.04.04-.13.07-.24.07h-.57c-.13 0-.19-.02-.27-.07a.45.45 0 0 1-.12-.26L12.27 7.5l-1.03 4.28q-.045.195-.12.27a.5.5 0 0 1-.27.06zm8.55.18c-.33 0-.7-.04-1.03-.12s-.59-.17-.76-.26a.5.5 0 0 1-.21-.19.4.4 0 0 1-.04-.18v-.34c0-.14.05-.2.15-.2h.12c.04 0 .1.05.17.08.22.1.47.18.73.23.27.05.54.08.79.08.42 0 .75-.07.97-.22.23-.17.35-.36.35-.63 0-.19-.07-.34-.18-.47-.12-.12-.35-.24-.67-.34l-.97-.3c-.48-.16-.84-.38-1.06-.68a1.58 1.58 0 0 1-.33-.97c0-.28.06-.52.18-.73.12-.22.28-.4.46-.55.22-.15.44-.26.71-.34q.39-.12.84-.12.21 0 .45.03c.14.02.28.05.42.07.14.04.26.07.38.11s.2.08.28.12c.09.05.16.1.2.16s.06.13.06.22v.32q0 .21-.15.21c-.05 0-.14-.03-.26-.08-.37-.17-.8-.26-1.27-.26-.38 0-.66.06-.89.19-.2.12-.31.32-.31.59 0 .19.07.35.2.47.13.13.38.25.73.37l.95.3c.48.14.82.36 1.03.64q.3.405.3.93c0 .28-.06.54-.17.77-.12.22-.28.42-.5.58-.19.17-.44.29-.72.38s-.62.13-.95.13m1.25 3.24C17.89 17.14 14.71 18 12 18c-3.85 0-7.3-1.42-9.91-3.77-.21-.19-.02-.44.23-.29 2.82 1.63 6.29 2.62 9.89 2.62 2.43 0 5.1-.5 7.55-1.56.37-.15.68.26.32.53M21 14.5c-.29-.37-1.86-.18-2.57-.1-.21.03-.24-.16-.05-.3 1.25-.87 3.31-.6 3.54-.33.24.3-.06 2.36-1.23 3.34-.19.15-.36.07-.28-.11.27-.68.86-2.16.59-2.5"/></svg></span> <strong>AWS Bedrock 統合</strong></p><p>企業のAWSインフラと完全統合</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M23 14.75C23 18.2 20.2 21 16.75 21h-9.5C3.8 21 1 18.2 1 14.75c0-2.14 1.08-4.03 2.71-5.15C4.58 5.82 7.96 3 12 3s7.42 2.82 8.29 6.6A6.22 6.22 0 0 1 23 14.75M16.63 17c1.31 0 2.37-1.06 2.37-2.37 0-1.28-1-2.33-2.28-2.38l.03-.5a4.754 4.754 0 0 0-8.32-3.14c1.5.29 2.8 1.11 3.71 2.25L9.5 13.5c-.42-.73-1.21-1.25-2.12-1.25-1.32 0-2.38 1.06-2.38 2.38 0 1.27 1 2.3 2.25 2.37z"/></svg></span> <strong>Google Vertex AI 対応</strong></p><p>GCP環境での安全な運用</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.3v3.5c0 .6-.6 1.2-1.3 1.2H9.2c-.6 0-1.2-.6-1.2-1.3v-3.5c0-.6.6-1.2 1.2-1.2V9.5C9.2 8.1 10.6 7 12 7m0 1.2c-.8 0-1.5.5-1.5 1.3V11h3V9.5c0-.8-.7-1.3-1.5-1.3"/></svg></span> <strong>セキュリティ準拠</strong></p><p>企業セキュリティ要件をクリア</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></span> <strong>プロキシ対応</strong></p><p>企業ネットワーク環境での動作</p></li></ul></div><h2 id="-エンタープライズ展開の概要">📖 エンタープライズ展開の概要<a class="headerlink" href="#-エンタープライズ展開の概要" title="Permanent link">&para;</a></h2><div class="admonition warning"><p class="admonition-title">データ利用ポリシーに関する重要事項</p><p><strong>本記事で扱う Enterprise/Bedrock/Vertex 経由の利用は、2025年4月の Consumer 向けデータ利用ポリシー変更の対象外です。</strong></p><ul><li>Enterprise/Team プラン：学習利用なし、監査ログ完備</li><li>Bedrock/Vertex API：契約に基づく利用、データ保護保証</li><li>詳細：<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms">Anthropic 公式発表</a></li></ul></div><p>Claude Code のエンタープライズ展開では、企業の既存インフラと統合し、セキュリティポリシーに準拠した形で AI アシスタントを運用します。クラウドプロバイダーとの直接統合により、データの越境を防ぎ、コンプライアンス要件を満たします。</p><h3 id="主要な導入パターン">主要な導入パターン<a class="headerlink" href="#主要な導入パターン" title="Permanent link">&para;</a></h3><pre class="mermaid"><code>graph TB
+    A[企業ネットワーク] --&gt; B[Corporate Proxy]
+    B --&gt; C[LLM Gateway]
+    C --&gt; D[AWS Bedrock&lt;br/&gt;Claude 直接連携]
+    C --&gt; E[Google Vertex AI&lt;br/&gt;Claude 直接連携]
+    C --&gt; F[Azure OpenAI&lt;br/&gt;※Gateway経由の別系統LLM]
+
+    A --&gt; G[Claude Code CLI]
+    G --&gt; H[社内開発者]
+    G --&gt; I[CI/CD Pipeline]
+
+    style D fill:#9cf,stroke:#333,stroke-width:2px
+    style E fill:#9cf,stroke:#333,stroke-width:2px
+    style F fill:#faa,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5</code></pre><div class="admonition note"><p class="admonition-title">アーキテクチャ補足</p><ul><li><strong>Bedrock/Vertex AI</strong>: Claude との直接統合（ベンダー公式サポート）</li><li><strong>Azure OpenAI</strong>: LLM Gateway 経由でのマルチプロバイダー統合の一例（Claude は未提供）</li></ul></div><h2 id="-統制ポイント一覧">🛡️ 統制ポイント一覧<a class="headerlink" href="#-統制ポイント一覧" title="Permanent link">&para;</a></h2><p>Claude Code は <code>managed-settings.json</code> を中心とした管理フレームワークを提供しており、企業の IT 管理者がユーザーの設定を一元的に制御できます。</p><h3 id="managed-settingsjson-の配置パス">managed-settings.json の配置パス<a class="headerlink" href="#managed-settingsjson-の配置パス" title="Permanent link">&para;</a></h3><table><thead><tr><th>OS</th><th>パス</th></tr></thead><tbody><tr><td>macOS</td><td><code>/Library/Application Support/ClaudeCode/managed-settings.json</code></td></tr><tr><td>Linux / WSL</td><td><code>/etc/claude-code/managed-settings.json</code></td></tr><tr><td>Windows</td><td><code>C:\Program Files\ClaudeCode\managed-settings.json</code></td></tr></tbody></table><h3 id="統制機能一覧">統制機能一覧<a class="headerlink" href="#統制機能一覧" title="Permanent link">&para;</a></h3><table><thead><tr><th>統制レイヤ</th><th>機能</th><th>設定場所</th><th>説明</th></tr></thead><tbody><tr><td>Hooks</td><td><code>allowManagedHooksOnly</code></td><td>managed-settings.json</td><td>ユーザー/プロジェクト/プラグインフックを無効化</td></tr><tr><td>Hooks</td><td><code>disableAllHooks</code></td><td>managed-settings.json</td><td>全フックを無効化</td></tr><tr><td>MCP</td><td><code>managed-mcp.json</code></td><td>システムディレクトリ</td><td>MCP サーバー構成を一元管理</td></tr><tr><td>MCP</td><td><code>allowedMcpServers</code></td><td>managed-settings.json</td><td>許可 MCP サーバーのホワイトリスト</td></tr><tr><td>MCP</td><td><code>deniedMcpServers</code></td><td>managed-settings.json</td><td>拒否 MCP サーバーのブラックリスト</td></tr><tr><td>権限</td><td><code>allowManagedPermissionRulesOnly</code></td><td>managed-settings.json</td><td>管理ルールのみ適用</td></tr><tr><td>権限</td><td><code>disableBypassPermissionsMode</code></td><td>managed-settings.json</td><td>bypass 権限モードを無効化</td></tr><tr><td>認証</td><td><code>forceLoginMethod</code></td><td>managed-settings.json</td><td><code>claudeai</code> または <code>console</code> に強制</td></tr><tr><td>認証</td><td><code>forceLoginOrgUUID</code></td><td>managed-settings.json</td><td>組織を自動選択</td></tr><tr><td>プラグイン</td><td><code>strictKnownMarketplaces</code></td><td>managed-settings.json</td><td>プラグインマーケットプレイスを制限</td></tr><tr><td>通知</td><td><code>companyAnnouncements</code></td><td>managed-settings.json</td><td>起動時のお知らせ表示</td></tr></tbody></table><h3 id="設定例">設定例<a class="headerlink" href="#設定例" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// managed-settings.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;forceLoginMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;console&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;forceLoginOrgUUID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-org-uuid-here&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;allowManagedHooksOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;disableBypassPermissionsMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;allowedMcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;approved-server-1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;approved-server-2&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;deniedMcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;untrusted-server&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;allowManagedPermissionRulesOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;strictKnownMarketplaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;companyAnnouncements&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;セキュリティポリシーに従い、社内承認済みの MCP サーバーのみ利用してください。&quot;</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="組織レベルの-claudemdマネージド-claudemd">組織レベルの CLAUDE.md（マネージド CLAUDE.md）<a class="headerlink" href="#組織レベルの-claudemdマネージド-claudemd" title="Permanent link">&para;</a></h3><p>組織全体で統一したガイドラインを適用するため、システムレベルのパスに <code>CLAUDE.md</code> を配置できます。この CLAUDE.md は最も高い優先順位を持ち、プロジェクトやユーザーレベルの設定より優先されます。</p><table><thead><tr><th>OS</th><th>パス</th></tr></thead><tbody><tr><td>macOS</td><td><code>/Library/Application Support/ClaudeCode/CLAUDE.md</code></td></tr><tr><td>Linux / WSL</td><td><code>/etc/claude-code/CLAUDE.md</code></td></tr><tr><td>Windows</td><td><code>C:\Program Files\ClaudeCode\CLAUDE.md</code></td></tr></tbody></table><h3 id="サンドボックス設定">サンドボックス設定<a class="headerlink" href="#サンドボックス設定" title="Permanent link">&para;</a></h3><p>Bash コマンドの実行を分離するサンドボックス機能を設定できます。</p><div class="highlight"><pre><span></span><code><span class="c1">// managed-settings.json 内のサンドボックス設定</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sandbox&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;autoAllowBashIfSandboxed&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;network&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowedDomains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;github.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;npmjs.org&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pypi.org&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;excludedCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;rm -rf /&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;shutdown&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><ul><li><strong><code>sandbox.enabled</code></strong>: サンドボックスモードの有効化</li><li><strong><code>sandbox.autoAllowBashIfSandboxed</code></strong>: サンドボックス内では Bash コマンドを自動許可</li><li><strong><code>sandbox.network.allowedDomains</code></strong>: ネットワークアクセスを許可するドメインのリスト</li><li><strong><code>sandbox.excludedCommands</code></strong>: サンドボックス内でも実行を禁止するコマンド</li></ul><h2 id="-aws-bedrock-統合">🔧 AWS Bedrock 統合<a class="headerlink" href="#-aws-bedrock-統合" title="Permanent link">&para;</a></h2><h3 id="1-基本設定">1. 基本設定<a class="headerlink" href="#1-基本設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># AWS Bedrock の有効化</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_BEDROCK</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-east-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span>claude-code-production
+
+<span class="c1"># IAM ロールの設定</span>
+aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span>--role-name<span class="w"> </span>ClaudeCodeRole<span class="w"> </span>--assume-role-policy-document<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<span class="s1">  &quot;Statement&quot;: [</span>
+<span class="s1">    {</span>
+<span class="s1">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<span class="s1">      &quot;Principal&quot;: {</span>
+<span class="s1">        &quot;Service&quot;: &quot;bedrock.amazonaws.com&quot;</span>
+<span class="s1">      },</span>
+<span class="s1">      &quot;Action&quot;: &quot;sts:AssumeRole&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  ]</span>
+<span class="s1">}&#39;</span>
+
+<span class="c1"># 最小権限ポリシーの作成</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; claude-code-policy.json</span>
+<span class="s">{</span>
+<span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<span class="s">  &quot;Statement&quot;: [</span>
+<span class="s">    {</span>
+<span class="s">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<span class="s">      &quot;Action&quot;: [</span>
+<span class="s">        &quot;bedrock:InvokeModel&quot;,</span>
+<span class="s">        &quot;bedrock:InvokeModelWithResponseStream&quot;</span>
+<span class="s">      ],</span>
+<span class="s">      &quot;Resource&quot;: &quot;arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-*&quot;</span>
+<span class="s">    },</span>
+<span class="s">    {</span>
+<span class="s">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<span class="s">      &quot;Action&quot;: [</span>
+<span class="s">        &quot;bedrock:ListInferenceProfiles&quot;,</span>
+<span class="s">        &quot;bedrock:GetInferenceProfile&quot;</span>
+<span class="s">      ],</span>
+<span class="s">      &quot;Resource&quot;: &quot;*&quot;</span>
+<span class="s">    }</span>
+<span class="s">  ]</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># ポリシーの作成とアタッチ</span>
+aws<span class="w"> </span>iam<span class="w"> </span>create-policy<span class="w"> </span>--policy-name<span class="w"> </span>ClaudeCodeMinimalPolicy<span class="w"> </span>--policy-document<span class="w"> </span>file://claude-code-policy.json
+aws<span class="w"> </span>iam<span class="w"> </span>attach-role-policy<span class="w"> </span>--role-name<span class="w"> </span>ClaudeCodeRole<span class="w"> </span>--policy-arn<span class="w"> </span>arn:aws:iam::<span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>:policy/ClaudeCodeMinimalPolicy
+</code></pre></div><h3 id="2-企業向け設定">2. 企業向け設定<a class="headerlink" href="#2-企業向け設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># claude-config.yaml</span>
+<span class="nt">bedrock</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="c1"># Claude Code は inference profile ID を推奨（us.プレフィックス付き）</span>
+<span class="w">  </span><span class="nt">model_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us.anthropic.claude-sonnet-4-5-20250514-v1:0&quot;</span>
+<span class="w">  </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+
+<span class="w">  </span><span class="c1"># VPC 設定</span>
+<span class="w">  </span><span class="nt">vpc_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">subnet_ids</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;subnet-12345678&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;subnet-87654321&quot;</span>
+<span class="w">    </span><span class="nt">security_group_ids</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;sg-abcdef12&quot;</span>
+
+<span class="w">  </span><span class="c1"># 暗号化設定</span>
+<span class="w">  </span><span class="nt">encryption</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kms_key_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012&quot;</span>
+
+<span class="w">  </span><span class="c1"># ログ設定</span>
+<span class="w">  </span><span class="nt">logging</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cloudwatch_log_group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/aws/bedrock/claude-code&quot;</span>
+<span class="w">    </span><span class="nt">retention_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+</code></pre></div><h3 id="3-terraform-での自動化">3. Terraform での自動化<a class="headerlink" href="#3-terraform-での自動化" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># main.tf</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_bedrock_model_invocation_logging_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;claude_code&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">logging_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">cloud_watch_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">log_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/aws/bedrock/claude-code&quot;</span>
+<span class="w">      </span><span class="na">role_arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.bedrock_logging.arn</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">s3_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">bucket_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.bedrock_logs.bucket</span>
+<span class="w">      </span><span class="na">key_prefix</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bedrock-logs/&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">embedding_data_delivery_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">image_data_delivery_enabled</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">text_data_delivery_enabled</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;bedrock_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;claude-code-bedrock-logs-${random_id.bucket_suffix.hex}&quot;</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">Purpose</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bedrock-logging&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_encryption_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;bedrock_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.bedrock_logs.id</span>
+
+<span class="w">  </span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">apply_server_side_encryption_by_default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">kms_master_key_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_kms_key.bedrock_key.arn</span>
+<span class="w">      </span><span class="na">sse_algorithm</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aws:kms&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;bedrock_logging&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bedrock-logging-role&quot;</span>
+
+<span class="w">  </span><span class="na">assume_role_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span>
+<span class="w">    </span><span class="na">Statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="na">Action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sts:AssumeRole&quot;</span>
+<span class="w">        </span><span class="na">Effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">        </span><span class="nb">Principal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="na">Service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bedrock.amazonaws.com&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="-google-vertex-ai-統合">🌐 Google Vertex AI 統合<a class="headerlink" href="#-google-vertex-ai-統合" title="Permanent link">&para;</a></h2><h3 id="1-基本設定_1">1. 基本設定<a class="headerlink" href="#1-基本設定_1" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Vertex AI の有効化</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_VERTEX</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLOUD_ML_REGION</span><span class="o">=</span>us-central1
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_VERTEX_PROJECT_ID</span><span class="o">=</span>your-project-id
+
+<span class="c1"># サービスアカウントの設定</span>
+gcloud<span class="w"> </span>iam<span class="w"> </span>service-accounts<span class="w"> </span>create<span class="w"> </span>claude-code-service<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--display-name<span class="o">=</span><span class="s2">&quot;Claude Code Service Account&quot;</span>
+
+<span class="c1"># 必要な権限の付与</span>
+gcloud<span class="w"> </span>projects<span class="w"> </span>add-iam-policy-binding<span class="w"> </span>your-project-id<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--member<span class="o">=</span><span class="s2">&quot;serviceAccount:claude-code-service@your-project-id.iam.gserviceaccount.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="o">=</span><span class="s2">&quot;roles/aiplatform.user&quot;</span>
+
+<span class="c1"># 認証キーの作成</span>
+gcloud<span class="w"> </span>iam<span class="w"> </span>service-accounts<span class="w"> </span>keys<span class="w"> </span>create<span class="w"> </span>claude-code-key.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--iam-account<span class="o">=</span>claude-code-service@your-project-id.iam.gserviceaccount.com
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_APPLICATION_CREDENTIALS</span><span class="o">=</span>/path/to/claude-code-key.json
+</code></pre></div><h3 id="2-企業向け設定_1">2. 企業向け設定<a class="headerlink" href="#2-企業向け設定_1" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># vertex-config.yaml</span>
+<span class="nt">vertex_ai</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">project_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-project-id&quot;</span>
+<span class="w">  </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-central1&quot;</span>
+<span class="w">  </span><span class="c1"># 最新モデル例（定期的に最新バージョンを確認）</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4@20250514&quot;</span>
+
+<span class="w">  </span><span class="c1"># エンドポイント選択</span>
+<span class="w">  </span><span class="c1"># Global: 高可用性、自動フェイルオーバー</span>
+<span class="w">  </span><span class="c1"># Regional: データレジデンシ保証、準拠要件厳守</span>
+<span class="w">  </span><span class="nt">endpoint_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;regional&quot;</span><span class="w">  </span><span class="c1"># 推奨: データ所在地要件がある場合</span>
+
+<span class="w">  </span><span class="c1"># VPC 設定</span>
+<span class="w">  </span><span class="nt">network</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;projects/your-project-id/global/networks/default&quot;</span>
+<span class="w">  </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;projects/your-project-id/regions/us-central1/subnetworks/default&quot;</span>
+
+<span class="w">  </span><span class="c1"># セキュリティ設定</span>
+<span class="w">  </span><span class="nt">encryption_spec</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kms_key_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;projects/your-project-id/locations/us-central1/keyRings/claude-code/cryptoKeys/vertex-ai&quot;</span>
+
+<span class="w">  </span><span class="c1"># 監査ログ</span>
+<span class="w">  </span><span class="nt">audit_logging</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">log_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DATA_READ&quot;</span>
+<span class="w">    </span><span class="nt">exempted_members</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div><h3 id="3-kubernetes-での運用">3. Kubernetes での運用<a class="headerlink" href="#3-kubernetes-での運用" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># k8s-deployment.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-service</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai-tools</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-service</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-service</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-sa</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code</span>
+<span class="w">        </span><span class="c1"># 公式イメージは提供されていません</span>
+<span class="w">        </span><span class="c1"># DevContainer を参考に自社ビルドが必要</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-registry.com/claude-code:v1.0.0</span>
+<span class="w">        </span><span class="c1"># ビルド手順: https://docs.anthropic.com/en/docs/claude-code/devcontainer</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLAUDE_CODE_USE_VERTEX</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GOOGLE_APPLICATION_CREDENTIALS</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/var/secrets/google/key.json&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ANTHROPIC_VERTEX_PROJECT_ID</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vertex-config</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">project-id</span>
+<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google-cloud-key</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/secrets/google</span>
+<span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span>
+<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google-cloud-key</span>
+<span class="w">        </span><span class="nt">secret</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google-cloud-key</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-sa</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai-tools</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">iam.gke.io/gcp-service-account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code-service@your-project-id.iam.gserviceaccount.com</span>
+</code></pre></div><h2 id="-セキュリティ対策">🔐 セキュリティ対策<a class="headerlink" href="#-セキュリティ対策" title="Permanent link">&para;</a></h2><h3 id="1-ネットワークセキュリティ">1. ネットワークセキュリティ<a class="headerlink" href="#1-ネットワークセキュリティ" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Corporate Proxy の設定</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>https://proxy.company.com:8080
+<span class="nb">export</span><span class="w"> </span><span class="nv">HTTP_PROXY</span><span class="o">=</span>http://proxy.company.com:8080
+<span class="nb">export</span><span class="w"> </span><span class="nv">NO_PROXY</span><span class="o">=</span>localhost,127.0.0.1,.company.com
+
+<span class="c1"># SSL証明書の設定</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SSL_CERT_FILE</span><span class="o">=</span>/etc/ssl/certs/company-ca-bundle.crt
+<span class="nb">export</span><span class="w"> </span><span class="nv">REQUESTS_CA_BUNDLE</span><span class="o">=</span>/etc/ssl/certs/company-ca-bundle.crt
+</code></pre></div><h3 id="2-llm-gateway-の実装">2. LLM Gateway の実装<a class="headerlink" href="#2-llm-gateway-の実装" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># llm_gateway.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.middleware.proxy_fix</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProxyFix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.fernet</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fernet</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">ProxyFix</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>
+
+<span class="c1"># ログ設定</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMGateway</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encryption_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ENCRYPTION_KEY&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cipher_suite</span> <span class="o">=</span> <span class="n">Fernet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encryption_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bedrock_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;bedrock-runtime&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encrypt_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リクエストデータの暗号化&quot;&quot;&quot;</span>
+        <span class="n">encrypted_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cipher_suite</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">encrypted_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decrypt_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encrypted_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;レスポンスデータの復号化&quot;&quot;&quot;</span>
+        <span class="n">decrypted_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cipher_suite</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decrypted_data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">audit_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">request_type</span><span class="p">,</span> <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;監査ログの記録&quot;&quot;&quot;</span>
+        <span class="n">log_entry</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+            <span class="s1">&#39;request_type&#39;</span><span class="p">:</span> <span class="n">request_type</span><span class="p">,</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span>
+            <span class="s1">&#39;ip_address&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">remote_addr</span><span class="p">,</span>
+            <span class="s1">&#39;user_agent&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user_agent</span><span class="o">.</span><span class="n">string</span>
+        <span class="p">}</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AUDIT: </span><span class="si">{</span><span class="n">log_entry</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># CloudWatch Logs に送信</span>
+        <span class="n">cloudwatch</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+        <span class="n">cloudwatch</span><span class="o">.</span><span class="n">put_log_events</span><span class="p">(</span>
+            <span class="n">logGroupName</span><span class="o">=</span><span class="s1">&#39;/aws/lambda/claude-code-gateway&#39;</span><span class="p">,</span>
+            <span class="n">logStreamName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;audit-</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">logEvents</span><span class="o">=</span><span class="p">[{</span>
+                <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span>
+                <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">log_entry</span><span class="p">)</span>
+            <span class="p">}]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リクエストの検証&quot;&quot;&quot;</span>
+        <span class="c1"># データサニタイゼーション</span>
+        <span class="k">if</span> <span class="s1">&#39;prompt&#39;</span> <span class="ow">in</span> <span class="n">request_data</span><span class="p">:</span>
+            <span class="n">prompt</span> <span class="o">=</span> <span class="n">request_data</span><span class="p">[</span><span class="s1">&#39;prompt&#39;</span><span class="p">]</span>
+
+            <span class="c1"># 禁止されたキーワードのチェック</span>
+            <span class="n">forbidden_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="s1">&#39;secret&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">forbidden_keywords</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">prompt</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Forbidden keyword detected: </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Valid request&quot;</span>
+
+<span class="n">gateway</span> <span class="o">=</span> <span class="n">LLMGateway</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/v1/messages&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">proxy_to_bedrock</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># リクエストの認証</span>
+        <span class="n">auth_header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">auth_header</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Bearer &#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing or invalid authorization&#39;</span><span class="p">}),</span> <span class="mi">401</span>
+
+        <span class="n">token</span> <span class="o">=</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">validate_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Invalid token&#39;</span><span class="p">}),</span> <span class="mi">401</span>
+
+        <span class="c1"># リクエストの検証</span>
+        <span class="n">request_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+        <span class="n">is_valid</span><span class="p">,</span> <span class="n">error_msg</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">validate_request</span><span class="p">(</span><span class="n">request_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid</span><span class="p">:</span>
+            <span class="n">gateway</span><span class="o">.</span><span class="n">audit_log</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s1">&#39;INVALID_REQUEST&#39;</span><span class="p">,</span> <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">error_msg</span><span class="p">}),</span> <span class="mi">400</span>
+
+        <span class="c1"># Bedrock へのリクエスト</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">bedrock_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
+            <span class="c1"># inference profile ID を使用（リージョン依存の解消）</span>
+            <span class="n">modelId</span><span class="o">=</span><span class="s1">&#39;us.anthropic.claude-sonnet-4-5-20250514-v1:0&#39;</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">request_data</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 監査ログ</span>
+        <span class="n">gateway</span><span class="o">.</span><span class="n">audit_log</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s1">&#39;MODEL_INVOCATION&#39;</span><span class="p">,</span> <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="mi">200</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing request: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Internal server error&#39;</span><span class="p">}),</span> <span class="mi">500</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_token</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;トークンの検証&quot;&quot;&quot;</span>
+    <span class="c1"># JWT トークンの検証ロジック</span>
+    <span class="c1"># 実際の実装では、企業の認証システムと連携</span>
+    <span class="k">return</span> <span class="s2">&quot;user123&quot;</span>  <span class="c1"># 例</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">ssl_context</span><span class="o">=</span><span class="s1">&#39;adhoc&#39;</span><span class="p">)</span>
+</code></pre></div><h3 id="3-データ保護">3. データ保護<a class="headerlink" href="#3-データ保護" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># 企業データの暗号化</span>
+<span class="c1">#!/bin/bash</span>
+<span class="c1"># data_protection.sh</span>
+
+<span class="c1"># 暗号化キーの生成</span>
+openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="w"> </span>&gt;<span class="w"> </span>/secure/claude-code-key.txt
+
+<span class="c1"># ファイル暗号化</span>
+encrypt_file<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">input_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">output_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+
+<span class="w">    </span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-salt<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>/secure/claude-code-key.txt<span class="k">)</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+
+<span class="c1"># ファイル復号化</span>
+decrypt_file<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">encrypted_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">output_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+
+<span class="w">    </span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-d<span class="w"> </span>-salt<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$encrypted_file</span><span class="s2">&quot;</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>/secure/claude-code-key.txt<span class="k">)</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+
+<span class="c1"># 使用例</span>
+encrypt_file<span class="w"> </span><span class="s2">&quot;sensitive_code.py&quot;</span><span class="w"> </span><span class="s2">&quot;sensitive_code.py.enc&quot;</span>
+decrypt_file<span class="w"> </span><span class="s2">&quot;sensitive_code.py.enc&quot;</span><span class="w"> </span><span class="s2">&quot;sensitive_code.py&quot;</span>
+</code></pre></div><h2 id="-組織的な導入">🏢 組織的な導入<a class="headerlink" href="#-組織的な導入" title="Permanent link">&para;</a></h2><h3 id="1-段階的展開">1. 段階的展開<a class="headerlink" href="#1-段階的展開" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># deployment-phases.yaml</span>
+<span class="nt">phase_1</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pilot</span><span class="nv"> </span><span class="s">Program&quot;</span>
+<span class="w">  </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2</span><span class="nv"> </span><span class="s">weeks&quot;</span>
+<span class="w">  </span><span class="nt">participants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Senior</span><span class="nv"> </span><span class="s">developers</span><span class="nv"> </span><span class="s">(5</span><span class="nv"> </span><span class="s">people)&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;DevOps</span><span class="nv"> </span><span class="s">team</span><span class="nv"> </span><span class="s">(3</span><span class="nv"> </span><span class="s">people)&quot;</span>
+<span class="w">  </span><span class="nt">scope</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Internal</span><span class="nv"> </span><span class="s">tools</span><span class="nv"> </span><span class="s">development&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Code</span><span class="nv"> </span><span class="s">review</span><span class="nv"> </span><span class="s">assistance&quot;</span>
+<span class="w">  </span><span class="nt">success_criteria</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Productivity</span><span class="nv"> </span><span class="s">improvement</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">20%&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Zero</span><span class="nv"> </span><span class="s">security</span><span class="nv"> </span><span class="s">incidents&quot;</span>
+
+<span class="nt">phase_2</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Department</span><span class="nv"> </span><span class="s">Rollout&quot;</span>
+<span class="w">  </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1</span><span class="nv"> </span><span class="s">month&quot;</span>
+<span class="w">  </span><span class="nt">participants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;All</span><span class="nv"> </span><span class="s">development</span><span class="nv"> </span><span class="s">teams</span><span class="nv"> </span><span class="s">(50</span><span class="nv"> </span><span class="s">people)&quot;</span>
+<span class="w">  </span><span class="nt">scope</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Full</span><span class="nv"> </span><span class="s">development</span><span class="nv"> </span><span class="s">lifecycle&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;CI/CD</span><span class="nv"> </span><span class="s">integration&quot;</span>
+<span class="w">  </span><span class="nt">success_criteria</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Adoption</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">80%&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Code</span><span class="nv"> </span><span class="s">quality</span><span class="nv"> </span><span class="s">improvement&quot;</span>
+
+<span class="nt">phase_3</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Enterprise</span><span class="nv"> </span><span class="s">Wide&quot;</span>
+<span class="w">  </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3</span><span class="nv"> </span><span class="s">months&quot;</span>
+<span class="w">  </span><span class="nt">participants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;All</span><span class="nv"> </span><span class="s">technical</span><span class="nv"> </span><span class="s">staff</span><span class="nv"> </span><span class="s">(200</span><span class="nv"> </span><span class="s">people)&quot;</span>
+<span class="w">  </span><span class="nt">scope</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;All</span><span class="nv"> </span><span class="s">projects&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Cross-team</span><span class="nv"> </span><span class="s">collaboration&quot;</span>
+<span class="w">  </span><span class="nt">success_criteria</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ROI</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">300%&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Full</span><span class="nv"> </span><span class="s">security</span><span class="nv"> </span><span class="s">compliance&quot;</span>
+</code></pre></div><h3 id="2-ガバナンス体制">2. ガバナンス体制<a class="headerlink" href="#2-ガバナンス体制" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># governance_framework.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">UserRole</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ADMIN</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">DEVELOPER</span> <span class="o">=</span> <span class="s2">&quot;developer&quot;</span>
+    <span class="n">VIEWER</span> <span class="o">=</span> <span class="s2">&quot;viewer&quot;</span>
+    <span class="n">GUEST</span> <span class="o">=</span> <span class="s2">&quot;guest&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProjectType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">INTERNAL</span> <span class="o">=</span> <span class="s2">&quot;internal&quot;</span>
+    <span class="n">CUSTOMER_FACING</span> <span class="o">=</span> <span class="s2">&quot;customer_facing&quot;</span>
+    <span class="n">CONFIDENTIAL</span> <span class="o">=</span> <span class="s2">&quot;confidential&quot;</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AccessPolicy</span><span class="p">:</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">UserRole</span>
+    <span class="n">allowed_models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">max_tokens_per_day</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">allowed_project_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ProjectType</span><span class="p">]</span>
+    <span class="n">can_access_external_apis</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">audit_level</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GovernanceManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policies</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">:</span> <span class="n">AccessPolicy</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">,</span>
+                <span class="n">allowed_models</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;claude-opus-4-6&quot;</span><span class="p">,</span> <span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span><span class="p">],</span>
+                <span class="n">max_tokens_per_day</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+                <span class="n">allowed_project_types</span><span class="o">=</span><span class="p">[</span><span class="n">ProjectType</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span> <span class="n">ProjectType</span><span class="o">.</span><span class="n">CUSTOMER_FACING</span><span class="p">,</span> <span class="n">ProjectType</span><span class="o">.</span><span class="n">CONFIDENTIAL</span><span class="p">],</span>
+                <span class="n">can_access_external_apis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">audit_level</span><span class="o">=</span><span class="s2">&quot;full&quot;</span>
+            <span class="p">),</span>
+            <span class="n">UserRole</span><span class="o">.</span><span class="n">DEVELOPER</span><span class="p">:</span> <span class="n">AccessPolicy</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">UserRole</span><span class="o">.</span><span class="n">DEVELOPER</span><span class="p">,</span>
+                <span class="n">allowed_models</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span> <span class="s2">&quot;claude-haiku-4-5&quot;</span><span class="p">],</span>
+                <span class="n">max_tokens_per_day</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span>
+                <span class="n">allowed_project_types</span><span class="o">=</span><span class="p">[</span><span class="n">ProjectType</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span> <span class="n">ProjectType</span><span class="o">.</span><span class="n">CUSTOMER_FACING</span><span class="p">],</span>
+                <span class="n">can_access_external_apis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">audit_level</span><span class="o">=</span><span class="s2">&quot;standard&quot;</span>
+            <span class="p">),</span>
+            <span class="n">UserRole</span><span class="o">.</span><span class="n">VIEWER</span><span class="p">:</span> <span class="n">AccessPolicy</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">UserRole</span><span class="o">.</span><span class="n">VIEWER</span><span class="p">,</span>
+                <span class="n">allowed_models</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;claude-haiku-4-5&quot;</span><span class="p">],</span>
+                <span class="n">max_tokens_per_day</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                <span class="n">allowed_project_types</span><span class="o">=</span><span class="p">[</span><span class="n">ProjectType</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">],</span>
+                <span class="n">can_access_external_apis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">audit_level</span><span class="o">=</span><span class="s2">&quot;minimal&quot;</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_user_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">UserRole</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccessPolicy</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ユーザーのアクセスポリシーを取得&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リクエストの妥当性を検証&quot;&quot;&quot;</span>
+        <span class="n">user_role</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_role</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_policy</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">user_role</span><span class="p">)</span>
+
+        <span class="c1"># モデルアクセス権限の確認</span>
+        <span class="k">if</span> <span class="n">request_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">policy</span><span class="o">.</span><span class="n">allowed_models</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># 日次トークン制限の確認</span>
+        <span class="n">daily_usage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_daily_token_usage</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">daily_usage</span> <span class="o">&gt;=</span> <span class="n">policy</span><span class="o">.</span><span class="n">max_tokens_per_day</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># プロジェクトタイプの確認</span>
+        <span class="n">project_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project_type</span><span class="p">(</span><span class="n">request_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;project_id&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">project_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">policy</span><span class="o">.</span><span class="n">allowed_project_types</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_user_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserRole</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ユーザーのロールを取得&quot;&quot;&quot;</span>
+        <span class="c1"># 実際の実装では、企業のIDシステムと連携</span>
+        <span class="k">return</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">DEVELOPER</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_daily_token_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ユーザーの日次トークン使用量を取得&quot;&quot;&quot;</span>
+        <span class="c1"># 実際の実装では、使用量データベースから取得</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_project_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProjectType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;プロジェクトタイプを取得&quot;&quot;&quot;</span>
+        <span class="c1"># 実際の実装では、プロジェクト管理システムから取得</span>
+        <span class="k">return</span> <span class="n">ProjectType</span><span class="o">.</span><span class="n">INTERNAL</span>
+</code></pre></div><h2 id="-運用監視">📊 運用監視<a class="headerlink" href="#-運用監視" title="Permanent link">&para;</a></h2><h3 id="opentelemetry-によるオブザーバビリティ">OpenTelemetry によるオブザーバビリティ<a class="headerlink" href="#opentelemetry-によるオブザーバビリティ" title="Permanent link">&para;</a></h3><p>Claude Code はネイティブで OpenTelemetry（OTel）をサポートしており、セッション・コスト・トークン使用量などをリアルタイムで収集できます。</p><h4 id="環境変数による有効化">環境変数による有効化<a class="headerlink" href="#環境変数による有効化" title="Permanent link">&para;</a></h4><div class="highlight"><pre><span></span><code><span class="c1"># OpenTelemetry テレメトリの有効化</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># エクスポーター設定（例: OTLP）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_LOGS_EXPORTER</span><span class="o">=</span>otlp
+
+<span class="c1"># エンドポイント設定</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>https://otel-collector.company.com:4317
+
+<span class="c1"># チーム/部署ごとのリソース属性</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;team.name=platform,department=engineering,environment=production&quot;</span>
+</code></pre></div><h4 id="収集されるメトリクス">収集されるメトリクス<a class="headerlink" href="#収集されるメトリクス" title="Permanent link">&para;</a></h4><table><thead><tr><th>メトリクス名</th><th>説明</th><th>型</th></tr></thead><tbody><tr><td><code>session.count</code></td><td>セッション数</td><td>Counter</td></tr><tr><td><code>lines_of_code.count</code></td><td>生成コード行数</td><td>Counter</td></tr><tr><td><code>cost.usage</code></td><td>API 利用コスト</td><td>Gauge</td></tr><tr><td><code>token.usage</code></td><td>トークン消費量</td><td>Counter</td></tr><tr><td><code>active_time.total</code></td><td>アクティブ時間合計</td><td>Gauge</td></tr></tbody></table><h4 id="収集されるイベント">収集されるイベント<a class="headerlink" href="#収集されるイベント" title="Permanent link">&para;</a></h4><table><thead><tr><th>イベント名</th><th>説明</th></tr></thead><tbody><tr><td><code>user_prompt</code></td><td>ユーザーのプロンプト送信</td></tr><tr><td><code>tool_result</code></td><td>ツール実行結果</td></tr><tr><td><code>api_request</code></td><td>API リクエスト</td></tr><tr><td><code>api_error</code></td><td>API エラー</td></tr><tr><td><code>tool_decision</code></td><td>ツール選択の意思決定</td></tr></tbody></table><h4 id="マルチチーム対応">マルチチーム対応<a class="headerlink" href="#マルチチーム対応" title="Permanent link">&para;</a></h4><p><code>OTEL_RESOURCE_ATTRIBUTES</code> を活用することで、チームごと・部署ごとのメトリクスをフィルタリングできます。</p><div class="highlight"><pre><span></span><code><span class="c1"># チーム A</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;team.name=frontend,cost_center=CC-001&quot;</span>
+
+<span class="c1"># チーム B</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;team.name=backend,cost_center=CC-002&quot;</span>
+</code></pre></div><h4 id="動的ヘッダー設定">動的ヘッダー設定<a class="headerlink" href="#動的ヘッダー設定" title="Permanent link">&para;</a></h4><p>認証が必要な OTel コレクターに対して、<code>otelHeadersHelper</code> 設定で動的にヘッダーを生成できます。</p><div class="highlight"><pre><span></span><code><span class="c1">// managed-settings.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;otelHeadersHelper&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin/generate-otel-auth-header.sh&quot;</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="1-メトリクス収集">1. メトリクス収集<a class="headerlink" href="#1-メトリクス収集" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># metrics_collector.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MetricsCollector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cloudwatch</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudwatch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span> <span class="o">=</span> <span class="s1">&#39;ClaudeCode/Enterprise&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_usage_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;使用量メトリクスの収集&quot;&quot;&quot;</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;requests_per_minute&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_requests_per_minute</span><span class="p">(),</span>
+            <span class="s1">&#39;tokens_processed&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tokens_processed</span><span class="p">(),</span>
+            <span class="s1">&#39;active_users&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_users</span><span class="p">(),</span>
+            <span class="s1">&#39;error_rate&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_error_rate</span><span class="p">(),</span>
+            <span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response_time</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cloudwatch</span><span class="o">.</span><span class="n">put_metric_data</span><span class="p">(</span>
+                <span class="n">Namespace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
+                <span class="n">MetricData</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;MetricName&#39;</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
+                        <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                        <span class="s1">&#39;Unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Count&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_system_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;システムメトリクスの収集&quot;&quot;&quot;</span>
+        <span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">memory_percent</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">percent</span>
+        <span class="n">disk_percent</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">disk_usage</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">percent</span>
+
+        <span class="n">system_metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;cpu_utilization&#39;</span><span class="p">:</span> <span class="n">cpu_percent</span><span class="p">,</span>
+            <span class="s1">&#39;memory_utilization&#39;</span><span class="p">:</span> <span class="n">memory_percent</span><span class="p">,</span>
+            <span class="s1">&#39;disk_utilization&#39;</span><span class="p">:</span> <span class="n">disk_percent</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">system_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cloudwatch</span><span class="o">.</span><span class="n">put_metric_data</span><span class="p">(</span>
+                <span class="n">Namespace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
+                <span class="n">MetricData</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;MetricName&#39;</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
+                        <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                        <span class="s1">&#39;Unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Percent&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_business_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ビジネスメトリクスの収集&quot;&quot;&quot;</span>
+        <span class="n">business_metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;code_lines_generated&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_code_lines_generated</span><span class="p">(),</span>
+            <span class="s1">&#39;bugs_fixed&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bugs_fixed</span><span class="p">(),</span>
+            <span class="s1">&#39;time_saved_minutes&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time_saved</span><span class="p">(),</span>
+            <span class="s1">&#39;cost_savings_usd&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cost_savings</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">business_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cloudwatch</span><span class="o">.</span><span class="n">put_metric_data</span><span class="p">(</span>
+                <span class="n">Namespace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
+                <span class="n">MetricData</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;MetricName&#39;</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
+                        <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                        <span class="s1">&#39;Unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Count&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+<span class="c1"># 定期実行</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">collector</span> <span class="o">=</span> <span class="n">MetricsCollector</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">collector</span><span class="o">.</span><span class="n">collect_usage_metrics</span><span class="p">()</span>
+            <span class="n">collector</span><span class="o">.</span><span class="n">collect_system_metrics</span><span class="p">()</span>
+            <span class="n">collector</span><span class="o">.</span><span class="n">collect_business_metrics</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metrics collected at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error collecting metrics: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># 5分間隔</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div><h3 id="2-アラート設定">2. アラート設定<a class="headerlink" href="#2-アラート設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># cloudwatch-alarms.yaml</span>
+<span class="nt">Resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">HighErrorRateAlarm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::CloudWatch::Alarm</span>
+<span class="w">    </span><span class="nt">Properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AlarmName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClaudeCode-HighErrorRate</span>
+<span class="w">      </span><span class="nt">AlarmDescription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Error rate is too high</span>
+<span class="w">      </span><span class="nt">MetricName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error_rate</span>
+<span class="w">      </span><span class="nt">Namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClaudeCode/Enterprise</span>
+<span class="w">      </span><span class="nt">Statistic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Average</span>
+<span class="w">      </span><span class="nt">Period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">      </span><span class="nt">EvaluationPeriods</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">Threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+<span class="w">      </span><span class="nt">ComparisonOperator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GreaterThanThreshold</span>
+<span class="w">      </span><span class="nt">AlarmActions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!Ref</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNSTopic</span>
+
+<span class="w">  </span><span class="nt">HighLatencyAlarm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::CloudWatch::Alarm</span>
+<span class="w">    </span><span class="nt">Properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AlarmName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClaudeCode-HighLatency</span>
+<span class="w">      </span><span class="nt">AlarmDescription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Response time is too high</span>
+<span class="w">      </span><span class="nt">MetricName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">response_time</span>
+<span class="w">      </span><span class="nt">Namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClaudeCode/Enterprise</span>
+<span class="w">      </span><span class="nt">Statistic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Average</span>
+<span class="w">      </span><span class="nt">Period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">      </span><span class="nt">EvaluationPeriods</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">Threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">      </span><span class="nt">ComparisonOperator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GreaterThanThreshold</span>
+<span class="w">      </span><span class="nt">AlarmActions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!Ref</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNSTopic</span>
+
+<span class="w">  </span><span class="nt">SNSTopic</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::SNS::Topic</span>
+<span class="w">    </span><span class="nt">Properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">TopicName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClaudeCode-Alerts</span>
+<span class="w">      </span><span class="nt">Subscription</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="w">          </span><span class="nt">Endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">devops@company.com</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span>
+<span class="w">          </span><span class="nt">Endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hooks.slack.com/services/YOUR/WEBHOOK/URL</span>
+</code></pre></div><h2 id="-roi-とコスト最適化">💰 ROI とコスト最適化<a class="headerlink" href="#-roi-とコスト最適化" title="Permanent link">&para;</a></h2><h3 id="導入効果の測定">導入効果の測定<a class="headerlink" href="#導入効果の測定" title="Permanent link">&para;</a></h3><table><thead><tr><th>指標</th><th>改善結果</th><th>年間コスト削減</th></tr></thead><tbody><tr><td>開発効率</td><td>40% 向上</td><td>$500,000</td></tr><tr><td>バグ修正時間</td><td>60% 短縮</td><td>$300,000</td></tr><tr><td>コードレビュー</td><td>50% 高速化</td><td>$200,000</td></tr><tr><td>運用作業</td><td>30% 削減</td><td>$150,000</td></tr><tr><td><strong>合計</strong></td><td>-</td><td><strong>$1,150,000</strong></td></tr></tbody></table><h3 id="コスト最適化戦略">コスト最適化戦略<a class="headerlink" href="#コスト最適化戦略" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># cost_optimization.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CostOptimizer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ce</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ce&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_usage_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;使用パターンの分析&quot;&quot;&quot;</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">end_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ce</span><span class="o">.</span><span class="n">get_cost_and_usage</span><span class="p">(</span>
+            <span class="n">TimePeriod</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;Start&#39;</span><span class="p">:</span> <span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;End&#39;</span><span class="p">:</span> <span class="n">end_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="n">Granularity</span><span class="o">=</span><span class="s1">&#39;DAILY&#39;</span><span class="p">,</span>
+            <span class="n">Metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BlendedCost&#39;</span><span class="p">,</span> <span class="s1">&#39;UsageQuantity&#39;</span><span class="p">],</span>
+            <span class="n">GroupBy</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s1">&#39;Type&#39;</span><span class="p">:</span> <span class="s1">&#39;DIMENSION&#39;</span><span class="p">,</span> <span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="s1">&#39;SERVICE&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;Type&#39;</span><span class="p">:</span> <span class="s1">&#39;DIMENSION&#39;</span><span class="p">,</span> <span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="s1">&#39;USAGE_TYPE&#39;</span><span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimize_model_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_complexity</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リクエストの複雑さに応じたモデル選択&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">request_complexity</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;claude-haiku-4-5&#39;</span>  <span class="c1"># 低コスト</span>
+        <span class="k">elif</span> <span class="n">request_complexity</span> <span class="o">==</span> <span class="s1">&#39;medium&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;claude-sonnet-4-5&#39;</span>  <span class="c1"># バランス</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;claude-opus-4-6&#39;</span>  <span class="c1"># 高性能</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_processing_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">requests</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;バッチ処理による最適化&quot;&quot;&quot;</span>
+        <span class="c1"># 類似リクエストをグループ化</span>
+        <span class="n">grouped_requests</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_similar_requests</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span>
+
+        <span class="n">optimized_requests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">grouped_requests</span><span class="p">:</span>
+            <span class="c1"># バッチ処理用にリクエストを結合</span>
+            <span class="n">combined_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_requests</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="n">optimized_requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_request</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">optimized_requests</span>
+</code></pre></div><h2 id="-関連記事">🔗 関連記事<a class="headerlink" href="#-関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../claude-code-advanced-guide/">Claude Code 応用編完全ガイド</a></li><li><a href="../claude-code-permission-optimization/">権限モード最適化</a></li><li><a href="../claude-code-batch-processing/">バッチ処理完全ガイド</a></li></ul><hr><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月12日 09:36:49 JST">2026年3月12日 09:36:49</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

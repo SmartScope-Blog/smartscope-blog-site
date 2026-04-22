@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Copilot CLI Autopilotモード</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-background-info: #E6F1FB;
+  --color-text-info: #185FA5;
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --color-border-secondary: rgba(0,0,0,0.25);
+  --color-border-info: #85B7EB;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --color-accent: #2979FF;
+  --color-human: #1976D2;
+  --color-ai: #2E7D32;
+  --color-warning: #E65100;
+  --color-muted: #9E9E9E;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-background-info: #0C447C;
+  --color-text-info: #85B7EB;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --color-border-secondary: rgba(255,255,255,0.25);
+  --color-border-info: #378ADD;
+  --color-human: #42A5F5;
+  --color-ai: #66BB6A;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) {
+    --color-text-primary: #D3D1C7;
+    --color-text-secondary: #B4B2A9;
+    --color-background-primary: #1e1e1e;
+    --color-background-secondary: #2a2a2a;
+    --color-background-info: #0C447C;
+    --color-text-info: #85B7EB;
+    --color-border-tertiary: rgba(255,255,255,0.12);
+    --color-border-secondary: rgba(255,255,255,0.25);
+    --color-border-info: #378ADD;
+    --color-human: #42A5F5;
+    --color-ai: #66BB6A;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+.widget {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px;
+}
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  border-bottom: 2px solid var(--color-border-tertiary);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--color-text-primary); }
+.tab-btn.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  font-weight: 600;
+}
+.tab-panel {
+  display: none;
+  padding: 20px 4px;
+  animation: fadeIn 0.3s ease;
+}
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+.panel-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+/* Tab 1: Split env layout */
+.env-split {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: start;
+}
+.env-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.env-col-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.env-col-title.vscode-title {
+  background: rgba(0, 120, 212, 0.12);
+  color: #0078D4;
+}
+[data-md-color-scheme="slate"] .env-col-title.vscode-title { color: #5BA3F5; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) .env-col-title.vscode-title { color: #5BA3F5; }
+}
+.env-col-title.cli-title {
+  background: rgba(41,121,255,0.10);
+  color: var(--color-accent);
+}
+.env-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 36px;
+}
+.connector-line {
+  width: 2px;
+  flex: 1;
+  max-height: 48px;
+  border-left: 2px dashed var(--color-border-secondary);
+}
+.connector-label {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 4px 8px;
+  border: 1px dashed var(--color-border-secondary);
+  border-radius: 6px;
+  margin: 4px 0;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+/* Tab 1: Mode cards */
+.mode-card {
+  padding: 12px 10px;
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  user-select: none;
+}
+.mode-card:hover { transform: translateY(-2px); }
+.mode-card.active {
+  border-color: var(--color-accent);
+  background: rgba(41,121,255,0.08);
+}
+.mode-card.autopilot-card {
+  border-color: #7B1FA2;
+}
+.mode-card.autopilot-card.active {
+  border-color: #7B1FA2;
+  background: rgba(123,31,162,0.10);
+}
+.mode-card-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+  display: block;
+}
+.mode-card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+.mode-card-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 99px;
+  background: rgba(123,31,162,0.15);
+  color: #7B1FA2;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 4px;
+}
+.mode-desc-box {
+  padding: 14px 16px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.7;
+  min-height: 56px;
+  transition: opacity 0.2s;
+}
+.mode-desc-box strong {
+  color: var(--color-accent);
+}
+
+/* Tab 2: Flow comparison */
+.flow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.flow-col {
+  padding: 16px 12px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+}
+.flow-col-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.flow-col-title.human-mode {
+  background: rgba(25,118,210,0.12);
+  color: var(--color-human);
+}
+.flow-col-title.auto-mode {
+  background: rgba(123,31,162,0.12);
+  color: #7B1FA2;
+}
+[data-md-color-scheme="slate"] .flow-col-title.auto-mode,
+.flow-col-title.auto-mode {
+  color: #CE93D8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) .flow-col-title.auto-mode {
+    color: #CE93D8;
+  }
+}
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-dot.human {
+  background: rgba(25,118,210,0.15);
+  color: var(--color-human);
+  border: 2px solid var(--color-human);
+}
+.step-dot.ai {
+  background: rgba(46,125,50,0.15);
+  color: var(--color-ai);
+  border: 2px solid var(--color-ai);
+}
+.flow-arrow {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  margin: 2px 0 6px 36px;
+}
+.autopilot-loop {
+  border: 2px dashed #7B1FA2;
+  border-radius: var(--border-radius-md);
+  padding: 12px 10px;
+  margin-top: 8px;
+  position: relative;
+}
+.loop-label {
+  font-size: 10px;
+  color: #9C27B0;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+[data-md-color-scheme="slate"] .loop-label { color: #CE93D8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) .loop-label { color: #CE93D8; }
+}
+.loop-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-tertiary);
+  opacity: 0.4;
+  transition: opacity 0.4s, background 0.4s;
+}
+.loop-step.lit {
+  opacity: 1;
+  background: rgba(46,125,50,0.10);
+  border-color: var(--color-ai);
+}
+.loop-step-icon { font-size: 14px; flex-shrink: 0; }
+.loop-step-text { color: var(--color-text-primary); font-size: 11px; }
+.loop-arrow-cont {
+  text-align: center;
+  font-size: 12px;
+  color: #9C27B0;
+  margin-bottom: 4px;
+}
+[data-md-color-scheme="slate"] .loop-arrow-cont { color: #CE93D8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) .loop-arrow-cont { color: #CE93D8; }
+}
+.loop-note {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* Tab 3: Stop conditions */
+.stop-list {
+  list-style: none;
+  margin-bottom: 20px;
+}
+.stop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+  border-left: 3px solid var(--color-border-tertiary);
+  line-height: 1.5;
+}
+.stop-icon { font-size: 18px; flex-shrink: 0; margin-top: 0px; }
+.stop-text strong { color: var(--color-text-primary); font-weight: 700; display: block; margin-bottom: 2px; }
+.stop-text span { color: var(--color-text-secondary); font-size: 12px; }
+.control-section {
+  padding: 16px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  margin-bottom: 12px;
+}
+.control-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+.control-label code {
+  font-size: 12px;
+  background: rgba(41,121,255,0.10);
+  color: var(--color-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "SF Mono", "Fira Code", monospace;
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--color-accent);
+  height: 4px;
+  cursor: pointer;
+}
+.slider-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+.slider-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+/* Toggle switch */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle-switch input { display: none; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: var(--color-border-secondary);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-switch input:checked + .toggle-track {
+  background: var(--color-accent);
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.toggle-switch input:checked + .toggle-track::after {
+  transform: translateX(20px);
+}
+.toggle-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.toggle-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-primary);
+  transition: background 0.2s, border-color 0.2s;
+}
+.toggle-desc.on {
+  background: rgba(41,121,255,0.07);
+  border-color: var(--color-border-info);
+  color: var(--color-text-info);
+}
+
+/* Tab 4: Cost */
+.cost-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.cost-col {
+  padding: 14px 12px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+}
+.cost-col-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+.cost-col-title.interactive-title {
+  background: rgba(25,118,210,0.12);
+  color: var(--color-human);
+}
+.cost-col-title.autopilot-title {
+  background: rgba(123,31,162,0.12);
+  color: #7B1FA2;
+}
+[data-md-color-scheme="slate"] .cost-col-title.autopilot-title { color: #CE93D8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) .cost-col-title.autopilot-title { color: #CE93D8; }
+}
+.cost-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-tertiary);
+}
+.cost-row.counted {
+  border-color: var(--color-human);
+  background: rgba(25,118,210,0.07);
+}
+.cost-row.internal {
+  opacity: 0.45;
+  font-size: 11px;
+  border-style: dashed;
+  color: var(--color-text-secondary);
+}
+.cost-row.ai-step {
+  border-color: var(--color-ai);
+  background: rgba(46,125,50,0.07);
+}
+.cost-row.hidden {
+  display: none;
+}
+.cost-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.cost-badge.req {
+  background: rgba(25,118,210,0.18);
+  color: var(--color-human);
+}
+.cost-badge.free {
+  background: rgba(0,0,0,0.07);
+  color: var(--color-muted);
+}
+.cost-total {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+.cost-total.interactive-total {
+  background: rgba(25,118,210,0.12);
+  color: var(--color-human);
+}
+.cost-total.autopilot-total {
+  background: rgba(46,125,50,0.12);
+  color: var(--color-ai);
+}
+.play-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.play-btn:hover { opacity: 0.85; }
+.play-btn:disabled { opacity: 0.5; cursor: default; }
+.cost-note {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-info);
+  border-left: 3px solid var(--color-border-info);
+  color: var(--color-text-info);
+  line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+  .env-split { grid-template-columns: 1fr; }
+  .env-connector { flex-direction: row; padding-top: 0; padding: 0 8px; }
+  .connector-line { width: 24px; height: 2px; max-height: 2px; flex: none; border-left: none; border-top: 2px dashed var(--color-border-secondary); }
+  .flow-grid { grid-template-columns: 1fr; }
+  .cost-grid { grid-template-columns: 1fr; }
+  .tab-btn { padding: 6px 10px; font-size: 12px; }
+  .panel-title { font-size: 14px; }
+  .panel-desc { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="modes">Autopilot の位置づけ</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="flow">動作比較</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="safety">停止条件 &amp; 安全性</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="cost">コスト比較</button>
+  </div>
+
+  <!-- Tab 1: Autopilot の位置づけ -->
+  <div class="tab-panel active" id="panel-modes" role="tabpanel">
+    <div class="panel-title">Autopilot の位置づけ</div>
+    <div class="panel-desc">カードをクリックして各モード／権限レベルの特徴を確認できます。VS Code と CLI、どちらにも「Autopilot」の概念が存在します。</div>
+    <div class="env-split" id="modeGrid">
+      <!-- VS Code column -->
+      <div class="env-col">
+        <div class="env-col-title vscode-title">VS Code</div>
+        <div class="mode-card" data-mode="vscode-default" role="button" tabindex="0">
+          <span class="mode-card-icon">🛡️</span>
+          <div class="mode-card-name">Default Approvals</div>
+        </div>
+        <div class="mode-card" data-mode="vscode-bypass" role="button" tabindex="0">
+          <span class="mode-card-icon">⚡</span>
+          <div class="mode-card-name">Bypass Approvals</div>
+        </div>
+        <div class="mode-card autopilot-card active" data-mode="vscode-autopilot" role="button" tabindex="0">
+          <span class="mode-card-icon">🤖</span>
+          <div class="mode-card-name">Autopilot</div>
+          <span class="mode-card-badge">Preview</span>
+        </div>
+      </div>
+      <!-- Connector -->
+      <div class="env-connector">
+        <div class="connector-line"></div>
+        <div class="connector-label">同じ自律実行<br>の概念</div>
+        <div class="connector-line"></div>
+      </div>
+      <!-- CLI column -->
+      <div class="env-col">
+        <div class="env-col-title cli-title">CLI</div>
+        <div class="mode-card" data-mode="cli-suggest" role="button" tabindex="0">
+          <span class="mode-card-icon">✏️</span>
+          <div class="mode-card-name">Suggest</div>
+        </div>
+        <div class="mode-card" data-mode="cli-interactive" role="button" tabindex="0">
+          <span class="mode-card-icon">💬</span>
+          <div class="mode-card-name">Interactive</div>
+          <div style="font-size:10px;color:var(--color-text-secondary);margin-top:4px;">デフォルト</div>
+        </div>
+        <div class="mode-card" data-mode="cli-plan" role="button" tabindex="0">
+          <span class="mode-card-icon">📋</span>
+          <div class="mode-card-name">Plan</div>
+        </div>
+        <div class="mode-card autopilot-card" data-mode="cli-autopilot" role="button" tabindex="0">
+          <span class="mode-card-icon">🤖</span>
+          <div class="mode-card-name">Autopilot</div>
+          <span class="mode-card-badge">NEW</span>
+        </div>
+      </div>
+    </div>
+    <div class="mode-desc-box" id="modeDesc">
+      <strong>VS Code: Autopilot (Preview)</strong> — 全自動承認 + 質問も自動応答。タスク完了まで自律実行する最上位モード。
+    </div>
+  </div>
+
+  <!-- Tab 2: 動作比較 -->
+  <div class="tab-panel" id="panel-flow" role="tabpanel">
+    <div class="panel-title">通常モード vs Autopilot の動作フロー</div>
+    <div class="panel-desc">Autopilot 側では AI が自律ループを繰り返し、ユーザーへの確認を最小化します。</div>
+    <div class="flow-grid">
+      <!-- 通常モード side -->
+      <div class="flow-col">
+        <div class="flow-col-title human-mode">💬 通常モード（承認あり）</div>
+        <div class="flow-step">
+          <div class="step-dot human">👤</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">指示を送る</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="step-dot ai">🤖</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">提案を生成</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="step-dot human">👤</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">承認 / 修正指示</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="step-dot ai">🤖</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">修正案を出力</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="step-dot human">👤</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">再度承認</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="step-dot ai">🤖</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">完了を確認</span>
+        </div>
+      </div>
+      <!-- Autopilot side -->
+      <div class="flow-col">
+        <div class="flow-col-title auto-mode">🤖 Autopilot（自律実行）</div>
+        <div class="flow-step">
+          <div class="step-dot human">👤</div>
+          <span style="font-size:12px;color:var(--color-text-primary);">最初の指示だけ</span>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="autopilot-loop">
+          <div class="loop-label">🔄 自律ループ（課金対象外の内部ステップを含む）</div>
+          <div class="loop-step" id="ls0">
+            <span class="loop-step-icon">📝</span>
+            <span class="loop-step-text">ファイル編集</span>
+          </div>
+          <div class="loop-arrow-cont">↓</div>
+          <div class="loop-step" id="ls1">
+            <span class="loop-step-icon">🧪</span>
+            <span class="loop-step-text">テスト実行</span>
+          </div>
+          <div class="loop-arrow-cont">↓</div>
+          <div class="loop-step" id="ls2">
+            <span class="loop-step-icon">🔧</span>
+            <span class="loop-step-text">エラー修正</span>
+          </div>
+          <div class="loop-arrow-cont">↓</div>
+          <div class="loop-step" id="ls3">
+            <span class="loop-step-icon">🔁</span>
+            <span class="loop-step-text">再テスト</span>
+          </div>
+          <div class="loop-arrow-cont">↓</div>
+          <div class="loop-step" id="ls4">
+            <span class="loop-step-icon">✅</span>
+            <span class="loop-step-text">完了判定</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: 停止条件 & 安全性 -->
+  <div class="tab-panel" id="panel-safety" role="tabpanel">
+    <div class="panel-title">Autopilot の停止条件</div>
+    <div class="panel-desc">Autopilot は以下のいずれかの条件で自動停止します。完全な自律実行でも制御の起点は常に人間です。</div>
+    <ul class="stop-list">
+      <li>
+        <span class="stop-icon">✅</span>
+        <div class="stop-text">
+          <strong>タスク完了をAIが判断</strong>
+          <span>設定したゴールを達成したと判断した時点で自動的に処理を終了する</span>
+        </div>
+      </li>
+      <li>
+        <span class="stop-icon">🚫</span>
+        <div class="stop-text">
+          <strong>続行不可能な問題を検出</strong>
+          <span>権限エラーや解決できない依存関係など、AIが先に進めないと判断した場合</span>
+        </div>
+      </li>
+      <li>
+        <span class="stop-icon">⌨️</span>
+        <div class="stop-text">
+          <strong>ユーザーが Ctrl+C で中断</strong>
+          <span>いつでも手動で割り込み停止が可能。実行中の変更はそのまま残る</span>
+        </div>
+      </li>
+      <li>
+        <span class="stop-icon">🔢</span>
+        <div class="stop-text">
+          <strong><code style="font-size:11px;background:rgba(0,0,0,0.07);padding:1px 5px;border-radius:4px;">--max-autopilot-continues</code> の上限に到達</strong>
+          <span>ループ回数の上限を設定し、コストや時間を明示的にコントロールできる</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="control-section">
+      <div class="control-label"><code>--max-autopilot-continues</code> のシミュレーション</div>
+      <div class="slider-row">
+        <span style="font-size:12px;color:var(--color-text-secondary);">1</span>
+        <input type="range" id="maxSlider" min="1" max="50" value="10">
+        <span style="font-size:12px;color:var(--color-text-secondary);">50</span>
+        <span class="slider-value" id="sliderVal">10</span>
+      </div>
+      <div class="slider-desc" id="sliderDesc">最大 <strong>10</strong> 回で自動停止。中程度のタスクに適した設定。</div>
+    </div>
+
+    <div class="control-section">
+      <div class="control-label"><code>--allow-all</code> フラグ</div>
+      <div class="toggle-row">
+        <label class="toggle-switch">
+          <input type="checkbox" id="allowAllToggle" checked>
+          <span class="toggle-track"></span>
+        </label>
+        <span class="toggle-label" id="toggleLabel">ON</span>
+      </div>
+      <div class="toggle-desc on" id="toggleDesc">全ツール・パス・URLへのアクセスを許可。Autopilotの推奨設定。</div>
+    </div>
+  </div>
+
+  <!-- Tab 4: コスト比較 -->
+  <div class="tab-panel" id="panel-cost" role="tabpanel">
+    <div class="panel-title">リクエスト数の比較</div>
+    <div class="panel-desc">Interactive は人間の操作ごとにリクエストが発生します。Autopilot の内部ループステップは課金対象外（グレー表示）です。</div>
+    <div class="cost-grid">
+      <!-- Interactive -->
+      <div class="cost-col">
+        <div class="cost-col-title interactive-title">💬 Interactive（5往復）</div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-total interactive-total">合計: 5 リクエスト</div>
+      </div>
+      <!-- Autopilot -->
+      <div class="cost-col">
+        <div class="cost-col-title autopilot-title">🤖 Autopilot</div>
+        <div class="cost-row counted">
+          <span>👤 Human → AI</span>
+          <span class="cost-badge req">+1</span>
+        </div>
+        <div class="cost-row internal hidden" id="ap-internal-1">
+          <span>🔧 内部ツール呼び出し</span>
+          <span class="cost-badge free">無料</span>
+        </div>
+        <div class="cost-row ai-step hidden" id="ap-step-1">
+          <span>🤖 自律ステップ</span>
+          <span class="cost-badge req" id="ap-badge-1">+2</span>
+        </div>
+        <div class="cost-row internal hidden" id="ap-internal-2">
+          <span>🔧 内部ツール呼び出し</span>
+          <span class="cost-badge free">無料</span>
+        </div>
+        <div class="cost-row ai-step hidden" id="ap-step-2">
+          <span>🤖 自律ステップ</span>
+          <span class="cost-badge req" id="ap-badge-2">+3</span>
+        </div>
+        <div class="cost-row internal hidden" id="ap-internal-3">
+          <span>🔧 内部ツール呼び出し</span>
+          <span class="cost-badge free">無料</span>
+        </div>
+        <div class="cost-row ai-step hidden" id="ap-step-3">
+          <span>🤖 自律ステップ（完了判定）</span>
+          <span class="cost-badge req" id="ap-badge-3">+4</span>
+        </div>
+        <div class="cost-total autopilot-total" id="ap-total">合計: 1 リクエスト ← 実行前</div>
+        <button class="play-btn" id="playBtn">▶ アニメーション再生</button>
+      </div>
+    </div>
+    <div class="cost-note">
+      内部ツール呼び出し（ファイル読み書き・シェル実行など）は Autopilot の自律ループ内で発生しますが、<strong>課金対象外のステップ</strong>として扱われます。課金されるのは AI のターン切り替え（= API リクエスト）のみです。
+    </div>
+  </div>
+</div>
+
+<script>
+// Tab switching
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    tabPanels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + target).classList.add('active');
+  });
+});
+
+// Tab 1: Mode cards
+const modeDescs = {
+  'vscode-default': '<strong>VS Code: Default Approvals</strong> — 安全な操作のみ自動承認。ファイル削除やシェル実行など潜在的に危険な操作は確認ダイアログを表示する。',
+  'vscode-bypass': '<strong>VS Code: Bypass Approvals</strong> — 全ツール呼び出しを自動承認。ただし AI が途中で質問した場合は止まる。完全自律ではない。',
+  'vscode-autopilot': '<strong>VS Code: Autopilot (Preview)</strong> — 全自動承認 + 質問も自動応答。タスク完了まで人間の介入なしに自律実行する最上位モード。',
+  'cli-suggest': '<strong>CLI: Suggest</strong> — コード補完のみ。チャットなし。インライン補完として動作し、対話は発生しない。',
+  'cli-interactive': '<strong>CLI: Interactive</strong>（デフォルト）— ステップごとに人間の承認を待つ。変更を適用する前に必ず確認が入る。',
+  'cli-plan': '<strong>CLI: Plan</strong> — 実装計画を立ててからAutopilotへ移行。複雑なタスクを整理してから自律実行に渡したい場合に有効。',
+  'cli-autopilot': '<strong>CLI: Autopilot</strong> — 初回指示だけでタスク完了まで自律実行。ファイル編集・テスト実行・エラー修正を人間の介入なしにループする。'
+};
+const modeGrid = document.getElementById('modeGrid');
+const modeDesc = document.getElementById('modeDesc');
+
+modeGrid.querySelectorAll('.mode-card').forEach(card => {
+  const activate = () => {
+    modeGrid.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    modeDesc.innerHTML = modeDescs[card.dataset.mode];
+  };
+  card.addEventListener('click', activate);
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+});
+
+// Tab 2: Autopilot loop animation
+const loopSteps = [
+  document.getElementById('ls0'),
+  document.getElementById('ls1'),
+  document.getElementById('ls2'),
+  document.getElementById('ls3'),
+  document.getElementById('ls4')
+];
+let loopIndex = 0;
+let loopTimer = null;
+
+function runLoop() {
+  loopSteps.forEach(s => s.classList.remove('lit'));
+  loopSteps[loopIndex].classList.add('lit');
+  loopIndex = (loopIndex + 1) % loopSteps.length;
+}
+
+function startLoop() {
+  runLoop();
+  loopTimer = setInterval(runLoop, 700);
+}
+
+// Start loop when flow tab becomes visible
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.tab === 'flow') {
+      if (!loopTimer) startLoop();
+    } else {
+      if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
+    }
+  });
+});
+
+// Tab 3: Slider
+const slider = document.getElementById('maxSlider');
+const sliderVal = document.getElementById('sliderVal');
+const sliderDesc = document.getElementById('sliderDesc');
+
+function getSliderHint(v) {
+  if (v <= 5) return '短いタスク向き。複雑なタスクは途中で止まる可能性あり。';
+  if (v <= 15) return '中程度のタスクに適した設定。';
+  if (v <= 30) return '大規模タスク向き。コストに注意。';
+  return '上限を高めに設定。長時間実行の可能性あり。';
+}
+slider.addEventListener('input', () => {
+  const v = slider.value;
+  sliderVal.textContent = v;
+  sliderDesc.innerHTML = '最大 <strong>' + v + '</strong> 回で自動停止。' + getSliderHint(Number(v));
+});
+
+// Tab 3: Toggle
+const allowToggle = document.getElementById('allowAllToggle');
+const toggleLabel = document.getElementById('toggleLabel');
+const toggleDesc = document.getElementById('toggleDesc');
+
+allowToggle.addEventListener('change', () => {
+  if (allowToggle.checked) {
+    toggleLabel.textContent = 'ON';
+    toggleDesc.textContent = '全ツール・パス・URLへのアクセスを許可。Autopilotの推奨設定。';
+    toggleDesc.classList.add('on');
+  } else {
+    toggleLabel.textContent = 'OFF';
+    toggleDesc.textContent = '承認が必要な操作は自動スキップ。タスクが途中で止まる可能性あり。';
+    toggleDesc.classList.remove('on');
+  }
+});
+
+// Tab 4: Cost animation
+const playBtn = document.getElementById('playBtn');
+const apTotal = document.getElementById('ap-total');
+const animSteps = [
+  { show: 'ap-internal-1', total: '1 リクエスト（内部ループ中…）' },
+  { show: 'ap-step-1',     total: '2 リクエスト（自律継続中…）' },
+  { show: 'ap-internal-2', total: '2 リクエスト（内部ループ中…）' },
+  { show: 'ap-step-2',     total: '3 リクエスト（自律継続中…）' },
+  { show: 'ap-internal-3', total: '3 リクエスト（内部ループ中…）' },
+  { show: 'ap-step-3',     total: '4 リクエスト ← 完了' }
+];
+let animIndex = 0;
+let animTimer = null;
+
+function resetAnim() {
+  animSteps.forEach(s => document.getElementById(s.show).classList.add('hidden'));
+  apTotal.textContent = '合計: 1 リクエスト ← 実行前';
+  animIndex = 0;
+}
+
+function stepAnim() {
+  if (animIndex >= animSteps.length) {
+    clearInterval(animTimer);
+    animTimer = null;
+    playBtn.disabled = false;
+    playBtn.textContent = '↺ リセット＆再生';
+    return;
+  }
+  const s = animSteps[animIndex];
+  document.getElementById(s.show).classList.remove('hidden');
+  apTotal.textContent = '合計: ' + s.total;
+  animIndex++;
+}
+
+playBtn.addEventListener('click', () => {
+  if (animTimer) return;
+  if (animIndex >= animSteps.length) {
+    resetAnim();
+  }
+  playBtn.disabled = true;
+  playBtn.textContent = '▶ 再生中…';
+  animTimer = setInterval(stepAnim, 600);
+});
+</script>
+</body>
+</html>

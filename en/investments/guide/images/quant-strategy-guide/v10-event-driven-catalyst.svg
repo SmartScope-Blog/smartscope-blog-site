@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="360" viewBox="0 0 920 360" role="img" aria-labelledby="title desc">
+  <title id="title">Event-Driven Strategy Concept</title>
+  <desc id="desc">Price reacts around earnings or M&amp;A events, creating a trading window.</desc>
+  <style>
+    .title { font: 700 26px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .axis { stroke: #888780; stroke-width: 1.6; }
+    .price { fill: none; stroke: #378add; stroke-width: 4; stroke-linecap: round; }
+    .event { stroke: #d85a30; stroke-width: 3; stroke-dasharray: 8 6; }
+    .label { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4f4f49; }
+    .box { fill: #f7f7f5; stroke: #d8d7d2; stroke-width: 1.2; }
+    .eventbox { fill: #fff5ef; stroke: #d85a30; stroke-width: 1.3; }
+  </style>
+  <rect width="920" height="360" fill="#ffffff" rx="28"/>
+  <text x="36" y="38" class="title">Event-Driven: Trade the Catalyst Day</text>
+  <g transform="translate(60 80)">
+    <line x1="0" y1="0" x2="0" y2="200" class="axis"/>
+    <line x1="0" y1="200" x2="640" y2="200" class="axis"/>
+    <polyline class="price" points="0,150 80,148 160,146 240,144 320,92 400,86 480,94 560,102 620,108"/>
+    <line x1="320" y1="18" x2="320" y2="200" class="event"/>
+    <text x="320" y="8" text-anchor="middle" class="label" fill="#d85a30">Event date</text>
+    <text x="10" y="220" class="label">Before event</text>
+    <text x="292" y="220" class="label">Right after</text>
+    <text x="542" y="220" class="label">After event</text>
+    <text x="-10" y="12" class="label">Price</text>
+  </g>
+
+  <rect x="724" y="84" width="150" height="42" rx="14" class="eventbox"/>
+  <text x="799" y="110" text-anchor="middle" class="label">Earnings</text>
+  <rect x="724" y="136" width="150" height="42" rx="14" class="eventbox"/>
+  <text x="799" y="162" text-anchor="middle" class="label">M&amp;A news</text>
+  <rect x="724" y="188" width="150" height="42" rx="14" class="eventbox"/>
+  <text x="799" y="214" text-anchor="middle" class="label">Index add</text>
+
+  <rect x="676" y="250" width="214" height="72" rx="18" class="box"/>
+  <text x="694" y="276" class="label">What to watch</text>
+  <text x="694" y="296" class="label">Not just what happened,</text>
+  <text x="694" y="316" class="label">but how to enter after it</text>
+</svg>

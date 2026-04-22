@@ -1,0 +1,410 @@
+/* ===== モバイル表示の完全修正 - 左端切れ問題対応 ===== */
+
+/* モバイル全般の修正 */
+@media screen and (max-width: 768px) {
+
+  /* ルート要素の基本設定 */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+  }
+
+  /* メインコンテナ全体の調整 - 左シフト問題修正 */
+  .md-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100vw !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* グリッドレイアウトの修正 - 左端切れ対策 */
+  .md-grid {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* メインコンテンツエリアの大幅な調整 */
+  .md-main {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  .md-main__inner {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* コンテンツ本体の調整 - 左端切れ防止 */
+  .md-content {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0.5rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+    position: relative !important;
+    left: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  .md-content__inner {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0.25rem !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* タイポグラフィの調整 */
+  .md-typeset {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* 全ての段落とコンテンツ要素 */
+  .md-typeset>* {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+
+  /* ヘッダーの調整 */
+  .md-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+    z-index: 4 !important; /* must be below drawer overlay (z-index:5) */
+  }
+
+  .md-header__inner {
+    padding: 0 0.5rem !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    width: 100vw !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* コンテンツのトップマージン（ヘッダー分） */
+  .md-main {
+    padding-top: 3rem !important;
+  }
+
+  /* ナビゲーションタブの調整 - 横スクロール可能に */
+  .md-tabs {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+  }
+
+  .md-tabs__list {
+    padding: 0 !important;
+    padding-left: 0.5rem !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  .md-tabs__item {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* テーブルの横スクロール対応 */
+  table,
+  .md-typeset table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* コードブロックの調整 */
+  pre,
+  .md-typeset pre {
+    margin: 1rem 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .md-typeset pre>code {
+    display: block !important;
+    overflow-x: auto !important;
+    padding: 1rem !important;
+  }
+
+  /* 見出しの調整 */
+  .md-typeset h1,
+  .md-typeset h2,
+  .md-typeset h3,
+  .md-typeset h4,
+  .md-typeset h5,
+  .md-typeset h6 {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* リストの調整 */
+  .md-typeset ul,
+  .md-typeset ol {
+    padding-left: 1.5rem !important;
+    margin-left: 0 !important;
+  }
+
+  /* カードやグリッドレイアウトの調整 */
+  .md-typeset .grid {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .md-typeset .grid.cards>* {
+    margin: 0.5rem 0 !important;
+  }
+
+  /* Admonition（注釈ブロック）の調整 */
+  .md-typeset .admonition,
+  .md-typeset details {
+    margin: 1rem 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* フッターの調整 */
+  .md-footer {
+    margin: 0 !important;
+    padding: 1rem !important;
+  }
+
+  .md-footer__inner {
+    padding: 0 1rem !important;
+  }
+
+  /* 検索ボックスの調整 */
+  .md-search__form {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .md-search__input {
+    font-size: 16px !important;
+    /* iOSのズーム防止 */
+  }
+
+  /* コンテンツ系要素の幅制限（ドロワーには影響しない） */
+  .md-content,
+  .md-content__inner,
+  .md-typeset {
+    box-sizing: border-box !important;
+  }
+
+  /* ドロワーオーバーレイ・サイドバーを確実に最前面に出す */
+  .md-overlay {
+    z-index: 200 !important;
+  }
+
+  .md-sidebar--primary {
+    z-index: 201 !important;
+  }
+
+  /* 画像やメディア要素の幅制限 */
+  img,
+  video,
+  iframe,
+  embed,
+  object {
+    max-width: calc(100vw - 2rem) !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  /* 横スクロールを防ぐための追加対策 + 左端切れ対策 */
+  .md-container,
+  .md-main,
+  .md-content {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    position: relative !important;
+    left: 0 !important;
+    margin-left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* モバイルメニューボタンの調整 */
+  .md-header__button.md-icon--menu {
+    display: flex !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* ヘッダータイトルの調整 */
+  .md-header__title {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0.5rem !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+
+  /* ヘッダーボタン全般 */
+  .md-header__button {
+    margin: 0 0.2rem !important;
+    position: relative !important;
+    left: 0 !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+  }
+}
+
+/* 小さい画面用の追加調整 */
+@media screen and (max-width: 480px) {
+
+  /* さらに小さいパディング */
+  .md-content {
+    padding: 0 0.5rem !important;
+    padding-left: 0.5rem !important;
+  }
+
+  .md-content__inner {
+    padding: 0.25rem !important;
+    padding-left: 0 !important;
+  }
+
+  /* フォントサイズの調整 */
+  .md-typeset {
+    font-size: 15px !important;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .md-typeset h2 {
+    font-size: 1.3rem !important;
+  }
+
+  .md-typeset h3 {
+    font-size: 1.1rem !important;
+  }
+
+  /* ナビゲーションリンクの調整 */
+  .md-nav__link {
+    padding: 0.75rem 0.5rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+
+/* Material for MkDocsのデフォルトスタイルを上書き */
+@media screen and (max-width: 76.1875em) {
+  /* ドロワーナビゲーションの無効化（コメントアウト: サブメニューのバックボタン動作バグの原因となっていたため） */
+  /* .md-nav__toggle {
+    display: none !important;
+  } */
+
+  /* サイドバードロワーの調整 */
+  .md-nav--primary .md-nav__title {
+    background-color: var(--md-primary-fg-color) !important;
+    color: var(--md-primary-bg-color) !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* メインコンテンツの位置調整 - 左端切れ防止 */
+  .md-content {
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 1rem !important;
+    /* transform removed: breaks position:fixed drawer overlay */
+    position: relative !important;
+    left: 0 !important;
+  }
+
+  /* TOC（右側の目次）を完全に非表示 */
+  .md-sidebar--secondary {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* 目次が使用していたスペースも削除 */
+  .md-main__inner {
+    grid-template-columns: 1fr !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* コンテンツを全幅に拡張 */
+  .md-content {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+
+}

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gh-stack Before / After</title>
+<style>
+:root {
+  --ink: #17324d;
+  --muted: #5b6472;
+  --paper: #ffffff;
+  --line: rgba(15, 23, 42, 0.12);
+  --blue: #378add;
+  --blue-fill: #e6f1fb;
+  --amber: #ba7517;
+  --amber-fill: #faeeda;
+  --green: #1d9e75;
+  --green-fill: #e1f5ee;
+  --red: #e24b4a;
+  --red-fill: #fcebeb;
+  --gray: #75736b;
+  --gray-fill: #f1efe8;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+[data-md-color-scheme="slate"] {
+  --ink: #eef2f7;
+  --muted: #c7d0da;
+  --paper: #181b20;
+  --panel: #222730;
+  --line: rgba(255, 255, 255, 0.12);
+  --blue-fill: #103454;
+  --amber-fill: #3d2b0e;
+  --green-fill: #0e3c31;
+  --red-fill: #471a1f;
+  --gray-fill: #2b3139;
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  background: #fff;
+  overflow: hidden;
+}
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  padding: 8px;
+}
+.widget {
+  width: min(100%, 780px);
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(55, 138, 221, 0.07), transparent 28%),
+    radial-gradient(circle at top right, rgba(29, 158, 117, 0.08), transparent 24%),
+    var(--paper);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.title {
+  font-size: 22px;
+  line-height: 1.18;
+  font-weight: 800;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.subtitle {
+  margin-top: 7px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 680px;
+  overflow-wrap: anywhere;
+}
+.board {
+  padding: 12px;
+}
+.compare {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.94);
+  min-width: 0;
+}
+.panel.before {
+  border-color: rgba(226, 75, 74, 0.22);
+}
+.panel.after {
+  border-color: rgba(29, 158, 117, 0.22);
+}
+.label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.before .label {
+  color: var(--red);
+}
+.after .label {
+  color: var(--green);
+}
+.panel-title {
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 800;
+  margin-bottom: 4px;
+  overflow-wrap: anywhere;
+}
+.panel-copy {
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+.canvas {
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  padding: 10px;
+}
+.before .canvas {
+  background: #fff7f7;
+  border-color: rgba(226, 75, 74, 0.22);
+}
+.after .canvas {
+  background: #f7fcfa;
+  border-color: rgba(29, 158, 117, 0.22);
+}
+.branch-name {
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.agent-list,
+.layer-list {
+  display: grid;
+  gap: 8px;
+}
+.agent,
+.layer {
+  border-radius: 12px;
+  padding: 8px 9px;
+  border: 1.4px solid;
+  min-width: 0;
+}
+.agent-head,
+.layer-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.agent-name,
+.layer-name {
+  font-size: 11px;
+  font-weight: 800;
+}
+.agent-task,
+.layer-task {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: right;
+}
+.agent-file,
+.layer-file {
+  font-size: 9.5px;
+  line-height: 1.35;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.a {
+  background: var(--blue-fill);
+  border-color: var(--blue);
+}
+.b {
+  background: var(--amber-fill);
+  border-color: var(--amber);
+}
+.c {
+  background: var(--green-fill);
+  border-color: var(--green);
+}
+.conflicts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.conflict {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 75, 74, 0.22);
+  background: var(--red-fill);
+  color: var(--red);
+  font-size: 9px;
+  font-weight: 800;
+}
+.arrow-col {
+  display: grid;
+  gap: 4px;
+  width: 16px;
+  justify-items: center;
+  align-self: center;
+}
+.arrow-col span {
+  display: block;
+  width: 2px;
+  height: 10px;
+  background: #93a0af;
+}
+.arrow-col i {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid #93a0af;
+}
+.layer-row {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 8px;
+}
+.main-bar {
+  margin-top: 9px;
+  border-radius: 12px;
+  border: 1px solid #b8b3a6;
+  background: var(--gray-fill);
+  color: var(--gray);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 8px 10px;
+  overflow-wrap: anywhere;
+}
+.auto-note {
+  margin-top: 8px;
+  padding: 7px 8px;
+  border-radius: 10px;
+  background: var(--gray-fill);
+  color: var(--gray);
+  font-size: 9px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+.stat {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 8px;
+  background: rgba(255, 255, 255, 0.96);
+}
+.stat-label {
+  font-size: 8.2px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.stat-value {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.before .stat-value.conflict {
+  color: var(--red);
+}
+.after .stat-value.conflict {
+  color: var(--green);
+}
+.caption {
+  margin-top: 8px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 520px) {
+  body {
+    padding: 6px;
+  }
+  .widget {
+    width: 560px;
+    transform: scale(0.74);
+    transform-origin: top left;
+    margin-bottom: -150px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="widget">
+    <div class="header">
+      <div class="eyebrow">Before / After Comparison</div>
+      <div class="title">Shared branch vs dependency-ordered stack</div>
+      <div class="subtitle">The difference is branch structure. Before, diffs pile onto one head. After, branches are stacked by dependency so the conflict surface moves into review order.</div>
+    </div>
+
+    <div class="board">
+      <div class="compare" role="img" aria-label="gh-stack Before After comparison">
+        <section class="panel before">
+          <div class="label">Before</div>
+          <div class="panel-title">Shared branch</div>
+          <div class="panel-copy">Three agents keep updating one head.</div>
+          <div class="canvas">
+            <div class="branch-name">feature/orders</div>
+            <div class="agent-list">
+              <div class="agent a">
+                <div class="agent-head">
+                  <span class="agent-name">Agent A</span>
+                </div>
+                <div class="agent-file">DB schema / model</div>
+              </div>
+              <div class="agent b">
+                <div class="agent-head">
+                  <span class="agent-name">Agent B</span>
+                </div>
+                <div class="agent-file">Order logic</div>
+              </div>
+              <div class="agent c">
+                <div class="agent-head">
+                  <span class="agent-name">Agent C</span>
+                </div>
+                <div class="agent-file">API / tests / config</div>
+              </div>
+            </div>
+            <div class="conflicts">
+              <span class="conflict">model</span>
+              <span class="conflict">db.yaml</span>
+              <span class="conflict">tests</span>
+            </div>
+            <div class="main-bar">main</div>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">CONFLICT</div>
+              <div class="stat-value conflict">3 files</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">PR SIZE</div>
+              <div class="stat-value">1 large</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">MERGE</div>
+              <div class="stat-value">manual</div>
+            </div>
+          </div>
+          <div class="caption">Conflicts concentrate on the shared head.</div>
+        </section>
+
+        <section class="panel after">
+          <div class="label">After</div>
+          <div class="panel-title">Ordered stack</div>
+          <div class="panel-copy">Foundation below, dependent work above.</div>
+          <div class="canvas">
+            <div class="layer-list">
+              <div class="layer-row">
+                <div class="arrow-col"><span></span><span></span><i></i></div>
+                <div class="layer c">
+                  <div class="layer-head">
+                    <span class="layer-name">Layer 3 · Agent C</span>
+                  </div>
+                  <div class="layer-file">feat/api-endpoints</div>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="arrow-col"><span></span><span></span><i></i></div>
+                <div class="layer b">
+                  <div class="layer-head">
+                    <span class="layer-name">Layer 2 · Agent B</span>
+                  </div>
+                  <div class="layer-file">feat/order-logic</div>
+                </div>
+              </div>
+              <div class="layer a">
+                <div class="layer-head">
+                  <span class="layer-name">Layer 1 · Agent A</span>
+                </div>
+                <div class="layer-file">feat/db-schema</div>
+              </div>
+            </div>
+            <div class="auto-note">auto rebase: lower changes propagate upward</div>
+            <div class="main-bar">main</div>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">CONFLICT</div>
+              <div class="stat-value conflict">0 structural</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">PR SIZE</div>
+              <div class="stat-value">3 small</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">REBASE</div>
+              <div class="stat-value">auto</div>
+            </div>
+          </div>
+          <div class="caption">Conflict shifts into branch order.</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

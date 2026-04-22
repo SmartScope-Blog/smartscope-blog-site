@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex app Automation vs Notifications</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #202125);
+  --color-text-secondary: var(--md-default-fg-color--light, #5f6368);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f7f7f8);
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-accent: #c2410c;
+  --color-accent-soft: #fff1e8;
+  --color-blue: #2563eb;
+  --color-blue-soft: #eef4ff;
+  --color-green: #15803d;
+  --color-green-soft: #ecfdf3;
+  --color-violet: #7c3aed;
+  --color-violet-soft: #f4f0ff;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #e7e5df;
+  --color-text-secondary: #b8b4ab;
+  --color-background-primary: #111317;
+  --color-background-secondary: #1a1d22;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-accent-soft: #3a1d12;
+  --color-blue-soft: #142338;
+  --color-green-soft: #12291b;
+  --color-violet-soft: #23183a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: var(--font-sans);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+.widget {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.header {
+  margin-bottom: 12px;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.scenario-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 10px;
+}
+.scenario-btn {
+  border: 1px solid var(--color-border);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.scenario-btn.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 12px;
+}
+.card.notification {
+  background: var(--color-blue-soft);
+  border-color: var(--color-blue);
+}
+.card.automation {
+  background: var(--color-green-soft);
+  border-color: var(--color-green);
+}
+.card-head {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: start;
+  gap: 10px;
+  min-height: 60px;
+  margin-bottom: 10px;
+}
+.icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+}
+.notification .icon {
+  background: rgba(37, 99, 235, 0.14);
+  color: var(--color-blue);
+}
+.automation .icon {
+  background: rgba(21, 128, 61, 0.14);
+  color: var(--color-green);
+}
+.card-title {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.card-desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+.rows {
+  display: grid;
+  gap: 7px;
+}
+.row {
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+.row-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+.row-value {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.bottom-stack {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.request-panel,
+.traits-panel {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 12px;
+  background: var(--color-background-secondary);
+}
+.request-panel {
+  background: var(--color-violet-soft);
+  border-color: var(--color-violet);
+}
+.box-title {
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+.request-text {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.request-note {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--color-background-primary);
+}
+@media (max-width: 720px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="header">
+    <div class="eyebrow">Codex app Automation</div>
+    <div class="title">How it differs from notifications</div>
+    <div class="subtitle">Switch scenarios to compare a simple alert with scheduled agent work that filters and returns only what matters.</div>
+  </div>
+
+  <div class="scenario-bar">
+    <button class="scenario-btn active" data-scenario="deploy">Deploy Watch</button>
+    <button class="scenario-btn" data-scenario="triage">Morning Triage</button>
+    <button class="scenario-btn" data-scenario="report">Weekly Brief</button>
+  </div>
+
+  <div class="compare-grid">
+    <section class="card notification">
+      <div class="card-head">
+        <div class="icon">!</div>
+        <div>
+          <div class="card-title">Standard Notification</div>
+          <div class="card-desc">It reports an event. A human decides what to do next.</div>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-label">What it does</div>
+          <div class="row-value" id="notification-action"></div>
+        </div>
+        <div class="row">
+          <div class="row-label">What comes back</div>
+          <div class="row-value" id="notification-output"></div>
+        </div>
+        <div class="row">
+          <div class="row-label">What the human does next</div>
+          <div class="row-value" id="notification-next"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card automation">
+      <div class="card-head">
+        <div class="icon">A</div>
+        <div>
+          <div class="card-title">Codex app Automation</div>
+          <div class="card-desc">It checks on a schedule, filters results, and returns only when the rule says it should.</div>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-label">What it does</div>
+          <div class="row-value" id="automation-action"></div>
+        </div>
+        <div class="row">
+          <div class="row-label">What comes back</div>
+          <div class="row-value" id="automation-output"></div>
+        </div>
+        <div class="row">
+          <div class="row-label">What the human does next</div>
+          <div class="row-value" id="automation-next"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="bottom-stack">
+    <section class="request-panel">
+      <div class="box-title">An Automation-style request in this scenario</div>
+      <div class="request-text" id="request-text"></div>
+      <div class="request-note" id="request-note"></div>
+    </section>
+
+    <section class="traits-panel">
+      <div class="box-title">Work traits that fit Automation</div>
+      <div class="chips" id="chips"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function() {
+  var scenarios = {
+    deploy: {
+      notification: {
+        action: "It alerts you the moment a deploy fails.",
+        output: "A one-shot event saying the run failed.",
+        next: "Open logs, find the failed job, and share context."
+      },
+      automation: {
+        action: "It checks every few minutes, stays silent while running, and returns only on failure.",
+        output: "A short summary with the failed job and the run URL.",
+        next: "Review only when action is actually needed."
+      },
+      request: "Check every five minutes. Stay silent while it is running. If it fails, return the failed job and run URL only.",
+      requestNote: "You can add a second rule such as 'if it succeeds, return one line only' without changing the overall pattern.",
+      chips: ["Scheduled watch", "Silent while running", "Return on failure", "Filtered output"]
+    },
+    triage: {
+      notification: {
+        action: "It tells you that new issues or PRs arrived.",
+        output: "A stream of incoming events or counts.",
+        next: "Decide priority and who should pick them up."
+      },
+      automation: {
+        action: "It reviews the list each morning and sorts it into urgent, today, and later.",
+        output: "A compressed triage brief with the highest-priority items first.",
+        next: "Spend time on only the items that deserve attention now."
+      },
+      request: "Every morning at 9, review the queue and return only the top three items that need a response today.",
+      requestNote: "You can add rules like 'low-priority items may be title only' to keep the brief short and stable.",
+      chips: ["Daily review", "Priority sorting", "List compression", "First-pass judgment"]
+    },
+    report: {
+      notification: {
+        action: "It keeps sending small updates whenever events happen.",
+        output: "A scattered stream of fine-grained updates.",
+        next: "Rebuild the story yourself later."
+      },
+      automation: {
+        action: "It checks at week end and turns changes into one usable brief.",
+        output: "A weekly summary of wins, blockers, and next questions.",
+        next: "Decide priorities instead of rewriting notes."
+      },
+      request: "Every Friday, summarize three wins, two blockers, and two questions for next week. Ignore low-value log noise.",
+      requestNote: "If you also ask for links or evidence at the end, the output becomes easier to reuse in review meetings.",
+      chips: ["Weekly summary", "Delta compression", "Decision support", "Reusable brief"]
+    }
+  };
+
+  function render(key) {
+    var data = scenarios[key];
+    document.getElementById("notification-action").textContent = data.notification.action;
+    document.getElementById("notification-output").textContent = data.notification.output;
+    document.getElementById("notification-next").textContent = data.notification.next;
+    document.getElementById("automation-action").textContent = data.automation.action;
+    document.getElementById("automation-output").textContent = data.automation.output;
+    document.getElementById("automation-next").textContent = data.automation.next;
+    document.getElementById("request-text").textContent = data.request;
+    document.getElementById("request-note").textContent = data.requestNote;
+
+    var chips = document.getElementById("chips");
+    chips.innerHTML = "";
+    data.chips.forEach(function(text) {
+      var chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = text;
+      chips.appendChild(chip);
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll(".scenario-btn"), function(btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-scenario") === key);
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".scenario-btn"), function(btn) {
+    btn.addEventListener("click", function() {
+      render(btn.getAttribute("data-scenario"));
+    });
+  });
+
+  render("deploy");
+
+  try {
+    var scheme = window.parent.document.body.getAttribute("data-md-color-scheme");
+    if (scheme) document.documentElement.setAttribute("data-md-color-scheme", scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === "data-md-color-scheme") {
+          var s = window.parent.document.body.getAttribute("data-md-color-scheme");
+          document.documentElement.setAttribute("data-md-color-scheme", s || "");
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ["data-md-color-scheme"] });
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

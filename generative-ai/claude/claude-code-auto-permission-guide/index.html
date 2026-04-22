@@ -1,0 +1,400 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="高CTRクエリの意図に合わせ、Shift+Tab切り替えとCLIフラグ、権限リスト整備で安全な自動許可運用を5分で構築する。"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/generative-ai/claude/claude-code-auto-permission-guide/"><link rel="prev" href="../claude-code-reference-guide/"><link rel="next" href="../claude-code-auto-mode-guide/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../../en/generative-ai/claude/claude-code-auto-permission-guide/" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude Code自動承認を安全に運用する3ステップ - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude Code自動承認を安全に運用する3ステップ"><meta property="og:description" content="高CTRクエリの意図に合わせ、Shift+Tab切り替えとCLIフラグ、権限リスト整備で安全な自動許可運用を5分で構築する。"><meta property="og:url" content="https://smartscope.blog/generative-ai/claude/claude-code-auto-permission-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude Code自動承認を安全に運用する3ステップ"><meta name="twitter:description" content="高CTRクエリの意図に合わせ、Shift+Tab切り替えとCLIフラグ、権限リスト整備で安全な自動許可運用を5分で構築する。"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code自動承認を安全に運用する3ステップ" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude Code自動承認を安全に運用する3ステップ </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../../en/generative-ai/claude/claude-code-auto-permission-guide/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item md-tabs__item--active"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked><div class="md-nav__link md-nav__container"><a href="../../" class="md-nav__link "><span class="md-ellipsis"> 🤖 Generative AI </span></a><label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3"><span class="md-nav__icon md-icon"></span> 🤖 Generative AI </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../foundations/" class="md-nav__link"><span class="md-ellipsis"> 🧱 基礎・概念ハブ </span></a></li><li class="md-nav__item"><a href="../../methodology/" class="md-nav__link"><span class="md-ellipsis"> 🧪 開発手法・文化 </span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked><div class="md-nav__link md-nav__container"><a href="../" class="md-nav__link "><span class="md-ellipsis"> Claude </span></a><label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3_4"><span class="md-nav__icon md-icon"></span> Claude </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../claude-code-hub/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Claude Codeハブ </span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-pptx-skill-practical-guide/" class="md-nav__link"><span class="md-ellipsis"> Claude Skills </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-md-introduction/" class="md-nav__link"><span class="md-ellipsis"> CLAUDE.md設計 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_5" checked><label class="md-nav__link" for="__nav_3_4_5" id="__nav_3_4_5_label" tabindex="0"><span class="md-ellipsis"> Claude Code基本 </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_5_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3_4_5"><span class="md-nav__icon md-icon"></span> Claude Code基本 </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../claude-code-reference-guide/" class="md-nav__link"><span class="md-ellipsis"> 📋 コマンドリファレンス </span></a></li><li class="md-nav__item md-nav__item--active"><input class="md-nav__toggle md-toggle" type="checkbox" id="__toc"><label class="md-nav__link md-nav__link--active" for="__toc"><span class="md-ellipsis"> 自動承認設定ガイド </span><span class="md-nav__icon md-icon"></span></label><a href="./" class="md-nav__link md-nav__link--active"><span class="md-ellipsis"> 自動承認設定ガイド </span></a><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#なぜこの問題が今重要か" class="md-nav__link"><span class="md-ellipsis"> なぜこの問題が今重要か </span></a></li><li class="md-nav__item"><a href="#解決ステップ概要" class="md-nav__link"><span class="md-ellipsis"> 解決ステップ概要 </span></a></li><li class="md-nav__item"><a href="#ステップ1-モード切替で自動許可を限定する" class="md-nav__link"><span class="md-ellipsis"> ステップ1: モード切替で自動許可を限定する </span></a></li><li class="md-nav__item"><a href="#ステップ2-cliフラグをルール化して使う" class="md-nav__link"><span class="md-ellipsis"> ステップ2: CLIフラグをルール化して使う </span></a><nav class="md-nav" aria-label="ステップ2: CLIフラグをルール化して使う"><ul class="md-nav__list"><li class="md-nav__item"><a href="#組織でのバイパス制限" class="md-nav__link"><span class="md-ellipsis"> 組織でのバイパス制限 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#ステップ3-許可拒否リストでガードレールを固定する" class="md-nav__link"><span class="md-ellipsis"> ステップ3: 許可/拒否リストでガードレールを固定する </span></a></li><li class="md-nav__item"><a href="#compaction-長時間自動承認セッションの安定化" class="md-nav__link"><span class="md-ellipsis"> Compaction: 長時間自動承認セッションの安定化 </span></a></li><li class="md-nav__item"><a href="#よくある落とし穴と対処" class="md-nav__link"><span class="md-ellipsis"> よくある落とし穴と対処 </span></a></li><li class="md-nav__item"><a href="#次に読む関連記事" class="md-nav__link"><span class="md-ellipsis"> 次に読む（関連記事） </span></a></li></ul></nav></li><li class="md-nav__item"><a href="../claude-code-auto-mode-guide/" class="md-nav__link"><span class="md-ellipsis"> Auto Mode完全ガイド </span></a></li><li class="md-nav__item"><a href="../claude-code-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> 📖 完全ガイド </span></a></li><li class="md-nav__item"><a href="../claude-code-installation-guide/" class="md-nav__link"><span class="md-ellipsis"> 🚀 インストール </span></a></li><li class="md-nav__item"><a href="../claude-code-image-guide/" class="md-nav__link"><span class="md-ellipsis"> 🖼️ 画像添付ガイド </span></a></li><li class="md-nav__item"><a href="../claude-code-control-best-practices/" class="md-nav__link"><span class="md-ellipsis"> Control Best Practices </span></a></li><li class="md-nav__item"><a href="../claude-code-troubleshooting-guide/" class="md-nav__link"><span class="md-ellipsis"> 🆘 トラブルシューティング </span></a></li><li class="md-nav__item"><a href="../claude-code-buddy-ai-companion/" class="md-nav__link"><span class="md-ellipsis"> Claude Codeの /buddy とは何か──ターミナルに住みつくAIペットの正体 </span></a></li><li class="md-nav__item"><a href="../claude-code-oom-kill-wsl2-troubleshooting/" class="md-nav__link"><span class="md-ellipsis"> OOM Kill対策（WSL2） </span></a></li><li class="md-nav__item"><a href="../claude-code-docker-guide/" class="md-nav__link"><span class="md-ellipsis"> 🐳 Docker </span></a></li><li class="md-nav__item"><a href="../claude-code-remote-access/" class="md-nav__link"><span class="md-ellipsis"> 🌐 リモートアクセス </span></a></li><li class="md-nav__item"><a href="../claude-code-remote-control/" class="md-nav__link"><span class="md-ellipsis"> 🎮 Remote Control </span></a></li><li class="md-nav__item"><a href="../claude-code-desktop-ssh-wsl2-setup-guide/" class="md-nav__link"><span class="md-ellipsis"> 🪟 Desktop SSH × WSL2 セットアップ </span></a></li><li class="md-nav__item"><a href="../claude-code-windows-native-installation/" class="md-nav__link"><span class="md-ellipsis"> 🪟 Windowsネイティブインストール </span></a></li><li class="md-nav__item"><a href="../claude-code-course-guide/" class="md-nav__link"><span class="md-ellipsis"> 🎓 公式無料コース解説 </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-code-hooks-guide/" class="md-nav__link"><span class="md-ellipsis"> Claude Code高度な機能 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-opus-4-1-github-copilot-integration-2025/" class="md-nav__link"><span class="md-ellipsis"> Claudeモデル </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5"><div class="md-nav__link md-nav__container"><a href="../../github-copilot/" class="md-nav__link "><span class="md-ellipsis"> GitHub Copilot </span></a><label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_5"><span class="md-nav__icon md-icon"></span> GitHub Copilot </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../github-copilot/github-copilot-custom-instructions-guide/" class="md-nav__link"><span class="md-ellipsis"> インストラクション体系 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../github-copilot/github-copilot-coding-agent-guide/" class="md-nav__link"><span class="md-ellipsis"> エージェント機能 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-hooks-guide/" class="md-nav__link"><span class="md-ellipsis"> Hooks完全ガイド </span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-premium-request-optimization/" class="md-nav__link"><span class="md-ellipsis"> プレミアムリクエスト節約術 </span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-methodology/" class="md-nav__link"><span class="md-ellipsis"> 🔧 方法論ガイド </span></a></li><li class="md-nav__item"><a href="../../github-copilot-cli-release-2025/" class="md-nav__link"><span class="md-ellipsis"> ⚡ GitHub Copilot CLI </span></a></li><li class="md-nav__item"><a href="../../github-copilot/copilot-cli-ga-enterprise-procurement-analysis/" class="md-nav__link"><span class="md-ellipsis"> 🏢 Copilot CLI GA 調達構造分析 </span></a></li><li class="md-nav__item"><a href="../../github-copilot/copilot-cli-rubber-duck/" class="md-nav__link"><span class="md-ellipsis"> 🦆 Copilot CLI Rubber Duck【マルチモデル批評】 </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6"><div class="md-nav__link md-nav__container"><a href="../../chatgpt/" class="md-nav__link "><span class="md-ellipsis"> ChatGPT / OpenAI </span></a><label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_6"><span class="md-nav__icon md-icon"></span> ChatGPT / OpenAI </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-overview-and-quickstart/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI 基本 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-approval-modes-no-approval/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI 承認・権限 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-best-practices/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI 運用・自動化 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-network-restrictions-solution/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI トラブルシューティング </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-vs-claude-code/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI 比較 </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/gpt-5-3-codex-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> GPT-5 / Codex モデル </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/sora-2-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> Sora 2 (動画生成) </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7"><div class="md-nav__link md-nav__container"><a href="../../grok/" class="md-nav__link "><span class="md-ellipsis"> Grok </span></a></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_7"><span class="md-nav__icon md-icon"></span> Grok </label><ul class="md-nav__list" data-md-scrollfix></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8"><div class="md-nav__link md-nav__container"><a href="../../google-gemini/" class="md-nav__link "><span class="md-ellipsis"> Google Gemini </span></a><label class="md-nav__link " for="__nav_3_8" id="__nav_3_8_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_8"><span class="md-nav__icon md-icon"></span> Google Gemini </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../google-gemini/notebooklm-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> NotebookLM完全ガイド </span></a></li><li class="md-nav__item"><a href="../../google-gemini/gemini-3-1-pro-benchmark-analysis-2026/" class="md-nav__link"><span class="md-ellipsis"> Gemini 3.1 Proベンチマーク分析 </span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../google-gemini/antigravity-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> Antigravity 関連記事 </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#なぜこの問題が今重要か" class="md-nav__link"><span class="md-ellipsis"> なぜこの問題が今重要か </span></a></li><li class="md-nav__item"><a href="#解決ステップ概要" class="md-nav__link"><span class="md-ellipsis"> 解決ステップ概要 </span></a></li><li class="md-nav__item"><a href="#ステップ1-モード切替で自動許可を限定する" class="md-nav__link"><span class="md-ellipsis"> ステップ1: モード切替で自動許可を限定する </span></a></li><li class="md-nav__item"><a href="#ステップ2-cliフラグをルール化して使う" class="md-nav__link"><span class="md-ellipsis"> ステップ2: CLIフラグをルール化して使う </span></a><nav class="md-nav" aria-label="ステップ2: CLIフラグをルール化して使う"><ul class="md-nav__list"><li class="md-nav__item"><a href="#組織でのバイパス制限" class="md-nav__link"><span class="md-ellipsis"> 組織でのバイパス制限 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#ステップ3-許可拒否リストでガードレールを固定する" class="md-nav__link"><span class="md-ellipsis"> ステップ3: 許可/拒否リストでガードレールを固定する </span></a></li><li class="md-nav__item"><a href="#compaction-長時間自動承認セッションの安定化" class="md-nav__link"><span class="md-ellipsis"> Compaction: 長時間自動承認セッションの安定化 </span></a></li><li class="md-nav__item"><a href="#よくある落とし穴と対処" class="md-nav__link"><span class="md-ellipsis"> よくある落とし穴と対処 </span></a></li><li class="md-nav__item"><a href="#次に読む関連記事" class="md-nav__link"><span class="md-ellipsis"> 次に読む（関連記事） </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><nav class="md-path" aria-label="ナビゲーション"><ol class="md-path__list"><li class="md-path__item"><a href="../../.." class="md-path__link"><span class="md-ellipsis"> Top </span></a></li><li class="md-path__item"><a href="../../" class="md-path__link"><span class="md-ellipsis"> 🤖 Generative AI </span></a></li><li class="md-path__item"><a href="../" class="md-path__link"><span class="md-ellipsis"> Claude </span></a></li><li class="md-path__item"><a href="../claude-code-reference-guide/" class="md-path__link"><span class="md-ellipsis"> Claude Code基本 </span></a></li></ol></nav><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:automation" class="md-tag">automation</a><a href="../../../tags/#tag:claude-code" class="md-tag">claude-code</a><a href="../../../tags/#tag:permissions" class="md-tag">permissions</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code 完全ガイド</a></p><h1 id="claude-code自動承認を安全に運用する3ステップ">Claude Code自動承認を安全に運用する3ステップ<a class="headerlink" href="#claude-code自動承認を安全に運用する3ステップ" title="Permanent link">&para;</a></h1><div class="admonition abstract"><p class="admonition-title">この記事の対象者</p><ul><li>Claude Codeの基本操作を理解し、自動許可モードを導入したい中級エンジニア</li></ul></div><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><ol><li>タスク開始前に自動許可モードへ即切り替えできる</li><li><code>--dangerously-skip-permissions</code>の利用範囲を明文化できる</li><li>許可/拒否リストでリスクの高いツールをブロックできる</li></ol><div class="admonition info"><p class="admonition-title">2026-04 対応バージョン</p><p>本ガイドは以下の環境を前提に検証しています。</p><table><thead><tr><th>コンポーネント</th><th>バージョン / 備考</th></tr></thead><tbody><tr><td><strong>Claude Code</strong></td><td>v2.1.80+（Compaction・VS Code統合・Checkpoint・Auto mode対応）</td></tr><tr><td><strong>Claude Opus 4.6</strong></td><td>1Mコンテキスト（標準提供・betaヘッダー不要）、128K出力、Agent Teams、Adaptive Thinking</td></tr><tr><td><strong>Claude Sonnet 4.6</strong></td><td>デフォルトコーディングモデル（Sonnet 4.5の後継）</td></tr><tr><td><strong>Hooks</strong></td><td><a href="https://docs.anthropic.com/en/docs/claude-code/hooks">複数イベントタイプ</a>対応（PreToolUse / PostToolUse / SubagentStop / <strong>PermissionDenied</strong> / <strong>defer判定</strong>）</td></tr><tr><td><strong>auto mode</strong></td><td>2026-03-24 Research Preview（<strong>Team / Enterprise / API</strong>、Pro/Max未対応）→ <a href="../claude-code-auto-mode-guide/">詳細記事</a><sup id="fnref:auto1"><a class="footnote-ref" href="#fn:auto1">1</a></sup></td></tr></tbody></table></div><h2 id="なぜこの問題が今重要か">なぜこの問題が今重要か<a class="headerlink" href="#なぜこの問題が今重要か" title="Permanent link">&para;</a></h2><p>Claude Code v2.0以降、自動許可モードの機能が拡充され利用者が増えている一方、設定ミスによる意図しないコマンド実行のリスクも高まっています。高速化と安全運用を両立する運用ルールの整備が急務です。</p><div class="admonition info"><p class="admonition-title">90秒版との連携</p><ul><li>即効Tipsは別記事 <a href="../claude-code-auto-permission-quick-tips/">Claude Code自動承認クイックTips（90秒実践）</a> に集約しました。</li><li>本ガイドは体系的な手順を提供し、クイックTipsは<strong>着手前チェックリスト</strong>として使い分ける想定です。</li></ul></div><h2 id="解決ステップ概要">解決ステップ概要<a class="headerlink" href="#解決ステップ概要" title="Permanent link">&para;</a></h2><p>Claude Codeがコマンドを実行しようとしたとき、3つの関門を順に通過する必要があります。以下のシミュレーターで、コマンドごとの挙動を確認できます。</p><div id="gate-simulator"><style>
+.gs-widget{font-family:var(--md-text-font-family);max-width:100%;margin:1.5em 0}
+.gs-cmds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.gs-cmd{font-family:var(--md-code-font-family);font-size:.8rem;padding:6px 14px;border-radius:6px;border:1px solid var(--md-default-fg-color--lighter);background:var(--md-default-bg-color);color:var(--md-typeset-color);cursor:pointer;transition:all .2s}
+.gs-cmd:hover{border-color:#2196f3;background:rgba(33,150,243,0.08)}
+.gs-cmd.active{border-color:#2196f3;background:rgba(33,150,243,0.12);color:#2196f3;font-weight:600}
+.gs-gates{display:flex;align-items:center;gap:0;margin:12px 0;overflow-x:auto;padding-bottom:4px}
+.gs-gate{flex:1;min-width:120px;text-align:center;padding:14px 8px;border-radius:8px;border:1.5px solid var(--md-default-fg-color--lighter);background:var(--md-code-bg-color);transition:all .3s;position:relative}
+.gs-gate-num{font-size:.7rem;color:var(--md-default-fg-color--lighter);display:block;margin-bottom:2px}
+.gs-gate-title{font-size:.82rem;font-weight:600;color:var(--md-typeset-color);margin-bottom:4px}
+.gs-gate-status{font-size:.75rem;font-weight:600;padding:2px 10px;border-radius:10px;display:inline-block}
+.gs-arrow{font-size:1.4rem;color:var(--md-default-fg-color--lighter);padding:0 4px;flex-shrink:0}
+.gs-pass{border-color:rgba(76,175,80,0.4);background:rgba(76,175,80,0.06)}
+.gs-pass .gs-gate-status{color:#4caf50;background:rgba(76,175,80,0.12)}
+.gs-block{border-color:rgba(244,67,54,0.4);background:rgba(244,67,54,0.06)}
+.gs-block .gs-gate-status{color:#f44336;background:rgba(244,67,54,0.12)}
+.gs-grey{border-color:var(--md-default-fg-color--lighter);background:var(--md-code-bg-color)}
+.gs-grey .gs-gate-status{color:var(--md-default-fg-color--lighter);background:var(--md-code-bg-color)}
+.gs-result{margin-top:12px;padding:12px 16px;border-radius:8px;text-align:center;font-size:.9rem;font-weight:700;transition:all .3s}
+.gs-result-exec{background:rgba(76,175,80,0.1);color:#4caf50;border:1px solid rgba(76,175,80,0.3)}
+.gs-result-prompt{background:rgba(255,152,0,0.1);color:#ff9800;border:1px solid rgba(255,152,0,0.3)}
+.gs-result-blocked{background:rgba(244,67,54,0.1);color:#f44336;border:1px solid rgba(244,67,54,0.3)}
+.gs-result-empty{background:var(--md-code-bg-color);color:var(--md-default-fg-color--light);border:1px solid var(--md-default-fg-color--lighter)}
+@media(max-width:600px){.gs-gates{flex-direction:column;gap:0}.gs-arrow{transform:rotate(90deg);padding:2px 0}}
+</style><div class="gs-widget"><div class="gs-cmds" id="gs-cmds"></div><div class="gs-gates" id="gs-gates"></div><div class="gs-result gs-result-empty" id="gs-result">コマンドを選択してゲート通過を確認</div></div><script>
+(function(){
+var gateNames=["Gate 1: Mode","Gate 2: Hooks","Gate 3: allow/deny"];
+var commands=[
+{label:"npm run test",gates:[
+{status:"pass",text:"accept editsで通過"},
+{status:"pass",text:"Hookが許可"},
+{status:"pass",text:"allowにマッチ"}
+],result:"EXECUTE（実行）",resultCls:"gs-result-exec"},
+{label:"eslint --fix src/",gates:[
+{status:"pass",text:"accept editsで通過"},
+{status:"pass",text:"Hookが許可"},
+{status:"pass",text:"allowにマッチ"}
+],result:"EXECUTE（実行）",resultCls:"gs-result-exec"},
+{label:"rm -rf node_modules/",gates:[
+{status:"block",text:"defaultモードで停止"},
+{status:"grey",text:"到達しない"},
+{status:"grey",text:"到達しない"}
+],result:"承認プロンプト表示",resultCls:"gs-result-prompt"},
+{label:"curl https://外部API",gates:[
+{status:"pass",text:"モード通過"},
+{status:"pass",text:"Hook制限なし"},
+{status:"block",text:"denyにマッチ"}
+],result:"BLOCKED（拒否）",resultCls:"gs-result-blocked"},
+{label:"git push origin main",gates:[
+{status:"pass",text:"モード通過"},
+{status:"block",text:"Hookが拒否"},
+{status:"grey",text:"到達しない"}
+],result:"BLOCKED（拒否）",resultCls:"gs-result-blocked"}
+];
+var sel=-1;
+function render(){
+var cmdsEl=document.getElementById("gs-cmds");
+cmdsEl.innerHTML="";
+commands.forEach(function(c,i){
+var b=document.createElement("button");
+b.className="gs-cmd"+(i===sel?" active":"");
+b.textContent=c.label;
+b.onclick=function(){sel=i;render();};
+cmdsEl.appendChild(b);
+});
+var gatesEl=document.getElementById("gs-gates");
+gatesEl.innerHTML="";
+for(var g=0;g<3;g++){
+if(g>0){
+var arrow=document.createElement("span");
+arrow.className="gs-arrow";
+arrow.textContent="→";
+gatesEl.appendChild(arrow);
+}
+var d=document.createElement("div");
+var cls="gs-gate";
+var statusText="—";
+if(sel>=0){
+var gate=commands[sel].gates[g];
+cls+=" gs-"+gate.status;
+statusText=gate.text;
+}else{
+cls+=" gs-grey";
+}
+d.className=cls;
+d.innerHTML='<span class="gs-gate-num">'+gateNames[g]+'</span><div class="gs-gate-title">'+(g===0?"モード判定":g===1?"Hook検査":"allow/denyリスト")+'</div><span class="gs-gate-status">'+statusText+'</span>';
+gatesEl.appendChild(d);
+}
+var resEl=document.getElementById("gs-result");
+if(sel<0){
+resEl.className="gs-result gs-result-empty";
+resEl.textContent="コマンドを選択してゲート通過を確認";
+}else{
+var c=commands[sel];
+resEl.className="gs-result "+c.resultCls;
+resEl.textContent=c.result;
+}
+}
+render();
+})();
+</script></div><h2 id="ステップ1-モード切替で自動許可を限定する">ステップ1: モード切替で自動許可を限定する<a class="headerlink" href="#ステップ1-モード切替で自動許可を限定する" title="Permanent link">&para;</a></h2><p>自動許可の範囲はモードで決まります。Shift+Tabでモードを切り替え、タスクのリスクに応じた適切なモードを選択してください。</p><div id="mode-cycle-sim"><style>
+.mc-widget{font-family:var(--md-text-font-family);max-width:100%;margin:1.5em 0}
+.mc-btn-wrap{text-align:center;margin-bottom:16px}
+.mc-shift-btn{font-family:var(--md-text-font-family);font-size:.9rem;padding:10px 28px;border-radius:8px;border:2px solid #2196f3;background:rgba(33,150,243,0.08);color:#2196f3;cursor:pointer;font-weight:700;transition:all .15s}
+.mc-shift-btn:hover{background:rgba(33,150,243,0.18);transform:scale(1.03)}
+.mc-shift-btn:active{transform:scale(0.97)}
+.mc-terminal{background:#1a1a2e;border-radius:10px;padding:20px 24px;margin-bottom:16px;text-align:center;border:1px solid #333}
+.mc-mode-icon{font-size:2rem;margin-bottom:6px}
+.mc-mode-name{font-family:var(--md-code-font-family);font-size:1.1rem;color:#e0e0e0;font-weight:700}
+.mc-mode-desc{font-size:.78rem;color:#999;margin-top:4px}
+.mc-ops{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media(max-width:480px){.mc-ops{grid-template-columns:1fr}}
+.mc-op{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:6px;background:var(--md-code-bg-color);border:1px solid var(--md-default-fg-color--lighter)}
+.mc-op-name{font-size:.82rem;color:var(--md-typeset-color);font-weight:500}
+.mc-tag{font-size:.72rem;padding:3px 10px;border-radius:12px;font-weight:600;white-space:nowrap}
+.mc-tag-auto{background:rgba(76,175,80,0.12);color:#4caf50;border:1px solid rgba(76,175,80,0.3)}
+.mc-tag-approval{background:rgba(255,152,0,0.12);color:#ff9800;border:1px solid rgba(255,152,0,0.3)}
+.mc-tag-disabled{background:rgba(244,67,54,0.12);color:#f44336;border:1px solid rgba(244,67,54,0.3)}
+.mc-dots{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.mc-dot{width:10px;height:10px;border-radius:50%;background:var(--md-default-fg-color--lighter);transition:all .3s}
+.mc-dot.active{background:#2196f3;box-shadow:0 0 0 3px rgba(33,150,243,0.25)}
+</style><div class="mc-widget"><div class="mc-btn-wrap"><button class="mc-shift-btn" id="mc-btn" onclick="mcCycle()">Shift + Tab を押す</button></div><div class="mc-terminal"><div class="mc-mode-icon" id="mc-icon">🔵</div><div class="mc-mode-name" id="mc-name">default</div><div class="mc-mode-desc" id="mc-desc">標準モード — 全操作に承認が必要</div></div><div class="mc-ops" id="mc-ops"></div><div class="mc-dots" id="mc-dots"></div></div><script>
+(function(){
+var modes=[
+{name:"default",icon:"🔵",desc:"標準モード — 全操作に承認が必要",ops:[
+{name:"ファイル編集",tag:"承認が必要",cls:"mc-tag-approval"},
+{name:"Bash実行",tag:"承認が必要",cls:"mc-tag-approval"},
+{name:"ファイル読み取り",tag:"自動",cls:"mc-tag-auto"},
+{name:"検索",tag:"自動",cls:"mc-tag-auto"}
+]},
+{name:"accept edits",icon:"⏵⏵",desc:"編集自動受諾 — ファイル編集のみ自動許可",ops:[
+{name:"ファイル編集",tag:"自動",cls:"mc-tag-auto"},
+{name:"Bash実行",tag:"承認が必要",cls:"mc-tag-approval"},
+{name:"ファイル読み取り",tag:"自動",cls:"mc-tag-auto"},
+{name:"検索",tag:"自動",cls:"mc-tag-auto"}
+]},
+{name:"plan",icon:"⏸",desc:"計画モード — 読み取りと検索のみ実行",ops:[
+{name:"ファイル編集",tag:"実行しない",cls:"mc-tag-disabled"},
+{name:"Bash実行",tag:"実行しない",cls:"mc-tag-disabled"},
+{name:"ファイル読み取り",tag:"自動",cls:"mc-tag-auto"},
+{name:"検索",tag:"自動",cls:"mc-tag-auto"}
+]}
+];
+var cur=0;
+function render(){
+var m=modes[cur];
+document.getElementById("mc-icon").textContent=m.icon;
+document.getElementById("mc-name").textContent=m.name;
+document.getElementById("mc-desc").textContent=m.desc;
+var opsEl=document.getElementById("mc-ops");
+opsEl.innerHTML="";
+m.ops.forEach(function(o){
+var d=document.createElement("div");
+d.className="mc-op";
+d.innerHTML='<span class="mc-op-name">'+o.name+'</span><span class="mc-tag '+o.cls+'">'+o.tag+'</span>';
+opsEl.appendChild(d);
+});
+var dotsEl=document.getElementById("mc-dots");
+dotsEl.innerHTML="";
+modes.forEach(function(_,i){
+var d=document.createElement("div");
+d.className="mc-dot"+(i===cur?" active":"");
+dotsEl.appendChild(d);
+});
+}
+window.mcCycle=function(){cur=(cur+1)%modes.length;render();};
+render();
+})();
+</script></div><h2 id="ステップ2-cliフラグをルール化して使う">ステップ2: CLIフラグをルール化して使う<a class="headerlink" href="#ステップ2-cliフラグをルール化して使う" title="Permanent link">&para;</a></h2><p>バッチ処理やCIで確実に承認をスキップしたい場合は <code>--dangerously-skip-permissions</code> を使います。</p><div class="admonition danger"><p class="admonition-title">⚠️ 「dangerously」フラグは意図的に危険と明示されている</p><p><strong>一般的なベストプラクティスとして、「dangerously」という命名は意図的であり、リスクを十分理解した上で使用すべきフラグである</strong>と考えられています。本記事の説明は公式ドキュメントの引用ではなく、一般的な安全運用上のガイダンスです。</p><p><strong>原則オフ</strong>とし、以下の場合のみ例外的に使用してください：</p><ul><li>隔離されたCI/CD環境</li><li>検証済みの自動修正タスク（lint、テスト再実行等）</li><li>ログ監査が確立されたパイプライン</li></ul></div><p>チーム内で「どのタスクに許可するか」「ログ保管先」を決めてから、以下のように実行すると安全性と速度を両立できます。</p><div class="highlight"><pre><span></span><code>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span><span class="s2">&quot;Run eslint --fix and rerun tests&quot;</span>
+claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span><span class="s2">&quot;Regenerate Storybook docs without manual approvals&quot;</span>
+</code></pre></div><div class="admonition warning"><p class="admonition-title">v2.1.78以降の動作変更: protected paths</p><p>v2.1.78以降、<code>.git/</code> および <code>.claude/</code> ディレクトリがprotected pathsに指定されました。<code>--dangerously-skip-permissions</code>（<code>bypassPermissions</code>モード）を有効にしていても、これらのパスへの書き込み操作には承認プロンプトが表示されます。</p><ul><li>v2.1.81で <code>.claude/skills/</code> も保護対象に追加</li><li>VS Code拡張ではsettings.jsonの権限設定が無視される報告あり（CLIのみ正常動作）</li><li>この制約は今後拡大する可能性が高い</li></ul><p><strong>影響</strong>: スキルファイルの自動生成や<code>.claude/</code>配下の設定変更を含む自動化パイプラインでは、このフラグだけでは完全な無人実行ができなくなっています。</p></div><div id="hooks-inspection"><style>
+.hk-widget{font-family:var(--md-text-font-family);max-width:100%;margin:1.5em 0}
+.hk-title{font-size:.95rem;font-weight:700;color:var(--md-typeset-color);margin-bottom:12px}
+.hk-cmds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.hk-cmd{font-family:var(--md-code-font-family);font-size:.8rem;padding:6px 14px;border-radius:6px;border:1px solid var(--md-default-fg-color--lighter);background:var(--md-default-bg-color);color:var(--md-typeset-color);cursor:pointer;transition:all .2s}
+.hk-cmd:hover{border-color:#2196f3;background:rgba(33,150,243,0.08)}
+.hk-cmd.active{border-color:#2196f3;background:rgba(33,150,243,0.12);color:#2196f3;font-weight:600}
+.hk-flow{display:flex;flex-direction:column;gap:0;margin:12px 0}
+.hk-flow-step{padding:12px 16px;border-radius:8px;border:1px solid var(--md-default-fg-color--lighter);background:var(--md-code-bg-color);position:relative;margin-bottom:0;transition:all .3s}
+.hk-flow-step+.hk-flow-step{margin-top:0}
+.hk-arrow{text-align:center;font-size:1.2rem;color:var(--md-default-fg-color--lighter);line-height:1.8}
+.hk-step-title{font-size:.82rem;font-weight:600;color:var(--md-typeset-color);margin-bottom:4px}
+.hk-step-detail{font-size:.78rem;color:var(--md-default-fg-color--light);font-family:var(--md-code-font-family);line-height:1.5;white-space:pre-wrap}
+.hk-step-pass{border-color:rgba(76,175,80,0.4);background:rgba(76,175,80,0.06)}
+.hk-step-pass .hk-step-title{color:#4caf50}
+.hk-step-block{border-color:rgba(244,67,54,0.4);background:rgba(244,67,54,0.06)}
+.hk-step-block .hk-step-title{color:#f44336}
+.hk-step-neutral{border-color:var(--md-default-fg-color--lighter);background:var(--md-code-bg-color)}
+.hk-result{margin-top:12px;padding:10px 16px;border-radius:8px;text-align:center;font-size:.88rem;font-weight:600;transition:all .3s}
+.hk-result-pass{background:rgba(76,175,80,0.1);color:#4caf50;border:1px solid rgba(76,175,80,0.3)}
+.hk-result-block{background:rgba(244,67,54,0.1);color:#f44336;border:1px solid rgba(244,67,54,0.3)}
+.hk-result-empty{background:var(--md-code-bg-color);color:var(--md-default-fg-color--light);border:1px solid var(--md-default-fg-color--lighter)}
+</style><div class="hk-widget"><div class="hk-title">PreToolUse Hook 検査フロー</div><div class="hk-cmds" id="hk-cmds"></div><div class="hk-flow" id="hk-flow"></div><div class="hk-result hk-result-empty" id="hk-result">コマンドを選択して検査フローを確認</div></div><script>
+(function(){
+var commands=[
+{label:"npm test",steps:[
+{title:"Claude Code呼び出し",detail:"Bash(npm test)",cls:"hk-step-neutral"},
+{title:"PreToolUse Hook 検査",detail:'validate_command.py: 安全なテストコマンド → 許可\nexit 0\nstdout: {"hookSpecificOutput":{"permissionDecision":"allow"}}',cls:"hk-step-pass"},
+{title:"→ allow/deny リストへ",detail:"Hook通過 → settings.json の allow/deny ルールで最終判定",cls:"hk-step-pass"}
+],result:"PASS — Hookが許可、allow/denyリストへ進む",resultCls:"hk-result-pass"},
+{label:"git push origin main",steps:[
+{title:"Claude Code呼び出し",detail:"Bash(git push origin main)",cls:"hk-step-neutral"},
+{title:"PreToolUse Hook 検査",detail:"validate_command.py: destructive operation detected\nexit 1（非ゼロ → ツール呼び出し拒否）",cls:"hk-step-block"},
+{title:"→ allow/deny リストへ",detail:"（到達しない — Hookで拒否済み）",cls:"hk-step-neutral"}
+],result:"BLOCKED — Hookが拒否（exit 1）",resultCls:"hk-result-block"},
+{label:"curl https://外部API",steps:[
+{title:"Claude Code呼び出し",detail:"Bash(curl https://外部API)",cls:"hk-step-neutral"},
+{title:"PreToolUse Hook 検査",detail:'validate_command.py: ネットワークコマンド → Hook自体は許可\nexit 0\nstdout: {"hookSpecificOutput":{"permissionDecision":"allow"}}',cls:"hk-step-pass"},
+{title:"→ allow/deny リストへ",detail:"Hook通過 → settings.json の deny ルールで最終判定",cls:"hk-step-pass"}
+],result:"PASS — Hookが許可、allow/denyリストへ進む",resultCls:"hk-result-pass"}
+];
+var sel=-1;
+function render(){
+var cmdsEl=document.getElementById("hk-cmds");
+cmdsEl.innerHTML="";
+commands.forEach(function(c,i){
+var b=document.createElement("button");
+b.className="hk-cmd"+(i===sel?" active":"");
+b.textContent=c.label;
+b.onclick=function(){sel=i;render();};
+cmdsEl.appendChild(b);
+});
+var flowEl=document.getElementById("hk-flow");
+flowEl.innerHTML="";
+var resEl=document.getElementById("hk-result");
+if(sel<0){
+resEl.className="hk-result hk-result-empty";
+resEl.textContent="コマンドを選択して検査フローを確認";
+return;
+}
+var c=commands[sel];
+c.steps.forEach(function(s,i){
+if(i>0){
+var arrow=document.createElement("div");
+arrow.className="hk-arrow";
+arrow.textContent="↓";
+flowEl.appendChild(arrow);
+}
+var d=document.createElement("div");
+d.className="hk-flow-step "+s.cls;
+d.innerHTML='<div class="hk-step-title">'+s.title+'</div><div class="hk-step-detail">'+s.detail+'</div>';
+flowEl.appendChild(d);
+});
+resEl.className="hk-result "+c.resultCls;
+resEl.textContent=c.result;
+}
+render();
+})();
+</script></div><p>Hooksは<code>settings.json</code>のallow/denyリストと組み合わせて多層防御を構築します。詳細は <a href="../claude-code-best-practices-advanced-2026/">運用ベストプラクティス上級編【2026年版】</a> を参照してください。</p><div class="admonition tip"><p class="admonition-title">2026年3月追加のHook機能</p><ul><li><strong><code>PermissionDenied</code> hook</strong>: Auto modeのClassifierが操作を拒否した後に発火。<code>{retry: true}</code> を返すことでモデルにリトライを指示可能</li><li><strong><code>defer</code> 判定（PreToolUse）</strong>: headlessセッション（<code>-p</code>モード）でツール呼び出しを一時停止し、<code>-p --resume</code>で再開時にhookを再評価できる</li></ul><p>これらはAuto modeとの併用を前提とした機能だが、Hooks単体でも権限制御の粒度が向上している。</p></div><div class="admonition info"><p class="admonition-title">Team/Enterprise向け新機能: Auto mode（2026年3月24日〜）</p><p>Anthropicは<code>--dangerously-skip-permissions</code>の安全な代替として<strong>Auto mode</strong>をリリースしました。Sonnet 4.6ベースのClassifierがツール呼び出しごとにリスク判定を行い、安全な操作は自動承認、危険な操作（大量ファイル削除・データ流出・悪意あるコード実行等）はブロックします。</p><p><strong>対応プラン（2026年4月時点）:</strong></p><ul><li>Team: 利用可（research preview）</li><li>Enterprise: 利用可</li><li>API: 利用可</li><li><strong>Pro / Max（個人プラン）: 未対応</strong></li></ul><p><strong>有効化:</strong></p><div class="highlight"><pre><span></span><code>claude<span class="w"> </span>--enable-auto-mode
+</code></pre></div><p>有効化後、Shift+Tabのサイクルに <code>auto</code> が追加されます。</p><p><strong>個人プランユーザーへの影響:</strong> Pro/Maxプランでは現時点でAuto modeを利用できません。本記事で解説しているacceptEditsモード + Hooks + allow/denyリストの組み合わせが引き続き最も実用的な自動承認運用手段です。</p><p>詳細: <a href="https://claude.com/blog/auto-mode">Auto mode for Claude Code（公式ブログ）</a> / <a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic Engineering解説</a></p></div><h3 id="組織でのバイパス制限">組織でのバイパス制限<a class="headerlink" href="#組織でのバイパス制限" title="Permanent link">&para;</a></h3><p>エンタープライズ環境では、<strong>組織管理ポリシー（Organization managed policies）</strong>で <code>--dangerously-skip-permissions</code> の使用を制限できます。管理者がポリシーを設定すると、メンバーのCLIに自動適用されます。</p><p>許可対象は<strong>検証済みの自動修正タスク</strong>に限定し、デプロイやシークレット閲覧など高リスク処理は常に通常モードで承認してください。</p><h2 id="ステップ3-許可拒否リストでガードレールを固定する">ステップ3: 許可/拒否リストでガードレールを固定する<a class="headerlink" href="#ステップ3-許可拒否リストでガードレールを固定する" title="Permanent link">&para;</a></h2><p>チーム運用では<code>settings.json</code>で許可・拒否ルールを明文化します。以下のマッチャーで、コマンドがどのルールに該当するか確認できます。</p><div id="allow-deny-matcher"><style>
+.ad-widget{font-family:var(--md-text-font-family);max-width:100%;margin:1.5em 0}
+.ad-cmds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.ad-cmd{font-family:var(--md-code-font-family);font-size:.8rem;padding:6px 14px;border-radius:6px;border:1px solid var(--md-default-fg-color--lighter);background:var(--md-default-bg-color);color:var(--md-typeset-color);cursor:pointer;transition:all .2s}
+.ad-cmd:hover{border-color:#2196f3;background:rgba(33,150,243,0.08)}
+.ad-cmd.active{border-color:#2196f3;background:rgba(33,150,243,0.12);color:#2196f3;font-weight:600}
+.ad-columns{display:flex;gap:16px;margin-bottom:16px}
+@media(max-width:600px){.ad-columns{flex-direction:column}}
+.ad-col{flex:1;border-radius:8px;padding:12px 14px;min-width:0}
+.ad-col-allow{border:1.5px solid rgba(76,175,80,0.3);background:rgba(76,175,80,0.04)}
+.ad-col-deny{border:1.5px solid rgba(244,67,54,0.3);background:rgba(244,67,54,0.04)}
+.ad-col-title{font-size:.8rem;font-weight:700;margin-bottom:8px}
+.ad-col-allow .ad-col-title{color:#4caf50}
+.ad-col-deny .ad-col-title{color:#f44336}
+.ad-rule{font-family:var(--md-code-font-family);font-size:.78rem;padding:4px 8px;margin:3px 0;border-radius:4px;background:var(--md-default-bg-color);color:var(--md-typeset-color);transition:all .3s;border:1px solid transparent}
+.ad-rule.matched-allow{background:rgba(76,175,80,0.15);border-color:rgba(76,175,80,0.4);color:#4caf50;font-weight:600}
+.ad-rule.matched-deny{background:rgba(244,67,54,0.15);border-color:rgba(244,67,54,0.4);color:#f44336;font-weight:600}
+.ad-result{border-radius:8px;padding:14px 16px;text-align:center;font-size:.9rem;font-weight:600;min-height:1.5em;transition:all .3s}
+.ad-result-allow{background:rgba(76,175,80,0.1);color:#4caf50;border:1px solid rgba(76,175,80,0.3)}
+.ad-result-deny{background:rgba(244,67,54,0.1);color:#f44336;border:1px solid rgba(244,67,54,0.3)}
+.ad-result-prompt{background:rgba(255,152,0,0.1);color:#ff9800;border:1px solid rgba(255,152,0,0.3)}
+.ad-result-empty{background:var(--md-code-bg-color);color:var(--md-default-fg-color--light);border:1px solid var(--md-default-fg-color--lighter)}
+</style><div class="ad-widget"><div class="ad-cmds" id="ad-cmds"></div><div class="ad-columns"><div class="ad-col ad-col-allow"><div class="ad-col-title">✅ allow ルール</div><div id="ad-allow-rules"></div></div><div class="ad-col ad-col-deny"><div class="ad-col-title">🚫 deny ルール</div><div id="ad-deny-rules"></div></div></div><div class="ad-result ad-result-empty" id="ad-result">コマンドを選択してルールマッチを確認</div></div><script>
+(function(){
+var allowRules=["Edit","MultiEdit","Bash(npm run lint)","Bash(npm run test *)"];
+var denyRules=["Bash(rm -rf *)","Bash(curl *)","WebFetch(domain:example.com)"];
+var commands=[
+{label:"Edit src/app.ts",matchType:"allow",matchRule:"Edit",result:"許可（allow: Edit にマッチ）"},
+{label:"npm run test --watch",matchType:"allow",matchRule:"Bash(npm run test *)",result:"許可（allow: Bash(npm run test *) にマッチ）"},
+{label:"npm run lint",matchType:"allow",matchRule:"Bash(npm run lint)",result:"許可（allow: Bash(npm run lint) にマッチ）"},
+{label:"rm -rf dist/",matchType:"deny",matchRule:"Bash(rm -rf *)",result:"拒否（deny: Bash(rm -rf *) にマッチ）"},
+{label:"curl https://api.example.com",matchType:"deny",matchRule:"Bash(curl *)",result:"拒否（deny: Bash(curl *) にマッチ）"},
+{label:"docker build .",matchType:"none",matchRule:null,result:"どちらにもマッチしない → 承認プロンプト表示"}
+];
+var sel=-1;
+function renderRules(container,rules){
+container.innerHTML="";
+rules.forEach(function(r){
+var d=document.createElement("div");
+d.className="ad-rule";
+d.textContent=r;
+d.setAttribute("data-rule",r);
+container.appendChild(d);
+});
+}
+function render(){
+var cmdsEl=document.getElementById("ad-cmds");
+cmdsEl.innerHTML="";
+commands.forEach(function(c,i){
+var b=document.createElement("button");
+b.className="ad-cmd"+(i===sel?" active":"");
+b.textContent=c.label;
+b.onclick=function(){sel=i;render();};
+cmdsEl.appendChild(b);
+});
+renderRules(document.getElementById("ad-allow-rules"),allowRules);
+renderRules(document.getElementById("ad-deny-rules"),denyRules);
+var resEl=document.getElementById("ad-result");
+if(sel<0){
+resEl.className="ad-result ad-result-empty";
+resEl.textContent="コマンドを選択してルールマッチを確認";
+return;
+}
+var c=commands[sel];
+if(c.matchType==="allow"){
+document.querySelectorAll("#ad-allow-rules .ad-rule").forEach(function(el){
+if(el.getAttribute("data-rule")===c.matchRule)el.classList.add("matched-allow");
+});
+resEl.className="ad-result ad-result-allow";
+}else if(c.matchType==="deny"){
+document.querySelectorAll("#ad-deny-rules .ad-rule").forEach(function(el){
+if(el.getAttribute("data-rule")===c.matchRule)el.classList.add("matched-deny");
+});
+resEl.className="ad-result ad-result-deny";
+}else{
+resEl.className="ad-result ad-result-prompt";
+}
+resEl.textContent=c.result;
+}
+render();
+})();
+</script></div><div class="admonition warning"><p class="admonition-title">既知の問題: denyルールが正しく機能しない場合がある</p><p>GitHub Issues <a href="https://github.com/anthropics/claude-code/issues/6631">#6631</a>、<a href="https://github.com/anthropics/claude-code/issues/6699">#6699</a> で報告されているように、<code>deny</code>ルール（特にRead/Write系）が<strong>正しく機能しない</strong>問題があります。これらのIssueはClosedですが、<a href="https://github.com/anthropics/claude-code/issues/12918">#12918</a>（v2.0.56）や<a href="https://github.com/anthropics/claude-code/issues/27040">#27040</a>（2026年2月）で再発が報告されており、<strong>2026年2月時点でも完全には解決していません</strong>。セキュリティ上重要な制限には<code>deny</code>ルールだけに依存しないでください。</p><p><strong>推奨対策</strong>: <code>deny</code>ルールと<strong>PreToolUse Hooks</strong>を併用して確実にブロックしてください。Hooksは非ゼロの終了コードでツール呼び出しを拒否でき、多層防御を実現します。</p><p><strong>2026年3月の進展</strong>: v2.1.80+のリリースで「PreToolUse hooksが<code>allow</code>を返した場合にdenyルール（enterprise managed settings含む）をバイパスしてしまう問題」が修正されました。ただし、deny機能の信頼性は段階的に改善中であり、多層防御の方針は引き続き推奨されます。</p></div><p>設定変更後はClaude Codeを再起動し、<code>deny</code>に該当するコマンドが自動で停止するかをテストしてから本番運用へ移行します。ログは必ずリポジトリ外の監査ストレージに同期し、誰が自動許可モードを使ったか追跡できる状態を維持してください。</p><h2 id="compaction-長時間自動承認セッションの安定化">Compaction: 長時間自動承認セッションの安定化<a class="headerlink" href="#compaction-長時間自動承認セッションの安定化" title="Permanent link">&para;</a></h2><p>Claude Codeの<strong>Compaction</strong>機能は、長時間セッションでコンテキストが上限に近づくと自動的に会話を圧縮し、作業を継続させます。</p><div id="compaction-timeline"><style>
+.cp-widget{font-family:var(--md-text-font-family);max-width:100%;margin:1.5em 0;padding:0}
+.cp-bar-wrap{background:var(--md-code-bg-color);border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.cp-bar-label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--md-default-fg-color--light);margin-bottom:6px}
+.cp-bar-outer{background:var(--md-code-bg-color);border:1px solid var(--md-default-fg-color--lighter);border-radius:6px;height:28px;overflow:hidden;position:relative}
+.cp-bar-inner{height:100%;border-radius:6px;transition:width .6s ease,background .4s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:.75rem;font-weight:700;color:#fff;min-width:40px}
+.cp-bar-green{background:linear-gradient(90deg,#43a047,#66bb6a)}
+.cp-bar-yellow{background:linear-gradient(90deg,#f9a825,#ffca28)}
+.cp-bar-red{background:linear-gradient(90deg,#e53935,#ef5350)}
+.cp-msg{text-align:center;margin:8px 0 12px;font-size:.85rem;min-height:1.4em;color:var(--md-default-fg-color--light)}
+.cp-timeline{display:flex;align-items:flex-start;gap:0;margin:16px 0 12px;overflow-x:auto;padding-bottom:4px}
+.cp-step{flex:1;min-width:90px;text-align:center;position:relative;cursor:pointer;padding:8px 4px;border-radius:8px;transition:background .2s}
+.cp-step:hover{background:var(--md-code-bg-color)}
+.cp-dot{width:18px;height:18px;border-radius:50%;margin:0 auto 6px;border:2px solid var(--md-default-fg-color--lighter);background:var(--md-default-bg-color);transition:all .3s}
+.cp-step.active .cp-dot{border-color:#2196f3;background:#2196f3;box-shadow:0 0 0 4px rgba(33,150,243,0.2)}
+.cp-step-num{font-size:.7rem;color:var(--md-default-fg-color--lighter);display:block}
+.cp-step-title{font-size:.75rem;color:var(--md-default-fg-color--light);display:block;margin-top:2px;line-height:1.3}
+.cp-step.active .cp-step-title{color:var(--md-typeset-color);font-weight:600}
+.cp-desc{background:var(--md-code-bg-color);border-radius:8px;padding:14px 16px;font-size:.85rem;color:var(--md-typeset-color);min-height:3.5em;line-height:1.6}
+.cp-nav{display:flex;justify-content:center;gap:12px;margin-top:12px}
+.cp-nav button{font-family:var(--md-text-font-family);font-size:.85rem;padding:6px 18px;border-radius:6px;border:1px solid var(--md-default-fg-color--lighter);background:var(--md-default-bg-color);color:var(--md-typeset-color);cursor:pointer;transition:all .2s}
+.cp-nav button:hover:not(:disabled){background:rgba(33,150,243,0.1);border-color:#2196f3;color:#2196f3}
+.cp-nav button:disabled{opacity:.4;cursor:default}
+</style><div class="cp-widget"><div class="cp-bar-wrap"><div class="cp-bar-label"><span id="cp-usage">25K / 200K</span><span id="cp-pct">12%</span></div><div class="cp-bar-outer"><div class="cp-bar-inner cp-bar-green" id="cp-bar" style="width:12%">12%</div></div></div><div class="cp-msg" id="cp-msg"></div><div class="cp-timeline" id="cp-timeline"></div><div class="cp-desc" id="cp-desc"></div><div class="cp-nav"><button id="cp-prev" onclick="cpNav(-1)">← 戻る</button><button id="cp-next" onclick="cpNav(1)">次へ →</button></div></div><script>
+(function(){
+var steps=[
+{label:"セッション開始",usage:"25K / 200K",pct:12,cls:"cp-bar-green",msg:"",desc:"Claude Codeセッションを開始。コンテキストウィンドウには十分な余裕があります。"},
+{label:"リファクタリング作業中",usage:"65K / 200K",pct:32,cls:"cp-bar-green",msg:"",desc:"複数ファイルのリファクタリングを進行中。コード解析・編集でコンテキストが徐々に増加しています。"},
+{label:"大規模変更の中盤",usage:"120K / 200K",pct:60,cls:"cp-bar-yellow",msg:"",desc:"変更量が増え、コンテキスト使用率が60%に到達。まだ余裕はありますが、大きな追加ファイル読み込みには注意が必要です。"},
+{label:"コンテキスト上限に接近",usage:"175K / 200K",pct:87,cls:"cp-bar-red",msg:"⚠ Compaction間近",desc:"コンテキスト使用率が87%に達し、Compactionの自動発火閾値に接近しています。Claude Codeが圧縮準備を開始します。"},
+{label:"Compaction自動発火",usage:"60K / 200K",pct:30,cls:"cp-bar-green",msg:"重要情報を保持したまま圧縮完了",desc:"Compactionが自動実行されました。会話履歴が要約・圧縮され、重要な変数名・ファイルパス・タスク状態は保持されたまま、コンテキストが30%まで回復しました。"},
+{label:"作業再開 + Checkpoint",usage:"95K / 200K",pct:47,cls:"cp-bar-green",msg:"Checkpointで状態を自動保存",desc:"Compaction後に作業を再開。Checkpoint機能により、Compaction前後の状態が自動保存されており、問題発生時にはロールバックが可能です。"}
+];
+var cur=0;
+function render(){
+var s=steps[cur];
+document.getElementById("cp-usage").textContent=s.usage;
+document.getElementById("cp-pct").textContent=s.pct+"%";
+var bar=document.getElementById("cp-bar");
+bar.style.width=s.pct+"%";
+bar.textContent=s.pct+"%";
+bar.className="cp-bar-inner "+s.cls;
+document.getElementById("cp-msg").textContent=s.msg;
+var tl=document.getElementById("cp-timeline");
+tl.innerHTML="";
+for(var i=0;i<steps.length;i++){
+var d=document.createElement("div");
+d.className="cp-step"+(i===cur?" active":"");
+d.innerHTML='<div class="cp-dot"></div><span class="cp-step-num">'+( i+1)+'</span><span class="cp-step-title">'+steps[i].label+'</span>';
+(function(idx){d.onclick=function(){cur=idx;render();};})(i);
+tl.appendChild(d);
+}
+document.getElementById("cp-desc").textContent=s.desc;
+document.getElementById("cp-prev").disabled=(cur===0);
+document.getElementById("cp-next").disabled=(cur===steps.length-1);
+}
+window.cpNav=function(dir){cur=Math.max(0,Math.min(steps.length-1,cur+dir));render();};
+render();
+})();
+</script></div><h2 id="よくある落とし穴と対処">よくある落とし穴と対処<a class="headerlink" href="#よくある落とし穴と対処" title="Permanent link">&para;</a></h2><table><thead><tr><th>症状</th><th>原因</th><th>即時対処</th></tr></thead><tbody><tr><td>危険コマンドまで自動実行される</td><td>許可/拒否リストが未設定</td><td><code>settings.json</code>で<code>deny</code>に高リスクコマンドを追加し再テスト</td></tr><tr><td>自動許可モードのまま本番デプロイ</td><td>モード表示を確認せず作業継続</td><td>Shift+Tabで<code>default</code>モードへ戻し、承認履歴をレビュー</td></tr><tr><td>監査が追えない</td><td>ログ保存先がローカルのみ</td><td>CIでログをクラウドストレージへ同期し保持期間を定義</td></tr><tr><td>長時間セッションでコンテキスト切れ</td><td>Compaction未活用</td><td>Claude Code v2.0+にアップデートし、Checkpoint併用で安全網を確保</td></tr><tr><td><code>--dangerously-skip-permissions</code> でも<code>.git/</code>操作で承認を求められる</td><td>v2.1.78以降のprotected paths仕様</td><td>Auto mode（Team/Enterprise）への移行、またはHooksで対象操作を個別許可</td></tr></tbody></table><details><summary>詳細設定（高度最適化）</summary> - `alias cca="claude --dangerously-skip-permissions"` のように限定用途のエイリアスを作成し、想定外の引数が来たら実行を停止する簡易ラッパーを追加すると事故を防げます。 - `CLAUDE.md` に自動許可利用ポリシー（利用可能タスク、ログ提出先、承認プロセス）を記載し、オンボーディング時に共有してください。 - CI/CDで使う場合はジョブ開始時に `git diff --stat` を記録し、自動許可モードで何が変更されたかをプルリク説明に転記するとレビューが短縮されます。 <div class="highlight"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span><span class="nv">cca</span><span class="o">=</span><span class="s2">&quot;claude --dangerously-skip-permissions&quot;</span>
+cca<span class="w"> </span><span class="se">\&quot;</span>Fix<span class="w"> </span>eslint<span class="w"> </span>warnings<span class="w"> </span>and<span class="w"> </span>rerun<span class="w"> </span>tests<span class="se">\&quot;</span>
+</code></pre></div></details><h2 id="次に読む関連記事">次に読む（関連記事）<a class="headerlink" href="#次に読む関連記事" title="Permanent link">&para;</a></h2><ul><li><strong><a href="../claude-code-auto-mode-guide/">Claude Code auto mode完全ガイド</a></strong> — classifierの判定ロジック・Subagent挙動・有効化手順の詳細</li><li><strong><a href="https://claude.com/blog/auto-mode">Auto mode for Claude Code（公式ブログ）</a></strong> — Team/Enterprise向け: Classifierベースの自動承認モード</li><li><strong><a href="../claude-code-best-practices-advanced-2026/">運用ベストプラクティス上級編【2026年版】</a></strong> — Hooks・Subagents・コンテキスト管理など11の実践テクニック</li><li><a href="../claude-code-hooks-guide/">Claude Code Hooks完全ガイド</a> — PostToolUseフックで自動承認の安全網を構築</li><li><a href="../claude-md-introduction/">CLAUDE.md入門ガイド</a> — 自動承認ポリシーをCLAUDE.mdに記載する方法</li><li><a href="../claude-code-cli-update-december-2025/">Claude Code CLI最新4機能で開発効率を2倍にする実践ガイド</a> — Async Subagentsと自動承認の組み合わせ</li><li><a href="../claude-code-troubleshooting-guide/">Claude Codeトラブルシューティングガイド</a> — 自動承認で問題が起きた時の切り分け</li><li><a href="../claude-code-permission-overview/">Claude Code権限モデルの全体像</a></li><li><a href="https://code.claude.com/docs/en/permission-modes">Claude Code権限モード公式ドキュメント</a> — 全モード（default/acceptEdits/plan/auto/bypassPermissions）の公式解説</li><li><a href="../../chatgpt/codex-cli-approval-policy-implementation/">Codex CLI approval_policy実装パターン完全ガイド</a> — Codex CLIでの同等機能との比較</li><li><a href="../../chatgpt/codex-cli-approval-modes-no-approval/">Codex CLI承認モード完全ガイド</a> — クロスツール比較: Codex CLIの<code>-a never</code></li></ul><div class="footnote"><hr><ol><li id="fn:auto1"><p>Anthropic, "Auto mode for Claude Code", 2026-03-24. <a href="https://claude.com/blog/auto-mode">https://claude.com/blog/auto-mode</a>&#160;<a class="footnote-backref" href="#fnref:auto1" title="Jump back to footnote 1 in the text">&#8617;</a></p></li></ol></div><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月6日 02:03:23 JST">2026年4月6日 02:03:23</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

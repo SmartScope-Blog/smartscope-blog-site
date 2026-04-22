@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 520" width="840" height="520" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
+  <title id="title">Role split between /team-onboarding and persistent project assets</title>
+  <desc id="desc">Diagram showing /team-onboarding as a draft generator and CLAUDE.md, settings.json, and skills as the canonical places for durable team rules</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="840" height="520" fill="#ffffff"/>
+  <text x="420" y="34" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#1f2937">/team-onboarding vs. Persistent Assets</text>
+  <text x="420" y="60" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#475569">Use generated notes as an entry point, not as the source of truth</text>
+
+  <rect x="210" y="88" width="420" height="152" rx="16" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="420" y="126" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#9a3412">/team-onboarding</text>
+  <text x="420" y="150" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">Analyzes recent usage patterns</text>
+  <text x="420" y="168" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">and generates a draft guide</text>
+  <text x="420" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7c2d12">for new teammates</text>
+  <rect x="320" y="210" width="200" height="18" rx="9" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="420" y="223" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="700" fill="#9a3412">Entry point, not source of truth</text>
+
+  <line x1="420" y1="240" x2="420" y2="246" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="32" y="268" width="244" height="154" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="161" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">CLAUDE.md</text>
+  <text x="161" y="324" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Durable instructions loaded</text>
+  <text x="161" y="340" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">every session</text>
+  <text x="161" y="360" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Architecture</text>
+  <text x="161" y="380" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Naming rules</text>
+  <text x="161" y="400" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Shared workflow</text>
+  <rect x="80" y="404" width="162" height="18" rx="9" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="161" y="417" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#1d4ed8">Store facts and rules</text>
+
+  <rect x="305" y="268" width="230" height="154" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="420" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#047857">.claude/settings.json</text>
+  <text x="420" y="324" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">Team-shared configuration</text>
+  <text x="420" y="348" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">permissions / hooks</text>
+  <text x="420" y="368" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">MCP / project settings</text>
+  <text x="420" y="388" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Safe defaults</text>
+  <rect x="362" y="398" width="116" height="18" rx="9" fill="#d1fae5" stroke="#059669"/>
+  <text x="420" y="411" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#047857">Align settings</text>
+
+  <rect x="550" y="268" width="244" height="154" rx="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="679" y="298" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#6d28d9">.claude/skills/</text>
+  <text x="679" y="324" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Reusable workflow knowledge</text>
+  <text x="679" y="348" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Recurring tasks</text>
+  <text x="679" y="368" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Long workflows</text>
+  <text x="679" y="388" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#334155">Checklists</text>
+  <rect x="604" y="398" width="150" height="18" rx="9" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="679" y="411" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#6d28d9">Store action paths</text>
+
+  <line x1="420" y1="246" x2="161" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="246" x2="420" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="420" y1="246" x2="679" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="110" y="452" width="620" height="42" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="420" y="478" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">Review before sharing: local absolute paths, private aliases, MCP assumptions, risky permissions</text>
+</svg>

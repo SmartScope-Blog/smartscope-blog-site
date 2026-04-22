@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI vs Claude Code Mapping</title>
+<style>
+:root {
+  --text: #2c2c2a;
+  --muted: #888780;
+  --panel: #f7f5ef;
+  --border: rgba(0, 0, 0, 0.14);
+  --blue-accent: #378ADD;
+  --blue-fill: #E6F1FB;
+  --gray-fill: #F1EFE8;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; }
+body { font-family: var(--font); color: var(--text); padding: 14px; }
+.widget { max-width: 800px; margin: 0 auto; }
+.header, .row { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); gap: 8px; align-items: stretch; }
+.header { margin-bottom: 8px; }
+.head { font-size: 14px; font-weight: 700; padding: 8px 10px; border-radius: 8px; text-align: center; }
+.head.codex { background: var(--gray-fill); color: #5f5e5a; }
+.head.claude { background: var(--blue-fill); color: var(--blue-accent); }
+.spacer { background: transparent; }
+.row { margin-bottom: 8px; }
+.card { background: var(--panel); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; min-height: 74px; }
+.cmd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; line-height: 1.5; word-break: break-word; margin-bottom: 6px; }
+.category { font-size: 11px; color: var(--muted); }
+.eq { display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="header">
+    <div class="head codex">Codex CLI</div>
+    <div class="spacer"></div>
+    <div class="head claude">Claude Code</div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="cmd">--dangerously-bypass-approvals-and-sandbox</div><div class="category">Full unrestricted</div></div>
+    <div class="eq">=</div>
+    <div class="card"><div class="cmd">--dangerously-skip-permissions</div><div class="category">Full unrestricted</div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="cmd">--full-auto</div><div class="category">Balanced auto</div></div>
+    <div class="eq">=</div>
+    <div class="card"><div class="cmd">claude (default + allowedTools)</div><div class="category">Balanced auto</div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="cmd">-s read-only (= "Plan mode" equivalent)</div><div class="category">Read-only</div></div>
+    <div class="eq">=</div>
+    <div class="card"><div class="cmd">Plan mode</div><div class="category">Read-only</div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="cmd">sandbox_permissions + ReadOnlyAccess</div><div class="category">Fine-grained</div></div>
+    <div class="eq">=</div>
+    <div class="card"><div class="cmd">allowedTools + Hooks</div><div class="category">Fine-grained</div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="cmd">Steer mode + Skills</div><div class="category">Workflow automation</div></div>
+    <div class="eq">=</div>
+    <div class="card"><div class="cmd">Hooks (Pre/Post Tool Use)</div><div class="category">Workflow automation</div></div>
+  </div>
+</div>
+</body>
+</html>

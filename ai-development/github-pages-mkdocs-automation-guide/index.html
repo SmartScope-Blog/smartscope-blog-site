@@ -1,0 +1,347 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="MkDocsでGitHub Pagesサイトを構築し、GitHub Actionsで完全自動化する実践ガイド。初期設定からカスタマイズまで段階的に解説"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/ai-development/github-pages-mkdocs-automation-guide/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../en/ai-development/github-pages-mkdocs-automation-guide/" hreflang="en"><link rel="icon" href="../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>🚀 GitHub Pages × MkDocs 完全自動化ガイド - CI/CDからデプロイまでワンストップ構築 - SmartScope</title><link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../stylesheets/extra.css"><link rel="stylesheet" href="../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="🚀 GitHub Pages × MkDocs 完全自動化ガイド - CI/CDからデプロイまでワンストップ構築"><meta property="og:description" content="MkDocsでGitHub Pagesサイトを構築し、GitHub Actionsで完全自動化する実践ガイド。初期設定からカスタマイズまで段階的に解説"><meta property="og:url" content="https://smartscope.blog/ai-development/github-pages-mkdocs-automation-guide/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="🚀 GitHub Pages × MkDocs 完全自動化ガイド - CI/CDからデプロイまでワンストップ構築"><meta name="twitter:description" content="MkDocsでGitHub Pagesサイトを構築し、GitHub Actionsで完全自動化する実践ガイド。初期設定からカスタマイズまで段階的に解説"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#-github-pages--mkdocs-完全自動化ガイド---cicdからデプロイまでワンストップ構築" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> 🚀 GitHub Pages × MkDocs 完全自動化ガイド - CI/CDからデプロイまでワンストップ構築 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../en/ai-development/github-pages-mkdocs-automation-guide/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#-この記事の目標" class="md-nav__link"><span class="md-ellipsis"> 🎯 この記事の目標 </span></a></li><li class="md-nav__item"><a href="#-実装ロードマップ" class="md-nav__link"><span class="md-ellipsis"> 📋 実装ロードマップ </span></a><nav class="md-nav" aria-label="📋 実装ロードマップ"><ul class="md-nav__list"><li class="md-nav__item"><a href="#phase-1-基本環境構築" class="md-nav__link"><span class="md-ellipsis"> Phase 1: 基本環境構築 </span></a></li><li class="md-nav__item"><a href="#phase-2-github-actions自動化" class="md-nav__link"><span class="md-ellipsis"> Phase 2: GitHub Actions自動化 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-phase-1-基本環境構築" class="md-nav__link"><span class="md-ellipsis"> 🛠️ Phase 1: 基本環境構築 </span></a><nav class="md-nav" aria-label="🛠️ Phase 1: 基本環境構築"><ul class="md-nav__list"><li class="md-nav__item"><a href="#11-githubリポジトリセットアップ" class="md-nav__link"><span class="md-ellipsis"> 1.1 GitHubリポジトリセットアップ </span></a></li><li class="md-nav__item"><a href="#12-mkdocs環境構築" class="md-nav__link"><span class="md-ellipsis"> 1.2 MkDocs環境構築 </span></a></li><li class="md-nav__item"><a href="#13-基本的なmkdocsyml設定" class="md-nav__link"><span class="md-ellipsis"> 1.3 基本的なmkdocs.yml設定 </span></a></li><li class="md-nav__item"><a href="#14-初期コンテンツ作成" class="md-nav__link"><span class="md-ellipsis"> 1.4 初期コンテンツ作成 </span></a></li><li class="md-nav__item"><a href="#15-ローカル開発フロー" class="md-nav__link"><span class="md-ellipsis"> 1.5 ローカル開発フロー </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-phase-2-github-actions自動化" class="md-nav__link"><span class="md-ellipsis"> ⚡ Phase 2: GitHub Actions自動化 </span></a><nav class="md-nav" aria-label="⚡ Phase 2: GitHub Actions自動化"><ul class="md-nav__list"><li class="md-nav__item"><a href="#21-github-pages設定" class="md-nav__link"><span class="md-ellipsis"> 2.1 GitHub Pages設定 </span></a></li><li class="md-nav__item"><a href="#22-github-actionsワークフロー" class="md-nav__link"><span class="md-ellipsis"> 2.2 GitHub Actionsワークフロー </span></a></li><li class="md-nav__item"><a href="#23-高度なワークフロー設定" class="md-nav__link"><span class="md-ellipsis"> 2.3 高度なワークフロー設定 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-phase-3-高度なカスタマイズ" class="md-nav__link"><span class="md-ellipsis"> 🎨 Phase 3: 高度なカスタマイズ </span></a><nav class="md-nav" aria-label="🎨 Phase 3: 高度なカスタマイズ"><ul class="md-nav__list"><li class="md-nav__item"><a href="#31-カスタムテーマとスタイル" class="md-nav__link"><span class="md-ellipsis"> 3.1 カスタムテーマとスタイル </span></a></li><li class="md-nav__item"><a href="#32-プラグイン統合" class="md-nav__link"><span class="md-ellipsis"> 3.2 プラグイン統合 </span></a></li><li class="md-nav__item"><a href="#33-seo最適化とパフォーマンス" class="md-nav__link"><span class="md-ellipsis"> 3.3 SEO最適化とパフォーマンス </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-運用とトラブルシューティング" class="md-nav__link"><span class="md-ellipsis"> 🔧 運用とトラブルシューティング </span></a><nav class="md-nav" aria-label="🔧 運用とトラブルシューティング"><ul class="md-nav__list"><li class="md-nav__item"><a href="#41-よくある問題と解決法" class="md-nav__link"><span class="md-ellipsis"> 4.1 よくある問題と解決法 </span></a></li><li class="md-nav__item"><a href="#42-メンテナンスとアップデート" class="md-nav__link"><span class="md-ellipsis"> 4.2 メンテナンスとアップデート </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-成功指標とkpi" class="md-nav__link"><span class="md-ellipsis"> 🎯 成功指標とKPI </span></a><nav class="md-nav" aria-label="🎯 成功指標とKPI"><ul class="md-nav__list"><li class="md-nav__item"><a href="#実装完了チェックリスト" class="md-nav__link"><span class="md-ellipsis"> 実装完了チェックリスト </span></a></li><li class="md-nav__item"><a href="#継続的改善ポイント" class="md-nav__link"><span class="md-ellipsis"> 継続的改善ポイント </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-関連記事" class="md-nav__link"><span class="md-ellipsis"> 🔗 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../tags/#tag:cicd" class="md-tag">CI/CD</a><a href="../../tags/#tag:github-actions" class="md-tag">GitHub Actions</a><a href="../../tags/#tag:github-pages" class="md-tag">GitHub Pages</a><a href="../../tags/#tag:mkdocs" class="md-tag">MkDocs</a><a href="../../tags/#tag:ドキュメント作成" class="md-tag">ドキュメント作成</a><a href="../../tags/#tag:自動デプロイ" class="md-tag">自動デプロイ</a><a href="../../tags/#tag:静的サイト" class="md-tag">静的サイト</a></nav><h1 id="-github-pages--mkdocs-完全自動化ガイド---cicdからデプロイまでワンストップ構築">🚀 GitHub Pages × MkDocs 完全自動化ガイド - CI/CDからデプロイまでワンストップ構築<a class="headerlink" href="#-github-pages--mkdocs-完全自動化ガイド---cicdからデプロイまでワンストップ構築" title="Permanent link">&para;</a></h1><h2 id="-この記事の目標">🎯 この記事の目標<a class="headerlink" href="#-この記事の目標" title="Permanent link">&para;</a></h2><p><strong>検索意図</strong>: <code>github pages mkdocs</code> で検索するユーザーに対し、MkDocsでGitHub Pagesサイトを構築し、GitHub Actionsで完全自動化する方法を実装レベルで解説します。</p><div class="admonition success"><p class="admonition-title">こんな方におすすめ</p><ul><li>MkDocsでドキュメントサイトを作りたい</li><li>GitHub Pagesで無料ホスティングしたい</li><li>GitHub Actionsで自動デプロイを実現したい</li><li>技術ブログやポートフォリオサイトを構築したい</li></ul></div><h2 id="-実装ロードマップ">📋 実装ロードマップ<a class="headerlink" href="#-実装ロードマップ" title="Permanent link">&para;</a></h2><h3 id="phase-1-基本環境構築">Phase 1: 基本環境構築<a class="headerlink" href="#phase-1-基本環境構築" title="Permanent link">&para;</a></h3><ol><li><strong>リポジトリ準備</strong> - GitHub Pages対応リポジトリ作成</li><li><strong>MkDocs初期設定</strong> - 設定ファイルとディレクトリ構造</li><li><strong>ローカル開発環境</strong> - 即座に確認できる開発フロー</li></ol><h3 id="phase-2-github-actions自動化">Phase 2: GitHub Actions自動化<a class="headerlink" href="#phase-2-github-actions自動化" title="Permanent link">&para;</a></h3><ol><li><strong>CI/CDワークフロー</strong> - 自動ビルド・デプロイ設定</li><li><strong>高度な設定</strong> - カスタムテーマとプラグイン統合</li><li><strong>運用最適化</strong> - パフォーマンスとSEO対策</li></ol><h2 id="-phase-1-基本環境構築">🛠️ Phase 1: 基本環境構築<a class="headerlink" href="#-phase-1-基本環境構築" title="Permanent link">&para;</a></h2><h3 id="11-githubリポジトリセットアップ">1.1 GitHubリポジトリセットアップ<a class="headerlink" href="#11-githubリポジトリセットアップ" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># 新規リポジトリ作成（GitHubで作成済みの場合）</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/your-docs-site.git
+<span class="nb">cd</span><span class="w"> </span>your-docs-site
+
+<span class="c1"># 既存プロジェクトの場合</span>
+mkdir<span class="w"> </span>docs-site<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>docs-site
+git<span class="w"> </span>init
+</code></pre></div><div class="admonition warning"><p class="admonition-title">重要: リポジトリ名の注意事項</p><ul><li><strong>個人サイト</strong>: <code>username.github.io</code> → <code>https://username.github.io/</code></li><li><strong>プロジェクトサイト</strong>: <code>project-name</code> → <code>https://username.github.io/project-name/</code></li></ul></div><h3 id="12-mkdocs環境構築">1.2 MkDocs環境構築<a class="headerlink" href="#12-mkdocs環境構築" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Python仮想環境作成</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>mkdocs-env
+<span class="nb">source</span><span class="w"> </span>mkdocs-env/bin/activate<span class="w">  </span><span class="c1"># Windows: mkdocs-env\Scripts\activate</span>
+
+<span class="c1"># MkDocs関連パッケージインストール</span>
+pip<span class="w"> </span>install<span class="w"> </span>mkdocs<span class="w"> </span>mkdocs-material<span class="w"> </span>mkdocs-git-revision-date-localized-plugin
+
+<span class="c1"># 依存関係ファイル作成</span>
+pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
+</code></pre></div><h3 id="13-基本的なmkdocsyml設定">1.3 基本的なmkdocs.yml設定<a class="headerlink" href="#13-基本的なmkdocsyml設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">あなたのサイト名</span>
+<span class="nt">site_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://your-username.github.io/your-repo-name/</span>
+<span class="nt">site_description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MkDocsで構築した技術ドキュメントサイト</span>
+
+<span class="c1"># テーマ設定</span>
+<span class="nt">theme</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material</span>
+<span class="w">  </span><span class="nt">palette</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># ライトモード</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">indigo</span>
+<span class="w">      </span><span class="nt">accent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">indigo</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/brightness-7</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ダークモードに切り替え</span>
+<span class="w">    </span><span class="c1"># ダークモード</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slate</span>
+<span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">indigo</span>
+<span class="w">      </span><span class="nt">accent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">indigo</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/brightness-4</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ライトモードに切り替え</span>
+
+<span class="w">  </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.tabs</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.top</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search.highlight</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search.share</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">content.code.copy</span>
+
+<span class="c1"># プラグイン</span>
+<span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">search</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">lang</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ja</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">git-revision-date-localized</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">      </span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Asia/Tokyo</span>
+
+<span class="c1"># マークダウン拡張</span>
+<span class="nt">markdown_extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admonition</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymdownx.details</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymdownx.superfences</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pymdownx.highlight</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">anchor_linenums</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymdownx.inlinehilite</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymdownx.snippets</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pymdownx.tabbed</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">alternate_style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># ナビゲーション</span>
+<span class="nt">nav</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ホーム</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ガイド</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">始め方</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">guides/getting-started.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">設定</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">guides/configuration.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">API</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api/</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ブログ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog/</span>
+
+<span class="c1"># 追加設定</span>
+<span class="nt">extra</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">social</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fontawesome/brands/github</span>
+<span class="w">      </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/your-username</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fontawesome/brands/twitter</span>
+<span class="w">      </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://twitter.com/your-username</span>
+</code></pre></div><h3 id="14-初期コンテンツ作成">1.4 初期コンテンツ作成<a class="headerlink" href="#14-初期コンテンツ作成" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># ディレクトリ構造作成</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>docs/<span class="o">{</span>guides,api,blog<span class="o">}</span>
+
+<span class="c1"># メインページ作成</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>docs/index.md<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s"># Welcome to Your Documentation</span>
+
+<span class="s">## 🎯 このサイトについて</span>
+
+<span class="s">MkDocsとGitHub Pagesで構築した技術ドキュメントサイトです。</span>
+
+<span class="s">### 🚀 特徴</span>
+
+<span class="s">- **自動デプロイ**: GitHub Actionsで完全自動化</span>
+<span class="s">- **レスポンシブ**: モバイル対応のMaterial Design</span>
+<span class="s">- **高速検索**: 内蔵検索機能で即座にコンテンツ発見</span>
+<span class="s">- **SEO最適化**: 構造化データとサイトマップ自動生成</span>
+
+<span class="s">## 📚 コンテンツ</span>
+
+<span class="s">- [ガイド](/ai-development/guides/getting-started/) - 基本的な使い方</span>
+<span class="s">- [API](/ai-development/api/) - APIリファレンス</span>
+<span class="s">- [ブログ](/ai-development/blog/) - 技術記事</span>
+
+<span class="s">EOF</span>
+
+<span class="c1"># サンプルガイド作成</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>docs/guides/getting-started.md<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s"># 🚀 Getting Started</span>
+
+<span class="s">## インストール</span>
+
+<span class="s">\`\`\`bash</span>
+<span class="s">pip install mkdocs mkdocs-material</span>
+<span class="s">\`\`\`</span>
+
+<span class="s">## 基本コマンド</span>
+
+<span class="s">\`\`\`bash</span>
+<span class="s"># 開発サーバー起動</span>
+<span class="s">mkdocs serve</span>
+
+<span class="s"># サイトビルド</span>
+<span class="s">mkdocs build</span>
+<span class="s">\`\`\`</span>
+<span class="s">EOF</span>
+</code></pre></div><h3 id="15-ローカル開発フロー">1.5 ローカル開発フロー<a class="headerlink" href="#15-ローカル開発フロー" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># 開発サーバー起動</span>
+mkdocs<span class="w"> </span>serve
+
+<span class="c1"># カスタムポート指定</span>
+mkdocs<span class="w"> </span>serve<span class="w"> </span>--dev-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8001
+
+<span class="c1"># ライブリロード確認</span>
+<span class="c1"># ブラウザで http://127.0.0.1:8000 を開く</span>
+</code></pre></div><div class="admonition tip"><p class="admonition-title">開発効率化のコツ</p><ul><li><strong>ライブリロード</strong>: ファイル保存で即座に反映</li><li><strong>検索テスト</strong>: ローカルでも検索機能が動作</li><li><strong>レスポンシブ確認</strong>: DevToolsでモバイル表示チェック</li></ul></div><h2 id="-phase-2-github-actions自動化">⚡ Phase 2: GitHub Actions自動化<a class="headerlink" href="#-phase-2-github-actions自動化" title="Permanent link">&para;</a></h2><h3 id="21-github-pages設定">2.1 GitHub Pages設定<a class="headerlink" href="#21-github-pages設定" title="Permanent link">&para;</a></h3><ol><li><p><strong>リポジトリ設定</strong>: <div class="highlight"><pre><span></span><code>Settings → Pages → Source → GitHub Actions
+</code></pre></div></p></li><li><p><strong>ブランチ戦略</strong>:</p></li><li><code>main</code>ブランチ: ソースコード</li><li><code>gh-pages</code>ブランチ: 自動生成（触らない）</li></ol><h3 id="22-github-actionsワークフロー">2.2 GitHub Actionsワークフロー<a class="headerlink" href="#22-github-actionsワークフロー" title="Permanent link">&para;</a></h3><p><code>.github/workflows/deploy.yml</code>:</p><div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy MkDocs to GitHub Pages</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+
+<span class="nt">permissions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<span class="w">  </span><span class="nt">pages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+
+<span class="nt">concurrency</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pages&quot;</span>
+<span class="w">  </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">  </span><span class="c1"># git-revision-date-localized-plugin用</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pip&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">pip install -r requirements.txt</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build MkDocs</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">mkdocs build --verbose --clean</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Pages artifact</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-pages-artifact@v2</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./site</span>
+
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == &#39;refs/heads/main&#39;</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-pages</span>
+<span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.deployment.outputs.page_url }}</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to GitHub Pages</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployment</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/deploy-pages@v2</span>
+</code></pre></div><h3 id="23-高度なワークフロー設定">2.3 高度なワークフロー設定<a class="headerlink" href="#23-高度なワークフロー設定" title="Permanent link">&para;</a></h3><p><strong>プルリクエスト用プレビュー</strong>:</p><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/preview.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build PR Preview</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-preview</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pip&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements.txt</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build site</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs build</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Comment PR</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/github-script@v6</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">github.rest.issues.createComment({</span>
+<span class="w">            </span><span class="no">issue_number: context.issue.number,</span>
+<span class="w">            </span><span class="no">owner: context.repo.owner,</span>
+<span class="w">            </span><span class="no">repo: context.repo.repo,</span>
+<span class="w">            </span><span class="no">body: &#39;🚀 Preview build completed! Check the build artifacts.&#39;</span>
+<span class="w">          </span><span class="no">})</span>
+</code></pre></div><h2 id="-phase-3-高度なカスタマイズ">🎨 Phase 3: 高度なカスタマイズ<a class="headerlink" href="#-phase-3-高度なカスタマイズ" title="Permanent link">&para;</a></h2><h3 id="31-カスタムテーマとスタイル">3.1 カスタムテーマとスタイル<a class="headerlink" href="#31-カスタムテーマとスタイル" title="Permanent link">&para;</a></h3><p><strong>カスタムCSS</strong> (<code>docs/stylesheets/extra.css</code>):</p><div class="highlight"><pre><span></span><code><span class="c">/* カスタムブランドカラー */</span>
+<span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">--md-primary-fg-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#2563eb</span><span class="p">;</span>
+<span class="w">  </span><span class="nv">--md-accent-fg-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#3b82f6</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* コードブロックの改善 */</span>
+<span class="p">.</span><span class="nc">highlight</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* ナビゲーションの強化 */</span>
+<span class="p">.</span><span class="nc">md-nav__item--active</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">.</span><span class="nc">md-nav__link</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--md-primary-fg-color</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* レスポンシブ画像 */</span>
+<span class="p">.</span><span class="nc">md-content</span><span class="w"> </span><span class="nt">img</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">max-width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">  </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="kc">auto</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="mi">8</span><span class="kt">px</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><strong>mkdocs.yml追加設定</strong>:</p><div class="highlight"><pre><span></span><code><span class="nt">extra_css</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stylesheets/extra.css</span>
+
+<span class="nt">extra_javascript</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">javascripts/extra.js</span>
+</code></pre></div><h3 id="32-プラグイン統合">3.2 プラグイン統合<a class="headerlink" href="#32-プラグイン統合" title="Permanent link">&para;</a></h3><p><strong>高度なプラグイン設定</strong>:</p><div class="highlight"><pre><span></span><code><span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">search</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">lang</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ja</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">git-revision-date-localized</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
+<span class="w">      </span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Asia/Tokyo</span>
+<span class="w">      </span><span class="nt">locale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ja</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">minify</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">minify_html</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">minify_css</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">minify_js</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">social</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cards_layout_options</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">background_color</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#2563eb&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tags_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.md</span>
+</code></pre></div><h3 id="33-seo最適化とパフォーマンス">3.3 SEO最適化とパフォーマンス<a class="headerlink" href="#33-seo最適化とパフォーマンス" title="Permanent link">&para;</a></h3><p><strong>構造化データ設定</strong>:</p><div class="highlight"><pre><span></span><code><span class="c1"># mkdocs.yml</span>
+<span class="nt">extra</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">analytics</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google</span>
+<span class="w">    </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G-XXXXXXXXXX</span>
+
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WebSite</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Your Site Name</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Your site description</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://your-username.github.io/</span>
+
+<span class="w">  </span><span class="nt">social</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fontawesome/brands/github</span>
+<span class="w">      </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/your-username</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub</span>
+</code></pre></div><p><strong>サイトマップとrobots.txt</strong>:</p><div class="highlight"><pre><span></span><code><span class="c1"># mkdocs.yml</span>
+<span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sitemap</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">changefreq</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">daily</span>
+<span class="w">      </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+
+<span class="nt">site_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://your-username.github.io/your-repo/</span>
+</code></pre></div><h2 id="-運用とトラブルシューティング">🔧 運用とトラブルシューティング<a class="headerlink" href="#-運用とトラブルシューティング" title="Permanent link">&para;</a></h2><h3 id="41-よくある問題と解決法">4.1 よくある問題と解決法<a class="headerlink" href="#41-よくある問題と解決法" title="Permanent link">&para;</a></h3><div class="admonition warning"><p class="admonition-title">デプロイ失敗の対処法</p><p><strong>Problem</strong>: GitHub Actions が失敗する <div class="highlight"><pre><span></span><code><span class="c1"># ローカルでビルドテスト</span>
+mkdocs<span class="w"> </span>build<span class="w"> </span>--verbose
+
+<span class="c1"># 依存関係確認</span>
+pip<span class="w"> </span>check
+</code></pre></div></p><p><strong>Solution</strong>: - requirements.txt のバージョン固定 - プラグインの互換性確認 - Python バージョン統一</p></div><div class="admonition info"><p class="admonition-title">パフォーマンス最適化</p><p><strong>画像最適化</strong>: <div class="highlight"><pre><span></span><code><span class="c1"># WebP変換自動化</span>
+find<span class="w"> </span>docs<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-exec<span class="w"> </span>cwebp<span class="w"> </span><span class="o">{}</span><span class="w"> </span>-o<span class="w"> </span><span class="o">{}</span>.webp<span class="w"> </span><span class="se">\;</span>
+</code></pre></div></p><p><strong>ビルド高速化</strong>: <div class="highlight"><pre><span></span><code><span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">optimize</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kt">!ENV</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">CI</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">false</span><span class="p p-Indicator">]</span>
+</code></pre></div></p></div><h3 id="42-メンテナンスとアップデート">4.2 メンテナンスとアップデート<a class="headerlink" href="#42-メンテナンスとアップデート" title="Permanent link">&para;</a></h3><p><strong>依存関係更新ワークフロー</strong>:</p><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/update-deps.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update Dependencies</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w">  </span><span class="c1"># 毎週月曜日 9時</span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">update</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update pip packages</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">pip install --upgrade pip</span>
+<span class="w">        </span><span class="no">pip install -U mkdocs mkdocs-material</span>
+<span class="w">        </span><span class="no">pip freeze &gt; requirements.txt</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create PR</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">peter-evans/create-pull-request@v5</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;📦</span><span class="nv"> </span><span class="s">Update</span><span class="nv"> </span><span class="s">dependencies&quot;</span>
+<span class="w">        </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Automated</span><span class="nv"> </span><span class="s">dependency</span><span class="nv"> </span><span class="s">update&quot;</span>
+<span class="w">        </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update-deps</span>
+</code></pre></div><h2 id="-成功指標とkpi">🎯 成功指標とKPI<a class="headerlink" href="#-成功指標とkpi" title="Permanent link">&para;</a></h2><h3 id="実装完了チェックリスト">実装完了チェックリスト<a class="headerlink" href="#実装完了チェックリスト" title="Permanent link">&para;</a></h3><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>基本機能</strong>: MkDocs サイトがローカルで正常動作</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>自動デプロイ</strong>: GitHub Actions でエラーなくデプロイ完了</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>レスポンシブ</strong>: モバイル・デスクトップで正常表示</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>SEO対策</strong>: サイトマップ生成とメタデータ設定</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>検索機能</strong>: サイト内検索が正常に動作</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked><span class="task-list-indicator"></span></label> <strong>パフォーマンス</strong>: PageSpeed Insights スコア 90点以上</li></ul><h3 id="継続的改善ポイント">継続的改善ポイント<a class="headerlink" href="#継続的改善ポイント" title="Permanent link">&para;</a></h3><ol><li><strong>コンテンツ品質</strong>: 検索クエリに対する完全な回答提供</li><li><strong>ユーザビリティ</strong>: ナビゲーションの使いやすさ向上</li><li><strong>SEO最適化</strong>: 継続的なキーワード分析と改善</li><li><strong>技術的負債</strong>: 定期的なライブラリアップデート</li></ol><h2 id="-関連記事">🔗 関連記事<a class="headerlink" href="#-関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../../generative-ai/claude/claude-code-auto-permission-guide/">🤖 Claude Code 自動実行ガイド</a></li><li><a href="../../generative-ai/claude/claude-code-docker-guide/">🐳 Docker完全ガイド</a></li><li><a href="../../generative-ai/claude/claude-md-best-practices/">📋 CLAUDE.md ベストプラクティス</a></li></ul><hr><p><strong>🎯 この記事で解決する検索意図</strong>: <code>github pages mkdocs</code> で検索するユーザーが、MkDocsでGitHub Pagesサイトを構築し、完全自動化する方法を段階的に習得できます。実装からデプロイまでワンストップで完結する実践ガイドです。</p><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年2月17日 23:29:52 JST">2026年2月17日 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../javascripts/mermaid-init.js"></script><script src="../../javascripts/mobile-nav.js"></script><script src="../../javascripts/daily-progress.js"></script><script src="../../javascripts/fix-md-links.js"></script><script src="../../javascripts/mobile-category-tabs.js"></script></body></html>

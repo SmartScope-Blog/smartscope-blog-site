@@ -1,0 +1,44 @@
+<!-- Generated from diagram_specs/blog/gh-stack-structure.en.yml by scripts/render_diagrams.py. Do not hand-edit. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="837" viewBox="0 0 560 837" role="img" aria-labelledby="title desc">
+  <title id="title">gh-stack Stack Structure</title>
+  <desc id="desc">Diagram showing gh-stack layers, the relationship to main, Stack Map, and where CI and rules are applied</desc>
+  <rect width="560" height="837" fill="#ffffff"/>
+  <text x="280.0" y="53.7" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#17324d">gh-stack Stack Structure</text>
+  <text x="280.0" y="87.5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#5b6472"><tspan x="280.0" dy="0">Lower layers carry foundational changes; upper layers carry dependent</tspan><tspan x="280.0" dy="17.5">changes. GitHub treats the stack as one review context.</tspan></text>
+  <rect x="62.0" y="133.0" width="123.0" height="33.0" rx="13" fill="#ffffff" stroke="#d2d9e2" stroke-width="1.2"/>
+  <text x="74.0" y="151.8" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#4b5563">merge into main</text>
+  <line x1="28.0" y1="158.0" x2="28.0" y2="525.2" stroke="#6b7280" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <rect x="62.0" y="158.0" width="470.0" height="91.2" rx="18" fill="#e1f5ee" stroke="#1d9e75" stroke-width="2" id="layer-api"/>
+  <text x="80.0" y="183.0" text-anchor="start" font-family="sans-serif" font-size="11" font-weight="700" fill="#35685b">L3</text>
+  <text x="116.0" y="187.9" text-anchor="start" font-family="sans-serif" font-size="17" font-weight="700" fill="#124537">feat/api-endpoints</text>
+  <text x="116.0" y="211.1" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#124537">PR #3  base: feat/order-logic</text>
+  <text x="116.0" y="230.1" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#35685b">API / tests</text>
+  <rect x="62.0" y="259.2" width="470.0" height="91.2" rx="18" fill="#faeeda" stroke="#ba7517" stroke-width="2" id="layer-logic"/>
+  <text x="80.0" y="284.3" text-anchor="start" font-family="sans-serif" font-size="11" font-weight="700" fill="#6f5732">L2</text>
+  <text x="116.0" y="289.2" text-anchor="start" font-family="sans-serif" font-size="17" font-weight="700" fill="#3d2a0c">feat/order-logic</text>
+  <text x="116.0" y="312.3" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#3d2a0c">PR #2  base: feat/db-schema</text>
+  <text x="116.0" y="331.3" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#6f5732">Logic / service</text>
+  <rect x="62.0" y="360.5" width="470.0" height="91.2" rx="18" fill="#e6f1fb" stroke="#378add" stroke-width="2" id="layer-db"/>
+  <text x="80.0" y="385.5" text-anchor="start" font-family="sans-serif" font-size="11" font-weight="700" fill="#4f6174">L1</text>
+  <text x="116.0" y="390.4" text-anchor="start" font-family="sans-serif" font-size="17" font-weight="700" fill="#17324d">feat/db-schema</text>
+  <text x="116.0" y="413.6" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#17324d">PR #1  base: main</text>
+  <text x="116.0" y="432.6" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#4f6174">Schema / types</text>
+  <rect x="62.0" y="465.8" width="470.0" height="73.5" rx="16" fill="#f1efe8" stroke="#b8b3a6" stroke-width="1.5"/>
+  <text x="80.0" y="496.5" text-anchor="start" font-family="sans-serif" font-size="18" font-weight="700" fill="#6b6a63">main</text>
+  <text x="80.0" y="518.1" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="600" fill="#6b6a63">final target branch</text>
+  <rect x="62.0" y="557.2" width="470.0" height="132.5" rx="18" fill="#f8fafc" stroke="#d2d9e2" stroke-width="1.5"/>
+  <text x="77.0" y="584.7" text-anchor="start" font-family="sans-serif" font-size="14" font-weight="700" fill="#17324d">Stack Map</text>
+  <circle cx="88.0" cy="611.8" r="4.5" fill="#1d9e75"/>
+  <text x="102.0" y="614.6" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="500" fill="#17324d">PR #3 API</text>
+  <circle cx="88.0" cy="638.8" r="4.5" fill="#ba7517"/>
+  <text x="102.0" y="641.6" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="500" fill="#17324d">PR #2 Logic</text>
+  <circle cx="88.0" cy="665.8" r="4.5" fill="#378add"/>
+  <text x="102.0" y="668.6" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="500" fill="#17324d">PR #1 DB</text>
+  <rect x="62.0" y="701.8" width="470.0" height="105.5" rx="18" fill="#f8fafc" stroke="#d2d9e2" stroke-width="1.5"/>
+  <text x="77.0" y="729.2" text-anchor="start" font-family="sans-serif" font-size="14" font-weight="700" fill="#17324d">CI / Rules</text>
+  <text x="86.0" y="759.1" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="500" fill="#17324d">`main`-based checks / rules</text>
+  <text x="86.0" y="786.1" text-anchor="start" font-family="sans-serif" font-size="12" font-weight="500" fill="#17324d">required checks and protection apply to every layer</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#8b98a8"/></marker>
+  </defs>
+</svg>

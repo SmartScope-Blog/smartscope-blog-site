@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Silent Failures Rubber Duck Caught</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --color-border-secondary: rgba(0,0,0,0.25);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --c-red: #D64545;
+  --c-red-soft: #FCE5E5;
+  --c-amber: #E0A800;
+  --c-amber-soft: #FFF8DD;
+  --c-card-bg: #F8F8F6;
+  --c-text-on-red: #7C1F1F;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --color-border-secondary: rgba(255,255,255,0.25);
+  --c-red: #E66A6A;
+  --c-red-soft: #4A1F1F;
+  --c-amber: #F0BC4A;
+  --c-amber-soft: #4A3A14;
+  --c-card-bg: #262624;
+  --c-text-on-red: #FFB6B6;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background: var(--color-background-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
+h2 {
+  font-size: 14px; font-weight: 700;
+  margin: 0 0 4px;
+}
+.subtitle {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin: 0 0 14px;
+}
+.card {
+  background: var(--c-card-bg);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.card-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.tag {
+  display: inline-flex; align-items: center;
+  background: var(--c-red-soft);
+  color: var(--c-text-on-red);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--c-red);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.card-body {
+  font-size: 12px;
+  color: var(--color-text-primary);
+  margin: 6px 0 10px;
+}
+.duck-detect {
+  border-left: 3px solid var(--c-amber);
+  background: var(--c-amber-soft);
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+.duck-detect strong { color: var(--c-amber); font-weight: 700; }
+.silent-fail {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  border-top: 1px dashed var(--color-border-tertiary);
+  padding-top: 6px;
+}
+.silent-fail strong { font-style: normal; color: var(--color-text-primary); }
+.summary {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-left: 3px solid var(--c-amber);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+.summary-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+.summary-body {
+  font-size: 12px;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.note {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 12px 0 0;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Three Silent Failures Rubber Duck Caught</h2>
+  <p class="subtitle">All three slipped past the main model's self-reflection — and pass tests cleanly</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">🔴 Architecture flaw</span>
+      <span class="card-title">OpenLibrary / async scheduler</span>
+    </div>
+    <div class="card-body">
+      The proposed scheduler was designed to start and immediately exit, running zero jobs. On top of that, one of the scheduled tasks was an infinite loop.
+    </div>
+    <div class="duck-detect">
+      <strong>Duck caught →</strong> A broken startup lifecycle plus an infinite loop — two structural defects in a single proposal.
+    </div>
+    <div class="silent-fail">
+      <strong>Silent failure pattern:</strong> Scheduler exits with code 0. No error log.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">🔴 Data loss</span>
+      <span class="card-title">OpenLibrary / Solr facet query</span>
+    </div>
+    <div class="card-body">
+      A loop silently overwrote the same <code>dict</code> key on every iteration, dropping three out of four Solr facet categories from every search query. No errors raised.
+    </div>
+    <div class="duck-detect">
+      <strong>Duck caught →</strong> 75% of search facets silently missing — data loss without any runtime error.
+    </div>
+    <div class="silent-fail">
+      <strong>Silent failure pattern:</strong> Search results return, but facets are incomplete. Tests still pass.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">🔴 Cross-file dependency</span>
+      <span class="card-title">NodeBB / email confirmation (Redis)</span>
+    </div>
+    <div class="card-body">
+      New code stopped writing to a Redis key while three other files continued to read from it. The email confirmation UI and cleanup paths would have silently broken in production.
+    </div>
+    <div class="duck-detect">
+      <strong>Duck caught →</strong> Three files still reading a key that no one writes anymore — silent damage across file boundaries.
+    </div>
+    <div class="silent-fail">
+      <strong>Silent failure pattern:</strong> No deploy-time error. Email confirmation quietly stops working days later.
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">Common pattern across all three</div>
+    <p class="summary-body">
+      None of them <strong>raises a runtime error</strong>. Tests pass, deploy succeeds, and the feature silently breaks. This is exactly the category self-reflection cannot catch — and where <strong>a model with a different perspective is most valuable</strong>.
+    </p>
+  </div>
+
+  <p class="note">
+    Source: GitHub Blog "GitHub Copilot CLI combines model families for a second opinion" (April 6, 2026)
+  </p>
+</div>
+<script>
+(function() {
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

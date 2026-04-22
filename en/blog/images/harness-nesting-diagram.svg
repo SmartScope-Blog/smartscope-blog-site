@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Three-layer nesting of Prompt, Context, and Harness</title>
+  <desc id="desc">Harness Engineering (teal) contains Context Engineering (blue), which contains Prompt Engineering (purple). Each layer is shown with its associated technical tags and a horse-metaphor mapping table</desc>
+
+  <!-- Outer: Harness -->
+  <rect x="20" y="40" width="540" height="440" rx="14" fill="#E1F5EE" stroke="#0F6E56" stroke-width="2"/>
+  <text x="40" y="68" fill="#0F6E56" font-size="16" font-weight="700">Harness Engineering</text>
+  <text x="40" y="88" fill="#0F6E56" font-size="11">Optimize the entire system the agent runs in</text>
+
+  <!-- Middle: Context -->
+  <rect x="50" y="110" width="480" height="320" rx="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="2"/>
+  <text x="70" y="138" fill="#185FA5" font-size="15" font-weight="700">Context Engineering</text>
+  <text x="70" y="156" fill="#185FA5" font-size="11">Optimize everything the LLM sees</text>
+
+  <!-- Inner: Prompt -->
+  <rect x="80" y="180" width="420" height="100" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="2"/>
+  <text x="100" y="210" fill="#534AB7" font-size="14" font-weight="700">Prompt Engineering</text>
+  <text x="100" y="230" fill="#534AB7" font-size="11">Optimize the instruction text given to the LLM</text>
+  <text x="100" y="252" fill="#534AB7" font-size="10" opacity="0.85">Human-written instructions, examples, output format</text>
+
+  <!-- Context tags (5) inside middle, below inner -->
+  <g font-size="10" fill="#185FA5">
+    <rect x="80"  y="305" width="62" height="22" rx="11" fill="#FFFFFF" stroke="#185FA5"/><text x="111" y="320" text-anchor="middle">RAG</text>
+    <rect x="152" y="305" width="62" height="22" rx="11" fill="#FFFFFF" stroke="#185FA5"/><text x="183" y="320" text-anchor="middle">MCP</text>
+    <rect x="224" y="305" width="78" height="22" rx="11" fill="#FFFFFF" stroke="#185FA5"/><text x="263" y="320" text-anchor="middle">Memory</text>
+    <rect x="312" y="305" width="78" height="22" rx="11" fill="#FFFFFF" stroke="#185FA5"/><text x="351" y="320" text-anchor="middle">Schema</text>
+    <rect x="400" y="305" width="100" height="22" rx="11" fill="#FFFFFF" stroke="#185FA5"/><text x="450" y="320" text-anchor="middle">Tool defs</text>
+  </g>
+  <text x="80" y="350" font-size="10" fill="#185FA5" opacity="0.8">+ message history, output schemas, retrieval results ...</text>
+
+  <!-- Harness tags (4) inside outer, below middle -->
+  <g font-size="11" fill="#0F6E56">
+    <rect x="40"  y="442" width="78" height="24" rx="12" fill="#FFFFFF" stroke="#0F6E56"/><text x="79"  y="458" text-anchor="middle">Linters</text>
+    <rect x="128" y="442" width="78" height="24" rx="12" fill="#FFFFFF" stroke="#0F6E56"/><text x="167" y="458" text-anchor="middle">CI</text>
+    <rect x="216" y="442" width="120" height="24" rx="12" fill="#FFFFFF" stroke="#0F6E56"/><text x="276" y="458" text-anchor="middle">Task splitting</text>
+    <rect x="346" y="442" width="184" height="24" rx="12" fill="#FFFFFF" stroke="#0F6E56"/><text x="438" y="458" text-anchor="middle">Entropy mitigation</text>
+  </g>
+
+  <!-- Right side: Horse metaphor table -->
+  <g>
+    <text x="590" y="68" fill="#5F5E5A" font-size="12" font-weight="700">Horse-metaphor mapping</text>
+    <line x1="590" y1="78" x2="780" y2="78" stroke="#9E9D98" stroke-width="1"/>
+
+    <rect x="590" y="92" width="190" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+    <text x="600" y="112" fill="#534AB7" font-size="11" font-weight="700">Voice command</text>
+    <text x="600" y="132" fill="#534AB7" font-size="11">-&gt; Prompt</text>
+
+    <rect x="590" y="160" width="190" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+    <text x="600" y="180" fill="#185FA5" font-size="11" font-weight="700">Map</text>
+    <text x="600" y="200" fill="#185FA5" font-size="11">-&gt; Context</text>
+
+    <rect x="590" y="228" width="190" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+    <text x="600" y="248" fill="#0F6E56" font-size="11" font-weight="700">Reins, saddle, fences</text>
+    <text x="600" y="268" fill="#0F6E56" font-size="11">-&gt; Harness</text>
+
+    <text x="590" y="312" fill="#5F5E5A" font-size="10" opacity="0.85">Like the CPU/OS relationship:</text>
+    <text x="590" y="328" fill="#5F5E5A" font-size="10" opacity="0.85">no matter how powerful the</text>
+    <text x="590" y="344" fill="#5F5E5A" font-size="10" opacity="0.85">CPU (model), performance</text>
+    <text x="590" y="360" fill="#5F5E5A" font-size="10" opacity="0.85">suffers if the OS (harness) is poor.</text>
+  </g>
+</svg>

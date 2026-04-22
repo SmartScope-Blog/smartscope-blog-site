@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-labelledby="title desc">
+  <title id="title">Momentum Signal Concept</title>
+  <desc id="desc">Concept chart showing price trend with buy and sell signals from a 20-day lookback.</desc>
+  <style>
+    .axis { stroke: #888780; stroke-width: 1.5; }
+    .grid { stroke: #e7e6e1; stroke-width: 1; }
+    .price { fill: none; stroke: #378add; stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+    .label { font: 13px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #4f4f49; }
+    .small { font: 12px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #66655f; }
+    .title { font: 700 26px 'Segoe UI', 'Noto Sans JP', sans-serif; fill: #2d2d29; }
+    .legend { fill: #ffffff; stroke: #d6d5cf; stroke-width: 1; }
+    .note { fill: #f7fbff; stroke: #378add; stroke-width: 1; }
+    .brace { fill: none; stroke: #ef9f27; stroke-width: 2.5; stroke-linecap: round; }
+    .buy { fill: #1d9e75; }
+    .sell { fill: #e24b4a; }
+  </style>
+  <rect width="800" height="420" fill="#ffffff" rx="24"/>
+  <text x="70" y="38" class="title">Momentum Signal Concept</text>
+
+  <g transform="translate(70 70)">
+    <rect x="0" y="0" width="520" height="240" fill="#ffffff"/>
+    <g>
+      <line x1="0" y1="0" x2="0" y2="240" class="axis"/>
+      <line x1="0" y1="240" x2="520" y2="240" class="axis"/>
+      <line x1="0" y1="40" x2="520" y2="40" class="grid"/>
+      <line x1="0" y1="100" x2="520" y2="100" class="grid"/>
+      <line x1="0" y1="160" x2="520" y2="160" class="grid"/>
+      <line x1="104" y1="0" x2="104" y2="240" class="grid"/>
+      <line x1="208" y1="0" x2="208" y2="240" class="grid"/>
+      <line x1="312" y1="0" x2="312" y2="240" class="grid"/>
+      <line x1="416" y1="0" x2="416" y2="240" class="grid"/>
+    </g>
+    <polyline class="price" points="0,206 26,198 52,204 78,190 104,176 130,170 156,158 182,148 208,134 234,126 260,120 286,104 312,92 338,74 364,62 390,54 416,66 442,90 468,118 494,142 520,166"/>
+
+    <path d="M156 24 L156 12 M156 12 L286 12 M286 12 L286 24" class="brace"/>
+    <text x="221" y="8" text-anchor="middle" class="small" fill="#b77215">Lookback window: 20 days</text>
+
+    <polygon points="344,54 356,78 332,78" class="buy"/>
+    <text x="362" y="75" class="small" fill="#177a5b">Buy</text>
+
+    <polygon points="460,150 472,126 448,126" class="sell"/>
+    <text x="478" y="144" class="small" fill="#b53d3c">Sell</text>
+
+    <text x="-18" y="10" class="label">Price</text>
+    <text x="0" y="260" class="small">D1</text>
+    <text x="96" y="260" class="small">D30</text>
+    <text x="200" y="260" class="small">D60</text>
+    <text x="304" y="260" class="small">D90</text>
+    <text x="400" y="260" class="small">D120</text>
+    <text x="480" y="260" class="label">Time</text>
+  </g>
+
+  <rect x="620" y="86" width="138" height="120" rx="18" class="legend"/>
+  <text x="640" y="114" class="label">Legend</text>
+  <line x1="640" y1="138" x2="692" y2="138" class="price"/>
+  <text x="706" y="143" class="small">Price</text>
+  <polygon points="650,170 660,190 640,190" class="buy"/>
+  <text x="676" y="185" class="small">Buy Signal</text>
+  <polygon points="650,226 660,206 640,206" class="sell"/>
+  <text x="676" y="220" class="small">Sell Signal</text>
+
+  <rect x="70" y="340" width="688" height="46" rx="14" class="note"/>
+  <text x="414" y="368" text-anchor="middle" class="label">Buy signal when 20-day return exceeds +5%</text>
+</svg>

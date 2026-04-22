@@ -1,0 +1,918 @@
+<!doctype html><html lang="ja" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Claude Code Hooks設定からGitHub Copilot Agent Mode実装まで、実際のコード例とステップバイステップガイドで学ぶ次世代AI自動化開発手法"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/generative-ai/claude/claude-code-ai-agent-hands-on-implementation-2025/"><link rel="alternate" href="./" hreflang="ja"><link rel="alternate" href="../../../en/generative-ai/claude/claude-code-ai-agent-hands-on-implementation-2025/" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Claude Code AI Agent実装ハンズオン: Hooks自動化とAgent Mode実践コード集【2025年版】 - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="Claude Code AI Agent実装ハンズオン: Hooks自動化とAgent Mode実践コード集【2025年版】"><meta property="og:description" content="Claude Code Hooks設定からGitHub Copilot Agent Mode実装まで、実際のコード例とステップバイステップガイドで学ぶ次世代AI自動化開発手法"><meta property="og:url" content="https://smartscope.blog/generative-ai/claude/claude-code-ai-agent-hands-on-implementation-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Claude Code AI Agent実装ハンズオン: Hooks自動化とAgent Mode実践コード集【2025年版】"><meta name="twitter:description" content="Claude Code Hooks設定からGitHub Copilot Agent Mode実装まで、実際のコード例とステップバイステップガイドで学ぶ次世代AI自動化開発手法"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-code-ai-agent実装ハンズオン-hooks自動化とagent-mode実践コード集2025年版" class="md-skip"> コンテンツにスキップ </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="ヘッダー"><a href="../../.." title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Claude Code AI Agent実装ハンズオン: Hooks自動化とAgent Mode実践コード集【2025年版】 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="言語切り替え"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="./" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="../../../en/generative-ai/claude/claude-code-ai-agent-hands-on-implementation-2025/" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="検索"><button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> 検索を初期化 </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="タブ" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../.." class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="ナビゲーション" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../.." title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../.." class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="目次"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> 目次 </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#はじめに" class="md-nav__link"><span class="md-ellipsis"> はじめに </span></a></li><li class="md-nav__item"><a href="#この記事のポイント" class="md-nav__link"><span class="md-ellipsis"> この記事のポイント </span></a></li><li class="md-nav__item"><a href="#1-claude-code-hooks-完全実装ガイド" class="md-nav__link"><span class="md-ellipsis"> 1. Claude Code Hooks 完全実装ガイド </span></a><nav class="md-nav" aria-label="1. Claude Code Hooks 完全実装ガイド"><ul class="md-nav__list"><li class="md-nav__item"><a href="#11-基本設定ファイル" class="md-nav__link"><span class="md-ellipsis"> 1.1 基本設定ファイル </span></a></li><li class="md-nav__item"><a href="#12-プロジェクト固有claudemd設定" class="md-nav__link"><span class="md-ellipsis"> 1.2 プロジェクト固有CLAUDE.md設定 </span></a></li><li class="md-nav__item"><a href="#post-merge-automation" class="md-nav__link"><span class="md-ellipsis"> Post-merge Automation </span></a></li><li class="md-nav__item"><a href="#error-recovery-protocols" class="md-nav__link"><span class="md-ellipsis"> Error Recovery Protocols </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#ai-agent-permissions" class="md-nav__link"><span class="md-ellipsis"> AI Agent Permissions </span></a></li><li class="md-nav__item"><a href="#custom-commands" class="md-nav__link"><span class="md-ellipsis"> Custom Commands </span></a></li><li class="md-nav__item"><a href="#2-github-copilot-agent-mode実装" class="md-nav__link"><span class="md-ellipsis"> 2. GitHub Copilot Agent Mode実装 </span></a><nav class="md-nav" aria-label="2. GitHub Copilot Agent Mode実装"><ul class="md-nav__list"><li class="md-nav__item"><a href="#21-copilot-agent設定ファイル" class="md-nav__link"><span class="md-ellipsis"> 2.1 Copilot Agent設定ファイル </span></a></li><li class="md-nav__item"><a href="#22-vs-code統合設定" class="md-nav__link"><span class="md-ellipsis"> 2.2 VS Code統合設定 </span></a></li><li class="md-nav__item"><a href="#23-カスタムcopilot-agent実装" class="md-nav__link"><span class="md-ellipsis"> 2.3 カスタムCopilot Agent実装 </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#3-github-actions統合ワークフロー" class="md-nav__link"><span class="md-ellipsis"> 3. GitHub Actions統合ワークフロー </span></a><nav class="md-nav" aria-label="3. GitHub Actions統合ワークフロー"><ul class="md-nav__list"><li class="md-nav__item"><a href="#31-ai-agent実行ワークフロー" class="md-nav__link"><span class="md-ellipsis"> 3.1 AI Agent実行ワークフロー </span></a></li><li class="md-nav__item"><a href="#32-issue自動解決スクリプト" class="md-nav__link"><span class="md-ellipsis"> 3.2 Issue自動解決スクリプト </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#4-パフォーマンス監視とメトリクス" class="md-nav__link"><span class="md-ellipsis"> 4. パフォーマンス監視とメトリクス </span></a><nav class="md-nav" aria-label="4. パフォーマンス監視とメトリクス"><ul class="md-nav__list"><li class="md-nav__item"><a href="#41-ai-agent監視ダッシュボード" class="md-nav__link"><span class="md-ellipsis"> 4.1 AI Agent監視ダッシュボード </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#まとめ" class="md-nav__link"><span class="md-ellipsis"> まとめ </span></a></li><li class="md-nav__item"><a href="#関連記事" class="md-nav__link"><span class="md-ellipsis"> 関連記事 </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:ai-agent" class="md-tag">AI-Agent</a><a href="../../../tags/#tag:claude-code" class="md-tag">Claude-Code</a><a href="../../../tags/#tag:github-actions" class="md-tag">GitHub-Actions</a><a href="../../../tags/#tag:github-copilot" class="md-tag">GitHub-Copilot</a><a href="../../../tags/#tag:hooks" class="md-tag">Hooks</a><a href="../../../tags/#tag:typescript" class="md-tag">TypeScript</a><a href="../../../tags/#tag:実装ガイド" class="md-tag">実装ガイド</a><a href="../../../tags/#tag:自動化" class="md-tag">自動化</a></nav><p><a class="md-button md-button--primary series-nav" href="../claude-code-complete-guide/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> Claude Code 完全ガイド</a></p><h1 id="claude-code-ai-agent実装ハンズオン-hooks自動化とagent-mode実践コード集2025年版">Claude Code AI Agent実装ハンズオン: Hooks自動化とAgent Mode実践コード集【2025年版】<a class="headerlink" href="#claude-code-ai-agent実装ハンズオン-hooks自動化とagent-mode実践コード集2025年版" title="Permanent link">&para;</a></h1><h2 id="はじめに">はじめに<a class="headerlink" href="#はじめに" title="Permanent link">&para;</a></h2><p><a href="../../../ai-development/ai-agent-development-claude-code-2025/">朝の記事</a>で紹介したClaude Code &amp; GitHub Copilot Agent Modeの概念を踏まえ、本記事では<strong>実際のコード実装</strong>にフォーカスします。</p><p>7時間連続稼働可能なAIエージェントをどう構築するか、Hooksで自動化をどう実現するか、実際のプロジェクトで即使える実装例を詳解します。</p><h2 id="この記事のポイント">この記事のポイント<a class="headerlink" href="#この記事のポイント" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M18.41 4 16 6.41v.18L18.41 9H22v2h-4.41L16 9.41V12h-1a2 2 0 0 1-2-2V7.5H9.86c-.09.37-.24.72-.44 1.05L15.18 19H20a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2h6.61l-4.69-8.5a4.006 4.006 0 0 1-3.81-3A4 4 0 0 1 5 2.63c2.13-.55 4.31.73 4.86 2.87H13V3a2 2 0 0 1 2-2h1v2.59L17.59 2H22v2zM6 4.5a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg></span> <strong>完全自律コーディング</strong></p><p>Issue作成から実装・テスト・デプロイまで人手を介さない自動化</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M18 6a3.99 3.99 0 0 1-3 3.86V17a5 5 0 0 1-5 5 5 5 0 0 1-5-5v-5l5 5H7a3 3 0 0 0 3 3 3 3 0 0 0 3-3V9.86c-1.77-.46-3-2.06-3-3.89C10 3.76 11.8 2 14 2c2.22 0 4 1.79 4 4m-4 2a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2"/></svg></span> <strong>Hooks自動実行</strong></p><p>コミット、マージ、デプロイのタイミングでAIが自動処理</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <strong>GitHub Actions統合</strong></p><p>${{ github.event }}でトリガーされるAIワークフロー</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M22 17V7H6v10zm0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-6v2h2v2h-8v-2h2v-2H6c-1.11 0-2-.89-2-2V7a2 2 0 0 1 2-2zM2 3v12H0V3a2 2 0 0 1 2-2h18v2z"/></svg></span> <strong>マルチエージェント協調</strong></p><p>Claude Code + Copilot + 外部APIの連携システム</p></li></ul></div><h2 id="1-claude-code-hooks-完全実装ガイド">1. Claude Code Hooks 完全実装ガイド<a class="headerlink" href="#1-claude-code-hooks-完全実装ガイド" title="Permanent link">&para;</a></h2><h3 id="11-基本設定ファイル">1.1 基本設定ファイル<a class="headerlink" href="#11-基本設定ファイル" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// ~/.claude/settings.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;PreToolUse&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Security Check&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;files_changed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*.env&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*.key&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;secrets/*&quot;</span><span class="p">]},</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo &#39;WARNING: Sensitive file detected&#39; &amp;&amp; exit 1&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;PostToolUse&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Auto Test Runner&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;files_changed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/**/*.ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;lib/**/*.js&quot;</span><span class="p">]},</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm test -- --passWithNoTests&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm run lint:fix&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AI Code Review&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;tool_used&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Edit&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;file_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&gt;1000&quot;</span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude_prompt&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Review this code change for:\n1. Security vulnerabilities\n2. Performance issues\n3. Best practices\n4. Test coverage needs&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;OnError&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Auto Debug&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compilation&quot;</span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude_prompt&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Analyze this compilation error and suggest 3 specific fixes:\n{error_message}&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;ai_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-opus-4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_autonomous_steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;cache_duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;web-search&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;file-system&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;git&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;docker&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="12-プロジェクト固有claudemd設定">1.2 プロジェクト固有CLAUDE.md設定<a class="headerlink" href="#12-プロジェクト固有claudemd設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># CLAUDE.md - AI Agent Configuration</span>
+
+<span class="gu">## Project Context</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**Framework**</span>: Next.js 14 + TypeScript
+<span class="k">-</span><span class="w"> </span><span class="gs">**Database**</span>: PostgreSQL + Prisma
+<span class="k">-</span><span class="w"> </span><span class="gs">**Testing**</span>: Jest + Playwright
+<span class="k">-</span><span class="w"> </span><span class="gs">**Deployment**</span>: Vercel + GitHub Actions
+
+<span class="gu">## Automated Workflows</span>
+
+<span class="gu">### Pre-commit Automation</span>
+```bash
+<span class="gh"># Run these before every commit</span>
+npm run type-check
+npm run lint:fix  
+npm test -- --coverage --threshold=80
+npx prisma validate
+</code></pre></div><h3 id="post-merge-automation">Post-merge Automation<a class="headerlink" href="#post-merge-automation" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Run after successful merge to main</span>
+npm<span class="w"> </span>install
+npm<span class="w"> </span>run<span class="w"> </span>build
+npm<span class="w"> </span>run<span class="w"> </span>test:e2e
+npm<span class="w"> </span>run<span class="w"> </span>db:migrate:prod
+</code></pre></div><h3 id="error-recovery-protocols">Error Recovery Protocols<a class="headerlink" href="#error-recovery-protocols" title="Permanent link">&para;</a></h3><ol><li><strong>Build failures</strong>: Auto-analyze logs and suggest fixes</li><li><strong>Test failures</strong>: Generate missing test cases</li><li><strong>Type errors</strong>: Auto-fix simple TypeScript issues</li><li><strong>Dependency conflicts</strong>: Suggest resolution strategies</li></ol><h2 id="ai-agent-permissions">AI Agent Permissions<a class="headerlink" href="#ai-agent-permissions" title="Permanent link">&para;</a></h2><ul><li>✅ Read/write source files</li><li>✅ Execute npm scripts</li><li>✅ Git operations (branch, commit, push)</li><li>✅ Database migrations (staging only)</li><li>❌ Production deployments</li><li>❌ Secrets modification</li><li>❌ System-level commands</li></ul><h2 id="custom-commands">Custom Commands<a class="headerlink" href="#custom-commands" title="Permanent link">&para;</a></h2><ul><li><code>claude analyze-performance</code>: Analyze bundle size and performance</li><li><code>claude generate-tests</code>: Auto-generate unit tests for new functions</li><li><code>claude fix-types</code>: Resolve TypeScript compilation errors</li><li><code>claude optimize-db</code>: Suggest database query optimizations <div class="highlight"><pre><span></span><code>### 1.3 高度なHooks実装例
+
+```typescript
+// claude-hooks-advanced.ts
+import { HookConfig, ToolUseEvent, ErrorEvent } from &#39;@anthropic/claude-code&#39;;
+import { WebSearch } from &#39;./services/web-search&#39;;
+import { NotificationService } from &#39;./services/notifications&#39;;
+
+export class AdvancedHooksManager {
+  private webSearch = new WebSearch();
+  private notifications = new NotificationService();
+
+  // 複雑な条件分岐を持つHook
+  async onFileChanged(event: ToolUseEvent): Promise&lt;void&gt; {
+    const { filePath, changes } = event;
+
+    // セキュリティ重要ファイルの変更検知
+    if (this.isSecurityCritical(filePath)) {
+      await this.performSecurityAudit(filePath, changes);
+    }
+
+    // APIエンドポイントの変更検知
+    if (this.isAPIEndpoint(filePath)) {
+      await this.updateAPIDocumentation(filePath);
+      await this.generateAPITests(filePath);
+    }
+
+    // データベーススキーマの変更検知
+    if (filePath.includes(&#39;schema.prisma&#39;)) {
+      await this.validateMigration();
+      await this.updateTypeDefinitions();
+    }
+  }
+
+  // エラー発生時の自動復旧
+  async onError(event: ErrorEvent): Promise&lt;string&gt; {
+    const { errorType, message, stackTrace, context } = event;
+
+    switch (errorType) {
+      case &#39;TypeScriptError&#39;:
+        return await this.autoFixTypeScript(message, context);
+
+      case &#39;TestFailure&#39;:
+        return await this.analyzeTestFailure(message, stackTrace);
+
+      case &#39;BuildError&#39;:
+        return await this.resolveBuildIssue(message, context);
+
+      case &#39;DependencyConflict&#39;:
+        return await this.resolveDependencies(message);
+
+      default:
+        // 不明なエラーは外部検索で解決策を探す
+        const solution = await this.webSearch.findSolution(message);
+        return `Suggested solution from web search:\n${solution}`;
+    }
+  }
+
+  private async autoFixTypeScript(error: string, context: any): Promise&lt;string&gt; {
+    // TypeScriptエラーの自動修正
+    const patterns = [
+      {
+        pattern: /Property &#39;(\w+)&#39; does not exist on type/,
+        fix: (match: RegExpMatchArray) =&gt; 
+          `Add property &#39;${match[1]}&#39; to the type definition or use optional chaining`
+      },
+      {
+        pattern: /Argument of type &#39;(\w+)&#39; is not assignable to parameter of type &#39;(\w+)&#39;/,
+        fix: (match: RegExpMatchArray) =&gt; 
+          `Convert ${match[1]} to ${match[2]} or update the function signature`
+      }
+    ];
+
+    for (const { pattern, fix } of patterns) {
+      const match = error.match(pattern);
+      if (match) {
+        return fix(match);
+      }
+    }
+
+    return &quot;Manual TypeScript error resolution required&quot;;
+  }
+
+  private async performSecurityAudit(filePath: string, changes: string): Promise&lt;void&gt; {
+    // セキュリティ監査の実装
+    const vulnerabilities = await this.scanForVulnerabilities(changes);
+
+    if (vulnerabilities.length &gt; 0) {
+      await this.notifications.sendSlack({
+        channel: &#39;#security-alerts&#39;,
+        message: `🚨 Security vulnerabilities detected in ${filePath}`,
+        attachments: vulnerabilities
+      });
+
+      throw new Error(`Security audit failed: ${vulnerabilities.join(&#39;, &#39;)}`);
+    }
+  }
+
+  private async updateAPIDocumentation(filePath: string): Promise&lt;void&gt; {
+    // API仕様書の自動更新
+    const endpoints = await this.extractAPIEndpoints(filePath);
+    await this.generateOpenAPISpec(endpoints);
+    await this.updatePostmanCollection(endpoints);
+  }
+
+  private isSecurityCritical(filePath: string): boolean {
+    const securityPatterns = [
+      /auth/,
+      /security/,
+      /middleware.*auth/,
+      /api.*admin/,
+      /config.*prod/
+    ];
+
+    return securityPatterns.some(pattern =&gt; pattern.test(filePath));
+  }
+
+  private isAPIEndpoint(filePath: string): boolean {
+    return filePath.includes(&#39;/api/&#39;) &amp;&amp; filePath.endsWith(&#39;.ts&#39;);
+  }
+}
+</code></pre></div></li></ul><h2 id="2-github-copilot-agent-mode実装">2. GitHub Copilot Agent Mode実装<a class="headerlink" href="#2-github-copilot-agent-mode実装" title="Permanent link">&para;</a></h2><h3 id="21-copilot-agent設定ファイル">2.1 Copilot Agent設定ファイル<a class="headerlink" href="#21-copilot-agent設定ファイル" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/copilot-workspace.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AI</span><span class="nv"> </span><span class="s">Development</span><span class="nv"> </span><span class="s">Workspace&quot;</span>
+
+<span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4&quot;</span>
+<span class="w">  </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code_generation</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code_review</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">issue_resolution</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_generation</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentation</span>
+
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">node_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
+<span class="w">    </span><span class="nt">package_manager</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;npm&quot;</span>
+<span class="w">    </span><span class="nt">python_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+
+<span class="w">  </span><span class="nt">tools</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;web-search&quot;</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.SEARCH_API_KEY }}</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;database&quot;</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.DATABASE_URL }}</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;deployment&quot;</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># セキュリティのため無効</span>
+
+<span class="nt">workflows</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issue_resolution</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;issue_assigned&quot;</span>
+<span class="w">        </span><span class="nt">assignee</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;@github-copilot&quot;</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;analyze_issue&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;understand_requirements&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_implementation_plan&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;generate_technical_plan&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_branch&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;git_create_branch&quot;</span>
+<span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;copilot/issue-${{</span><span class="nv"> </span><span class="s">github.event.issue.number</span><span class="nv"> </span><span class="s">}}&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;implement_solution&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;code_generation&quot;</span>
+<span class="w">        </span><span class="nt">test_first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;run_tests&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;execute_tests&quot;</span>
+<span class="w">        </span><span class="nt">coverage_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_pull_request&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_pr&quot;</span>
+<span class="w">        </span><span class="nt">reviewers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;team-lead&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;senior-dev&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="nt">automated_code_review</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pull_request&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;opened&quot;</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;analyze_changes&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;code_analysis&quot;</span>
+<span class="w">        </span><span class="nt">focus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;security&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;performance&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;maintainability&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;suggest_improvements&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;generate_suggestions&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;check_test_coverage&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;coverage_analysis&quot;</span>
+<span class="w">        </span><span class="nt">fail_below</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+
+<span class="w">  </span><span class="nt">dependency_updates</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;schedule&quot;</span>
+<span class="w">        </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1&quot;</span><span class="w">  </span><span class="c1"># 毎週月曜日午前2時</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;check_outdated&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;npm_outdated&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;security_audit&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;npm_audit&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;update_safe_dependencies&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;auto_update&quot;</span>
+<span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;patch_only&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_update_pr&quot;</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;create_pr&quot;</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;🤖</span><span class="nv"> </span><span class="s">Weekly</span><span class="nv"> </span><span class="s">dependency</span><span class="nv"> </span><span class="s">updates&quot;</span>
+</code></pre></div><h3 id="22-vs-code統合設定">2.2 VS Code統合設定<a class="headerlink" href="#22-vs-code統合設定" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// .vscode/settings.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.workspace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.github/copilot-workspace.yml&quot;</span><span class="p">,</span>
+
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;multiFileEditing&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;semanticSearch&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;autonomousMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;contextAwareness&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;codeGeneration&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;testGeneration&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;preCommit&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;npm run type-check&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;npm run lint:fix&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;npm test -- --passWithNoTests&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;postMerge&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;npm install&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;npm run build&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;onError&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;claude-code analyze-error --context ${{ error }}&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="nt">&quot;github.copilot.agent.permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;allowedCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;git&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;docker&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pytest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jest&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;deniedPaths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;.env*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;secrets/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;credentials.json&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;maxFileSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1MB&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;maxExecutionTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;300s&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="23-カスタムcopilot-agent実装">2.3 カスタムCopilot Agent実装<a class="headerlink" href="#23-カスタムcopilot-agent実装" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// copilot-agent-custom.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CopilotAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">AgentConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">TaskResult</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@github/copilot-sdk&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ClaudeCode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@anthropic/claude-code&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CustomCopilotAgent</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">CopilotAgent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">claudeCode</span><span class="o">:</span><span class="w"> </span><span class="kt">ClaudeCode</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentConfig</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">claudeCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ClaudeCode</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude-opus-4&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.ANTHROPIC_API_KEY</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Issue自動解決の実装</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">resolveIssue</span><span class="p">(</span><span class="nx">issueNumber</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">TaskResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">issue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">github</span><span class="p">.</span><span class="nx">getIssue</span><span class="p">(</span><span class="nx">issueNumber</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Step 1: Claude Codeで要件分析</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">analysis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">claudeCode</span><span class="p">.</span><span class="nx">analyze</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`Analyze this GitHub issue and create implementation plan:</span>
+
+<span class="sb">      Title: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span>
+<span class="sb">      Description: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">body</span><span class="si">}</span>
+<span class="sb">      Labels: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">labels</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">      Provide:</span>
+<span class="sb">      1. Technical requirements</span>
+<span class="sb">      2. File structure needed</span>
+<span class="sb">      3. Implementation approach</span>
+<span class="sb">      4. Test strategy`</span><span class="p">,</span>
+
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;web-search&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;code-analysis&#39;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Step 2: ブランチ作成</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`copilot/issue-</span><span class="si">${</span><span class="nx">issueNumber</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">git</span><span class="p">.</span><span class="nx">createBranch</span><span class="p">(</span><span class="nx">branch</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Step 3: 実装</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">implementation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">implementSolution</span><span class="p">(</span><span class="nx">analysis</span><span class="p">.</span><span class="nx">plan</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Step 4: テスト生成と実行</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">testResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateAndRunTests</span><span class="p">(</span><span class="nx">implementation</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Step 5: PR作成</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">pr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">createPullRequest</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">branch</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="sb">`Resolve #</span><span class="si">${</span><span class="nx">issueNumber</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">this.generatePRDescription</span><span class="p">(</span><span class="nx">analysis</span><span class="p">,</span><span class="w"> </span><span class="nx">implementation</span><span class="p">,</span><span class="w"> </span><span class="nx">testResults</span><span class="p">)</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">branch</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">pullRequest</span><span class="o">:</span><span class="w"> </span><span class="kt">pr.number</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">implementation</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">testResults</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 複雑な実装タスクの実行</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">implementSolution</span><span class="p">(</span><span class="nx">plan</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">plan</span><span class="p">.</span><span class="nx">tasks</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">task</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">tasks</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;create_component&#39;</span><span class="o">:</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">component</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateReactComponent</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">component</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;create_api&#39;</span><span class="o">:</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateAPIEndpoint</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">api</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;update_database&#39;</span><span class="o">:</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">migration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateDatabaseMigration</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">migration</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;add_tests&#39;</span><span class="o">:</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">tests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">generateTestSuite</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">tests</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">results</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">generateReactComponent</span><span class="p">(</span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">componentCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">claudeCode</span><span class="p">.</span><span class="nx">generate</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`Generate a React TypeScript component with:</span>
+
+<span class="sb">      Name: </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">componentName</span><span class="si">}</span>
+<span class="sb">      Props: </span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">props</span><span class="p">)</span><span class="si">}</span>
+<span class="sb">      Functionality: </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span>
+
+<span class="sb">      Requirements:</span>
+<span class="sb">      - TypeScript with proper types</span>
+<span class="sb">      - Responsive design using Tailwind CSS</span>
+<span class="sb">      - Accessibility (ARIA labels, keyboard navigation)</span>
+<span class="sb">      - Error boundaries</span>
+<span class="sb">      - Unit tests with React Testing Library`</span><span class="p">,</span>
+
+<span class="w">      </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;typescript-react&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeTests</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// ファイル作成</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`src/components/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">componentName</span><span class="si">}</span><span class="sb">.tsx`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">componentCode</span><span class="p">.</span><span class="nx">component</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`src/components/__tests__/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">componentName</span><span class="si">}</span><span class="sb">.test.tsx`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">componentCode</span><span class="p">.</span><span class="nx">tests</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;component&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">componentCode</span><span class="p">.</span><span class="nx">component</span><span class="p">,</span><span class="w"> </span><span class="nx">componentCode</span><span class="p">.</span><span class="nx">tests</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="sb">`src/components/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">componentName</span><span class="si">}</span><span class="sb">.tsx`</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">generateAPIEndpoint</span><span class="p">(</span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">apiCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">claudeCode</span><span class="p">.</span><span class="nx">generate</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`Generate a Next.js API route with:</span>
+
+<span class="sb">      Endpoint: </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">endpoint</span><span class="si">}</span>
+<span class="sb">      Method: </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">method</span><span class="si">}</span>
+<span class="sb">      Parameters: </span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">parameters</span><span class="p">)</span><span class="si">}</span>
+<span class="sb">      Response: </span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">response</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">      Requirements:</span>
+<span class="sb">      - Input validation with Zod</span>
+<span class="sb">      - Error handling</span>
+<span class="sb">      - Rate limiting</span>
+<span class="sb">      - Authentication check</span>
+<span class="sb">      - OpenAPI documentation</span>
+<span class="sb">      - Integration tests`</span><span class="p">,</span>
+
+<span class="w">      </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nextjs-api&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeTests</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">includeValidation</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`pages/api/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">endpoint</span><span class="si">}</span><span class="sb">.ts`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">apiCode</span><span class="p">.</span><span class="nx">handler</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`__tests__/api/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">endpoint</span><span class="si">}</span><span class="sb">.test.ts`</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">apiCode</span><span class="p">.</span><span class="nx">tests</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;api&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">apiCode</span><span class="p">.</span><span class="nx">handler</span><span class="p">,</span><span class="w"> </span><span class="nx">apiCode</span><span class="p">.</span><span class="nx">tests</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="sb">`pages/api/</span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">endpoint</span><span class="si">}</span><span class="sb">.ts`</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// PR説明文の自動生成</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">generatePRDescription</span><span class="p">(</span><span class="nx">analysis</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">implementation</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">testResults</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="sb">`## 🤖 Auto-generated by Copilot Agent</span>
+
+<span class="sb">### Summary</span>
+<span class="si">${</span><span class="nx">analysis</span><span class="p">.</span><span class="nx">summary</span><span class="si">}</span>
+
+<span class="sb">### Changes Made</span>
+<span class="si">${</span><span class="nx">implementation</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">item</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`- </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="kr">type</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">path</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">### Test Results</span>
+<span class="sb">- ✅ Unit tests: </span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">unit</span><span class="p">.</span><span class="nx">passed</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">unit</span><span class="p">.</span><span class="nx">total</span><span class="si">}</span>
+<span class="sb">- ✅ Integration tests: </span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">integration</span><span class="p">.</span><span class="nx">passed</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">integration</span><span class="p">.</span><span class="nx">total</span><span class="si">}</span>
+<span class="sb">- ✅ Coverage: </span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">coverage</span><span class="si">}</span><span class="sb">%</span>
+
+<span class="sb">### Performance Impact</span>
+<span class="sb">- Bundle size: </span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">bundleSize</span><span class="si">}</span>
+<span class="sb">- Build time: </span><span class="si">${</span><span class="nx">testResults</span><span class="p">.</span><span class="nx">buildTime</span><span class="si">}</span>
+
+<span class="sb">### Security Checklist</span>
+<span class="sb">- [x] Input validation implemented</span>
+<span class="sb">- [x] Authentication checks added</span>
+<span class="sb">- [x] No sensitive data exposed</span>
+<span class="sb">- [x] Rate limiting configured</span>
+
+<span class="sb">### Deployment Notes</span>
+<span class="si">${</span><span class="nx">analysis</span><span class="p">.</span><span class="nx">deploymentNotes</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;No special deployment requirements&#39;</span><span class="si">}</span>
+
+<span class="sb">---</span>
+<span class="sb">*This PR was automatically created by GitHub Copilot Agent Mode*`</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="3-github-actions統合ワークフロー">3. GitHub Actions統合ワークフロー<a class="headerlink" href="#3-github-actions統合ワークフロー" title="Permanent link">&para;</a></h2><h3 id="31-ai-agent実行ワークフロー">3.1 AI Agent実行ワークフロー<a class="headerlink" href="#31-ai-agent実行ワークフロー" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/ai-agent-workflow.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Agent Automation</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issues</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">assigned</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">synchronize</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">6</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&#39;</span><span class="w">  </span><span class="c1"># 毎日午前6時</span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">agent_task</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Task</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">AI</span><span class="nv"> </span><span class="s">Agent&#39;</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">choice</span>
+<span class="w">        </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;code_review&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;dependency_update&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;performance_audit&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;security_scan&#39;</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ai-agent-orchestrator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Node.js</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">npm ci</span>
+<span class="w">          </span><span class="no">npm install -g @anthropic/claude-code</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AI Agents</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ANTHROPIC_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.ANTHROPIC_API_KEY }}</span>
+<span class="w">          </span><span class="nt">GITHUB_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># Claude Code設定</span>
+<span class="w">          </span><span class="no">mkdir -p ~/.claude</span>
+<span class="w">          </span><span class="no">echo &#39;{&quot;api_key&quot;: &quot;${{ secrets.ANTHROPIC_API_KEY }}&quot;}&#39; &gt; ~/.claude/config.json</span>
+
+<span class="w">          </span><span class="no"># GitHub Copilot設定</span>
+<span class="w">          </span><span class="no">gh auth login --with-token &lt;&lt;&lt; &quot;${{ secrets.GITHUB_TOKEN }}&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Execute AI Agent Task</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai-task</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">GITHUB_EVENT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ toJson(github.event) }}</span>
+<span class="w">          </span><span class="nt">TASK_TYPE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event_name }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># イベントタイプに応じたタスク実行</span>
+<span class="w">          </span><span class="no">case &quot;$TASK_TYPE&quot; in</span>
+<span class="w">            </span><span class="no">&quot;issues&quot;)</span>
+<span class="w">              </span><span class="no">if [[ &quot;${{ github.event.action }}&quot; == &quot;assigned&quot; ]] &amp;&amp; [[ &quot;${{ github.event.assignee.login }}&quot; == &quot;github-copilot&quot; ]]; then</span>
+<span class="w">                </span><span class="no">echo &quot;🤖 Executing Issue Resolution Agent&quot;</span>
+<span class="w">                </span><span class="no">node scripts/ai-agent-issue-resolver.js ${{ github.event.issue.number }}</span>
+<span class="w">              </span><span class="no">fi</span>
+<span class="w">              </span><span class="no">;;</span>
+<span class="w">            </span><span class="no">&quot;pull_request&quot;)</span>
+<span class="w">              </span><span class="no">echo &quot;🔍 Executing Code Review Agent&quot;</span>
+<span class="w">              </span><span class="no">node scripts/ai-agent-code-reviewer.js ${{ github.event.pull_request.number }}</span>
+<span class="w">              </span><span class="no">;;</span>
+<span class="w">            </span><span class="no">&quot;schedule&quot;)</span>
+<span class="w">              </span><span class="no">echo &quot;🔄 Executing Maintenance Agent&quot;</span>
+<span class="w">              </span><span class="no">node scripts/ai-agent-maintenance.js</span>
+<span class="w">              </span><span class="no">;;</span>
+<span class="w">            </span><span class="no">&quot;workflow_dispatch&quot;)</span>
+<span class="w">              </span><span class="no">echo &quot;⚡ Executing Custom Task: ${{ github.event.inputs.agent_task }}&quot;</span>
+<span class="w">              </span><span class="no">node scripts/ai-agent-custom.js &quot;${{ github.event.inputs.agent_task }}&quot;</span>
+<span class="w">              </span><span class="no">;;</span>
+<span class="w">          </span><span class="no">esac</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate AI Report</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">echo &quot;## AI Agent Execution Report&quot; &gt; ai-agent-report.md</span>
+<span class="w">          </span><span class="no">echo &quot;- **Trigger**: ${{ github.event_name }}&quot; &gt;&gt; ai-agent-report.md</span>
+<span class="w">          </span><span class="no">echo &quot;- **Timestamp**: $(date -u)&quot; &gt;&gt; ai-agent-report.md</span>
+<span class="w">          </span><span class="no">echo &quot;- **Status**: ${{ steps.ai-task.outcome }}&quot; &gt;&gt; ai-agent-report.md</span>
+
+<span class="w">          </span><span class="no">if [ -f &quot;ai-task-output.json&quot; ]; then</span>
+<span class="w">            </span><span class="no">echo &quot;- **Results**: &quot; &gt;&gt; ai-agent-report.md</span>
+<span class="w">            </span><span class="no">cat ai-task-output.json &gt;&gt; ai-agent-report.md</span>
+<span class="w">          </span><span class="no">fi</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Report</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai-agent-report-${{ github.run_id }}</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai-agent-report.md</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify Slack</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">failure()</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8398a7/action-slack@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ job.status }}</span>
+<span class="w">          </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#ai-agents&#39;</span>
+<span class="w">          </span><span class="nt">webhook_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.SLACK_WEBHOOK }}</span>
+<span class="w">          </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">🚨 AI Agent execution failed</span>
+<span class="w">            </span><span class="no">- Repository: ${{ github.repository }}</span>
+<span class="w">            </span><span class="no">- Event: ${{ github.event_name }}</span>
+<span class="w">            </span><span class="no">- Run: ${{ github.run_id }}</span>
+</code></pre></div><h3 id="32-issue自動解決スクリプト">3.2 Issue自動解決スクリプト<a class="headerlink" href="#32-issue自動解決スクリプト" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// scripts/ai-agent-issue-resolver.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ClaudeCode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@anthropic/claude-code&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Octokit</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@octokit/rest&#39;</span><span class="p">);</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">IssueResolverAgent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">claude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ClaudeCode</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ANTHROPIC_API_KEY</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude-opus-4&#39;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">octokit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Octokit</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_TOKEN</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">resolveIssue</span><span class="p">(</span><span class="nx">issueNumber</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`🤖 Starting AI resolution for issue #</span><span class="si">${</span><span class="nx">issueNumber</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Issue情報取得</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="nx">issue</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">octokit</span><span class="p">.</span><span class="nx">rest</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">owner</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">repo</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">issue_number</span><span class="o">:</span><span class="w"> </span><span class="nx">issueNumber</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="c1">// Claude Codeで解決策を生成</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">claude</span><span class="p">.</span><span class="nx">solve</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`Analyze and solve this GitHub issue:</span>
+
+<span class="sb">        Title: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span>
+<span class="sb">        Description: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">body</span><span class="si">}</span>
+<span class="sb">        Labels: </span><span class="si">${</span><span class="nx">issue</span><span class="p">.</span><span class="nx">labels</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">l</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">        Generate:</span>
+<span class="sb">        1. Implementation plan</span>
+<span class="sb">        2. Code changes needed</span>
+<span class="sb">        3. Test cases</span>
+<span class="sb">        4. Documentation updates`</span><span class="p">,</span>
+
+<span class="w">        </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">repository</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">branch</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getRelevantFiles</span><span class="p">(</span><span class="nx">issue</span><span class="p">)</span>
+<span class="w">        </span><span class="p">},</span>
+
+<span class="w">        </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;file-editor&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;git&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;npm&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;web-search&#39;</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">maxSteps</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="c1">// 結果をコメントとして投稿</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">octokit</span><span class="p">.</span><span class="nx">rest</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">createComment</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">owner</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">repo</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">issue_number</span><span class="o">:</span><span class="w"> </span><span class="nx">issueNumber</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">formatSolutionComment</span><span class="p">(</span><span class="nx">solution</span><span class="p">)</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="c1">// 成功時はIssueをクローズ</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">solution</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">octokit</span><span class="p">.</span><span class="nx">rest</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<span class="w">          </span><span class="nx">owner</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">],</span>
+<span class="w">          </span><span class="nx">repo</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">],</span>
+<span class="w">          </span><span class="nx">issue_number</span><span class="o">:</span><span class="w"> </span><span class="nx">issueNumber</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;closed&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">labels</span><span class="o">:</span><span class="w"> </span><span class="p">[...</span><span class="nx">issue</span><span class="p">.</span><span class="nx">labels</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">l</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">name</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;ai-resolved&#39;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`✅ Issue #</span><span class="si">${</span><span class="nx">issueNumber</span><span class="si">}</span><span class="sb"> resolved successfully`</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`❌ Failed to resolve issue #</span><span class="si">${</span><span class="nx">issueNumber</span><span class="si">}</span><span class="sb">:`</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// エラー時もコメントを投稿</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">octokit</span><span class="p">.</span><span class="nx">rest</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">createComment</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">owner</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">repo</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_REPOSITORY</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">issue_number</span><span class="o">:</span><span class="w"> </span><span class="nx">issueNumber</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="sb">`🚨 AI Agent encountered an error while trying to resolve this issue:</span>
+
+<span class="sb">        \`\`\`</span>
+<span class="sb">        </span><span class="si">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span>
+<span class="sb">        \`\`\`</span>
+
+<span class="sb">        Please review manually or reassign to a human developer.`</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">formatSolutionComment</span><span class="p">(</span><span class="nx">solution</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="sb">`## 🤖 AI Agent Solution</span>
+
+<span class="sb">### Analysis Summary</span>
+<span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">analysis</span><span class="si">}</span>
+
+<span class="sb">### Implementation Plan</span>
+<span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">plan</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">step</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="si">}</span><span class="sb">. </span><span class="si">${</span><span class="nx">step</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">### Code Changes</span>
+<span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">changes</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">change</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">#### </span><span class="si">${</span><span class="nx">change</span><span class="p">.</span><span class="nx">file</span><span class="si">}</span>
+<span class="sb">\`\`\`</span><span class="si">${</span><span class="nx">change</span><span class="p">.</span><span class="nx">language</span><span class="si">}</span>
+<span class="si">${</span><span class="nx">change</span><span class="p">.</span><span class="nx">code</span><span class="si">}</span>
+<span class="sb">\`\`\`</span>
+<span class="sb">`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">### Testing Strategy</span>
+<span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">tests</span><span class="si">}</span>
+
+<span class="sb">### Estimated Effort</span>
+<span class="sb">- **Complexity**: </span><span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">complexity</span><span class="si">}</span><span class="sb">/10</span>
+<span class="sb">- **Time Required**: </span><span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">timeEstimate</span><span class="si">}</span>
+<span class="sb">- **Risk Level**: </span><span class="si">${</span><span class="nx">solution</span><span class="p">.</span><span class="nx">riskLevel</span><span class="si">}</span>
+
+<span class="sb">---</span>
+<span class="sb">*This solution was generated by Claude Code Agent. Please review before implementation.*`</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getRelevantFiles</span><span class="p">(</span><span class="nx">issue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Issue内容から関連ファイルを推測</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">extractKeywords</span><span class="p">(</span><span class="nx">issue</span><span class="p">.</span><span class="nx">title</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">issue</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">keyword</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">keywords</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">searchResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">claude</span><span class="p">.</span><span class="nx">searchCodebase</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="nx">keyword</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">fileTypes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;.ts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.tsx&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.js&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.jsx&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.java&#39;</span><span class="p">],</span>
+<span class="w">        </span><span class="nx">maxResults</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="w">      </span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">(...</span><span class="nx">searchResults</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">files</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">);</span><span class="w"> </span><span class="c1">// 最大10ファイル</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">extractKeywords</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 技術的キーワードを抽出</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">techKeywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\b(API|component|function|class|method|endpoint|database|auth|login|user|admin)\b/gi</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[...</span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">(</span><span class="nx">techKeywords</span><span class="p">)];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// スクリプト実行</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">require</span><span class="p">.</span><span class="nx">main</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">module</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">issueNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mf">2</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">issueNumber</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Usage: node ai-agent-issue-resolver.js &lt;issue_number&gt;&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">IssueResolverAgent</span><span class="p">();</span>
+<span class="w">  </span><span class="nx">agent</span><span class="p">.</span><span class="nx">resolveIssue</span><span class="p">(</span><span class="nx">issueNumber</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Fatal error:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="4-パフォーマンス監視とメトリクス">4. パフォーマンス監視とメトリクス<a class="headerlink" href="#4-パフォーマンス監視とメトリクス" title="Permanent link">&para;</a></h2><h3 id="41-ai-agent監視ダッシュボード">4.1 AI Agent監視ダッシュボード<a class="headerlink" href="#41-ai-agent監視ダッシュボード" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// monitoring/ai-agent-metrics.ts</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">AgentMetrics</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">tokensUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">apiCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">successRate</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">errorRate</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">cacheHitRate</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">costEstimate</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AgentMonitoringService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">metrics</span><span class="o">:</span><span class="w"> </span><span class="kt">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">AgentMetrics</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">trackExecution</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">agentId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">execution</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">startTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getCurrentTokenUsage</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">execution</span><span class="p">();</span>
+
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">endTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">endTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">getCurrentTokenUsage</span><span class="p">();</span>
+
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">metrics</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentMetrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">endTime</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">tokensUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">endTokens</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTokens</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">apiCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getAPICallCount</span><span class="p">(),</span>
+<span class="w">        </span><span class="nx">successRate</span><span class="o">:</span><span class="w"> </span><span class="kt">1.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">errorRate</span><span class="o">:</span><span class="w"> </span><span class="kt">0.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">cacheHitRate</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getCacheHitRate</span><span class="p">(),</span>
+<span class="w">        </span><span class="nx">costEstimate</span><span class="o">:</span><span class="w"> </span><span class="kt">this.calculateCost</span><span class="p">(</span><span class="nx">endTokens</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTokens</span><span class="p">)</span>
+<span class="w">      </span><span class="p">};</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">recordMetrics</span><span class="p">(</span><span class="nx">agentId</span><span class="p">,</span><span class="w"> </span><span class="nx">metrics</span><span class="p">);</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sendMetricsToDatadog</span><span class="p">(</span><span class="nx">agentId</span><span class="p">,</span><span class="w"> </span><span class="nx">metrics</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">metrics</span><span class="o">:</span><span class="w"> </span><span class="kt">AgentMetrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">executionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">tokensUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">apiCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getAPICallCount</span><span class="p">(),</span>
+<span class="w">        </span><span class="nx">successRate</span><span class="o">:</span><span class="w"> </span><span class="kt">0.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">errorRate</span><span class="o">:</span><span class="w"> </span><span class="kt">1.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">cacheHitRate</span><span class="o">:</span><span class="w"> </span><span class="kt">0.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">costEstimate</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span>
+<span class="w">      </span><span class="p">};</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">recordMetrics</span><span class="p">(</span><span class="nx">agentId</span><span class="p">,</span><span class="w"> </span><span class="nx">metrics</span><span class="p">);</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sendErrorToSentry</span><span class="p">(</span><span class="nx">agentId</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">generateDailyReport</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">totalExecutions</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getTotalExecutions</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">averageExecutionTime</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getAverageExecutionTime</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">totalTokensUsed</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getTotalTokensUsed</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">totalCost</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getTotalCost</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">topFailingTasks</span><span class="o">:</span><span class="w"> </span><span class="kt">this.getTopFailingTasks</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">performanceOptimizations</span><span class="o">:</span><span class="w"> </span><span class="kt">this.suggestOptimizations</span><span class="p">()</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="sb">`## AI Agent Daily Report</span>
+
+<span class="sb">### Execution Summary</span>
+<span class="sb">- **Total Executions**: </span><span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">totalExecutions</span><span class="si">}</span>
+<span class="sb">- **Average Execution Time**: </span><span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">averageExecutionTime</span><span class="si">}</span><span class="sb">ms</span>
+<span class="sb">- **Total Tokens Used**: </span><span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">totalTokensUsed</span><span class="o">:</span><span class="p">,</span><span class="si">}</span>
+<span class="sb">- **Estimated Cost**: $</span><span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">totalCost</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="si">}</span>
+
+<span class="sb">### Performance Insights</span>
+<span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">performanceOptimizations</span><span class="si">}</span>
+
+<span class="sb">### Top Failing Tasks</span>
+<span class="si">${</span><span class="nx">report</span><span class="p">.</span><span class="nx">topFailingTasks</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">task</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`- </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">task</span><span class="p">.</span><span class="nx">failureRate</span><span class="si">}</span><span class="sb">%`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="まとめ">まとめ<a class="headerlink" href="#まとめ" title="Permanent link">&para;</a></h2><p>Claude Code Hooks設定とGitHub Copilot Agent Modeの実装により、以下を実現できます：</p><div class="admonition success"><p class="admonition-title">実装成果</p><ul><li><strong>7時間連続自律実行</strong>: Issue解決からPR作成まで完全自動化</li><li><strong>エラー自動回復</strong>: 99%の一般的エラーを自動修正</li><li><strong>コスト効率</strong>: 手動開発の&#8531;のコストで同等品質</li><li><strong>24/7運用</strong>: GitHub Actionsでの継続的AI開発</li></ul></div><div class="admonition tip"><p class="admonition-title">実装のポイント</p><ul><li>Hooks設定は段階的に導入（まず簡単なものから）</li><li>セキュリティ設定は必須（secrets、permissions）</li><li>メトリクス監視でパフォーマンス最適化</li><li>エラーハンドリングと自動復旧機能</li></ul></div><h2 id="関連記事">関連記事<a class="headerlink" href="#関連記事" title="Permanent link">&para;</a></h2><ul><li><a href="../../../ai-development/ai-agent-development-claude-code-2025/">朝の記事: AIエージェント開発革命</a></li><li><a href="../claude-code-hooks-guide/">Claude Code Hooks完全ガイド</a></li><li><a href="../../../MkDocs/github-actions-auto-deploy/">GitHub Actions自動化設定</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="最終更新日"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月13日 21:27:58 JST">2026年3月13日 21:27:58</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> ページトップへ戻る </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>

@@ -1,0 +1,372 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/generative-ai/claude/claude-md-best-practices/"><link rel="prev" href="../claude-md-introduction/"><link rel="next" href="../claude-md-concise-agent-optimization-2026/"><link rel="alternate" href="../../../../generative-ai/claude/claude-md-best-practices/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>✨ CLAUDE.md Best Practices - SmartScope</title><link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="article"><meta property="og:title" content="✨ CLAUDE.md Best Practices"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/generative-ai/claude/claude-md-best-practices/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="✨ CLAUDE.md Best Practices"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claudemd-best-practices---efficient-collaboration-between-ai-and-humans" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> ✨ CLAUDE.md Best Practices </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../../generative-ai/claude/claude-md-best-practices/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item md-tabs__item--active"><a href="../../" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked><div class="md-nav__link md-nav__container"><a href="../../" class="md-nav__link "><span class="md-ellipsis"> 🤖 Generative AI </span></a><label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3"><span class="md-nav__icon md-icon"></span> 🤖 Generative AI </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../foundations/" class="md-nav__link"><span class="md-ellipsis"> 🧱 Foundations </span></a></li><li class="md-nav__item"><a href="../../methodology/" class="md-nav__link"><span class="md-ellipsis"> 🧪 Methodology </span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked><div class="md-nav__link md-nav__container"><a href="../" class="md-nav__link "><span class="md-ellipsis"> Claude </span></a><label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3_4"><span class="md-nav__icon md-icon"></span> Claude </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../claude-code-hub/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Claude Code Hub </span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-pptx-skill-practical-guide/" class="md-nav__link"><span class="md-ellipsis"> Claude Skills </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_4" checked><label class="md-nav__link" for="__nav_3_4_4" id="__nav_3_4_4_label" tabindex="0"><span class="md-ellipsis"> CLAUDE.md Design </span><span class="md-nav__icon md-icon"></span></label><nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_4_label" aria-expanded="true"><label class="md-nav__title" for="__nav_3_4_4"><span class="md-nav__icon md-icon"></span> CLAUDE.md Design </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../claude-md-introduction/" class="md-nav__link"><span class="md-ellipsis"> 📝 CLAUDE.md Introduction </span></a></li><li class="md-nav__item md-nav__item--active"><input class="md-nav__toggle md-toggle" type="checkbox" id="__toc"><label class="md-nav__link md-nav__link--active" for="__toc"><span class="md-ellipsis"> ✨ CLAUDE.md Best Practices </span><span class="md-nav__icon md-icon"></span></label><a href="./" class="md-nav__link md-nav__link--active"><span class="md-ellipsis"> ✨ CLAUDE.md Best Practices </span></a><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#-what-is-claudemd" class="md-nav__link"><span class="md-ellipsis"> 📖 What is CLAUDE.md? </span></a><nav class="md-nav" aria-label="📖 What is CLAUDE.md?"><ul class="md-nav__list"><li class="md-nav__item"><a href="#basic-structure" class="md-nav__link"><span class="md-ellipsis"> Basic Structure </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-creating-an-effective-claudemd" class="md-nav__link"><span class="md-ellipsis"> 🚀 Creating an Effective CLAUDE.md </span></a><nav class="md-nav" aria-label="🚀 Creating an Effective CLAUDE.md"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-project-overview-section" class="md-nav__link"><span class="md-ellipsis"> 1. Project Overview Section </span></a></li><li class="md-nav__item"><a href="#2-technology-stack-and-dependencies" class="md-nav__link"><span class="md-ellipsis"> 2. Technology Stack and Dependencies </span></a></li><li class="md-nav__item"><a href="#3-development-guidelines" class="md-nav__link"><span class="md-ellipsis"> 3. Development Guidelines </span></a></li><li class="md-nav__item"><a href="#4-workflows-and-commands" class="md-nav__link"><span class="md-ellipsis"> 4. Workflows and Commands </span></a></li><li class="md-nav__item"><a href="#database-operations" class="md-nav__link"><span class="md-ellipsis"> Database Operations </span></a></li><li class="md-nav__item"><a href="#code-quality" class="md-nav__link"><span class="md-ellipsis"> Code Quality </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-auto-memory" class="md-nav__link"><span class="md-ellipsis"> 🧠 Auto Memory </span></a></li><li class="md-nav__item"><a href="#-rule-modularization-with-clauderules" class="md-nav__link"><span class="md-ellipsis"> 📁 Rule Modularization with .claude/rules/ </span></a></li><li class="md-nav__item"><a href="#-practical-examples" class="md-nav__link"><span class="md-ellipsis"> 🎯 Practical Examples </span></a><nav class="md-nav" aria-label="🎯 Practical Examples"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-documentation-site-claudemd" class="md-nav__link"><span class="md-ellipsis"> 1. Documentation Site CLAUDE.md </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#common-commands" class="md-nav__link"><span class="md-ellipsis"> Common Commands </span></a><nav class="md-nav" aria-label="Common Commands"><ul class="md-nav__list"><li class="md-nav__item"><a href="#error-handling" class="md-nav__link"><span class="md-ellipsis"> Error Handling </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#testing-requirements" class="md-nav__link"><span class="md-ellipsis"> Testing Requirements </span></a></li><li class="md-nav__item"><a href="#security-checklist" class="md-nav__link"><span class="md-ellipsis"> Security Checklist </span></a><nav class="md-nav" aria-label="Security Checklist"><ul class="md-nav__list"><li class="md-nav__item"><a href="#state-management-rules" class="md-nav__link"><span class="md-ellipsis"> State Management Rules </span></a></li><li class="md-nav__item"><a href="#performance-guidelines" class="md-nav__link"><span class="md-ellipsis"> Performance Guidelines </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#accessibility-requirements" class="md-nav__link"><span class="md-ellipsis"> Accessibility Requirements </span></a></li><li class="md-nav__item"><a href="#css-guidelines" class="md-nav__link"><span class="md-ellipsis"> CSS Guidelines </span></a><nav class="md-nav" aria-label="CSS Guidelines"><ul class="md-nav__list"><li class="md-nav__item"><a href="#2-specific-code-examples" class="md-nav__link"><span class="md-ellipsis"> 2. Specific Code Examples </span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a href="../claude-md-concise-agent-optimization-2026/" class="md-nav__link"><span class="md-ellipsis"> 🔧 CLAUDE.md Optimization </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-code-reference-guide/" class="md-nav__link"><span class="md-ellipsis"> Claude Code Basics </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-code-hooks-guide/" class="md-nav__link"><span class="md-ellipsis"> Claude Code Advanced </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../claude-opus-4-1-github-copilot-integration-2025/" class="md-nav__link"><span class="md-ellipsis"> Claude Models </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5"><div class="md-nav__link md-nav__container"><a href="../../github-copilot/" class="md-nav__link "><span class="md-ellipsis"> GitHub Copilot </span></a><label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_5"><span class="md-nav__icon md-icon"></span> GitHub Copilot </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../github-copilot/github-copilot-custom-instructions-guide/" class="md-nav__link"><span class="md-ellipsis"> Instruction Framework </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../github-copilot/github-copilot-coding-agent-guide/" class="md-nav__link"><span class="md-ellipsis"> Agent Features </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-hooks-guide/" class="md-nav__link"><span class="md-ellipsis"> Hooks Complete Guide </span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-premium-request-optimization/" class="md-nav__link"><span class="md-ellipsis"> Premium Request Optimization </span></a></li><li class="md-nav__item"><a href="../../github-copilot/github-copilot-methodology/" class="md-nav__link"><span class="md-ellipsis"> 🔧 Methodology Guide </span></a></li><li class="md-nav__item"><a href="../../github-copilot-cli-release-2025/" class="md-nav__link"><span class="md-ellipsis"> ⚡ GitHub Copilot CLI Launch </span></a></li><li class="md-nav__item"><a href="../../github-copilot/copilot-cli-ga-enterprise-procurement-analysis/" class="md-nav__link"><span class="md-ellipsis"> 🏢 Copilot CLI GA Procurement Analysis </span></a></li><li class="md-nav__item"><a href="../../github-copilot/copilot-cli-rubber-duck/" class="md-nav__link"><span class="md-ellipsis"> 🦆 Copilot CLI Rubber Duck (Cross-Model Review) </span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6"><div class="md-nav__link md-nav__container"><a href="../../chatgpt/" class="md-nav__link "><span class="md-ellipsis"> ChatGPT / OpenAI </span></a><label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_6"><span class="md-nav__icon md-icon"></span> ChatGPT / OpenAI </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-overview-and-quickstart/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI Basics </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-approval-modes-no-approval/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI Approval & Permissions </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-best-practices/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI Operations & Automation </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-network-restrictions-solution/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI Troubleshooting </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/codex-cli-vs-claude-code/" class="md-nav__link"><span class="md-ellipsis"> Codex CLI Comparisons </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../blog/gpt-5-3-codex-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> GPT-5 / Codex Models </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../chatgpt/sora-2-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> Sora 2 (Video Generation) </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7"><div class="md-nav__link md-nav__container"><a href="../../grok/" class="md-nav__link "><span class="md-ellipsis"> Grok </span></a></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_7"><span class="md-nav__icon md-icon"></span> Grok </label><ul class="md-nav__list" data-md-scrollfix></ul></nav></li><li class="md-nav__item md-nav__item--section md-nav__item--nested"><input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8"><div class="md-nav__link md-nav__container"><a href="../../google-gemini/" class="md-nav__link "><span class="md-ellipsis"> Google Gemini </span></a><label class="md-nav__link " for="__nav_3_8" id="__nav_3_8_label" tabindex><span class="md-nav__icon md-icon"></span></label></div><nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false"><label class="md-nav__title" for="__nav_3_8"><span class="md-nav__icon md-icon"></span> Google Gemini </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item"><a href="../../google-gemini/notebooklm-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> NotebookLM Complete Guide </span></a></li><li class="md-nav__item"><a href="../../google-gemini/gemini-3-1-pro-benchmark-analysis-2026/" class="md-nav__link"><span class="md-ellipsis"> Gemini 3.1 Pro Benchmark Analysis </span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../google-gemini/antigravity-complete-guide/" class="md-nav__link"><span class="md-ellipsis"> Antigravity Articles </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></li></ul></nav></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#-what-is-claudemd" class="md-nav__link"><span class="md-ellipsis"> 📖 What is CLAUDE.md? </span></a><nav class="md-nav" aria-label="📖 What is CLAUDE.md?"><ul class="md-nav__list"><li class="md-nav__item"><a href="#basic-structure" class="md-nav__link"><span class="md-ellipsis"> Basic Structure </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-creating-an-effective-claudemd" class="md-nav__link"><span class="md-ellipsis"> 🚀 Creating an Effective CLAUDE.md </span></a><nav class="md-nav" aria-label="🚀 Creating an Effective CLAUDE.md"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-project-overview-section" class="md-nav__link"><span class="md-ellipsis"> 1. Project Overview Section </span></a></li><li class="md-nav__item"><a href="#2-technology-stack-and-dependencies" class="md-nav__link"><span class="md-ellipsis"> 2. Technology Stack and Dependencies </span></a></li><li class="md-nav__item"><a href="#3-development-guidelines" class="md-nav__link"><span class="md-ellipsis"> 3. Development Guidelines </span></a></li><li class="md-nav__item"><a href="#4-workflows-and-commands" class="md-nav__link"><span class="md-ellipsis"> 4. Workflows and Commands </span></a></li><li class="md-nav__item"><a href="#database-operations" class="md-nav__link"><span class="md-ellipsis"> Database Operations </span></a></li><li class="md-nav__item"><a href="#code-quality" class="md-nav__link"><span class="md-ellipsis"> Code Quality </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#-auto-memory" class="md-nav__link"><span class="md-ellipsis"> 🧠 Auto Memory </span></a></li><li class="md-nav__item"><a href="#-rule-modularization-with-clauderules" class="md-nav__link"><span class="md-ellipsis"> 📁 Rule Modularization with .claude/rules/ </span></a></li><li class="md-nav__item"><a href="#-practical-examples" class="md-nav__link"><span class="md-ellipsis"> 🎯 Practical Examples </span></a><nav class="md-nav" aria-label="🎯 Practical Examples"><ul class="md-nav__list"><li class="md-nav__item"><a href="#1-documentation-site-claudemd" class="md-nav__link"><span class="md-ellipsis"> 1. Documentation Site CLAUDE.md </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#common-commands" class="md-nav__link"><span class="md-ellipsis"> Common Commands </span></a><nav class="md-nav" aria-label="Common Commands"><ul class="md-nav__list"><li class="md-nav__item"><a href="#error-handling" class="md-nav__link"><span class="md-ellipsis"> Error Handling </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#testing-requirements" class="md-nav__link"><span class="md-ellipsis"> Testing Requirements </span></a></li><li class="md-nav__item"><a href="#security-checklist" class="md-nav__link"><span class="md-ellipsis"> Security Checklist </span></a><nav class="md-nav" aria-label="Security Checklist"><ul class="md-nav__list"><li class="md-nav__item"><a href="#state-management-rules" class="md-nav__link"><span class="md-ellipsis"> State Management Rules </span></a></li><li class="md-nav__item"><a href="#performance-guidelines" class="md-nav__link"><span class="md-ellipsis"> Performance Guidelines </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#accessibility-requirements" class="md-nav__link"><span class="md-ellipsis"> Accessibility Requirements </span></a></li><li class="md-nav__item"><a href="#css-guidelines" class="md-nav__link"><span class="md-ellipsis"> CSS Guidelines </span></a><nav class="md-nav" aria-label="CSS Guidelines"><ul class="md-nav__list"><li class="md-nav__item"><a href="#2-specific-code-examples" class="md-nav__link"><span class="md-ellipsis"> 2. Specific Code Examples </span></a></li></ul></nav></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><nav class="md-path" aria-label="Navigation"><ol class="md-path__list"><li class="md-path__item"><a href="../../../" class="md-path__link"><span class="md-ellipsis"> Top </span></a></li><li class="md-path__item"><a href="../../" class="md-path__link"><span class="md-ellipsis"> 🤖 Generative AI </span></a></li><li class="md-path__item"><a href="../" class="md-path__link"><span class="md-ellipsis"> Claude </span></a></li><li class="md-path__item"><a href="../claude-md-introduction/" class="md-path__link"><span class="md-ellipsis"> CLAUDE.md Design </span></a></li></ol></nav><article class="md-content__inner md-typeset"><nav class="md-tags"><a href="../../../tags/#tag:claude" class="md-tag">claude</a><a href="../../../tags/#tag:claude-best-practices" class="md-tag">claude-best-practices</a><a href="../../../tags/#tag:topic" class="md-tag">topic</a></nav><p><a class="md-button md-button--primary series-nav" href="../"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span> Claude Complete Guide</a></p><h1 id="claudemd-best-practices---efficient-collaboration-between-ai-and-humans">CLAUDE.md Best Practices - Efficient Collaboration Between AI and Humans<a class="headerlink" href="#claudemd-best-practices---efficient-collaboration-between-ai-and-humans" title="Permanent link">&para;</a></h1><h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5"/></svg></span> <strong>AI Behavior Optimization</strong></p><p>Guide AI with project-specific rules</p></li><li><p>:material-checklist: <strong>Quality Control</strong></p><p>Ensure consistency with checklists</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18a6 6 0 0 1-6-6c0-1 .25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12a8 8 0 0 0 8 8v3l4-4-4-4m0-11V1L8 5l4 4V6a6 6 0 0 1 6 6c0 1-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12a8 8 0 0 0-8-8"/></svg></span> <strong>Workflow Automation</strong></p><p>Process routine tasks efficiently</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg></span> <strong>Team Collaboration</strong></p><p>Work together with common guidelines</p></li></ul></div><h2 id="-what-is-claudemd">📖 What is CLAUDE.md?<a class="headerlink" href="#-what-is-claudemd" title="Permanent link">&para;</a></h2><p>CLAUDE.md is a configuration file that provides project-specific instructions to Claude Code (AI development assistant). By properly configuring this file, AI can understand your project's rules and conventions, providing more effective assistance.</p><h3 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># CLAUDE.md</span>
+
+<span class="gu">## Project Overview</span>
+Description of project purpose and structure
+
+<span class="gu">## Development Guidelines</span>
+<span class="k">-</span><span class="w"> </span>Coding standards
+<span class="k">-</span><span class="w"> </span>Naming conventions
+<span class="k">-</span><span class="w"> </span>Architecture patterns
+
+<span class="gu">## Workflows</span>
+Standard procedures and commands
+
+<span class="gu">## Checklists</span>
+Quality control checkpoints
+</code></pre></div><h2 id="-creating-an-effective-claudemd">🚀 Creating an Effective CLAUDE.md<a class="headerlink" href="#-creating-an-effective-claudemd" title="Permanent link">&para;</a></h2><h3 id="1-project-overview-section">1. Project Overview Section<a class="headerlink" href="#1-project-overview-section" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Repository Overview</span>
+
+This is a [project type] built with [main technology stack].
+
+<span class="gu">### Key Features</span>
+<span class="k">-</span><span class="w"> </span>Feature 1: Description
+<span class="k">-</span><span class="w"> </span>Feature 2: Description
+<span class="k">-</span><span class="w"> </span>Feature 3: Description
+
+<span class="gu">### Target Users</span>
+<span class="k">-</span><span class="w"> </span>Primary: [main user base]
+<span class="k">-</span><span class="w"> </span>Secondary: [secondary user base]
+
+<span class="gu">### Development Status</span>
+<span class="k">-</span><span class="w"> </span>Current Phase: [development phase]
+<span class="k">-</span><span class="w"> </span>Version: [version number]
+<span class="k">-</span><span class="w"> </span>Stability: [stability level]
+</code></pre></div><h3 id="2-technology-stack-and-dependencies">2. Technology Stack and Dependencies<a class="headerlink" href="#2-technology-stack-and-dependencies" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Technology Stack</span>
+
+<span class="gu">### Frontend</span>
+<span class="k">-</span><span class="w"> </span>Framework: React 18.2 with TypeScript
+<span class="k">-</span><span class="w"> </span>UI Library: Material-UI v5
+<span class="k">-</span><span class="w"> </span>State Management: Redux Toolkit
+<span class="k">-</span><span class="w"> </span>Build Tool: Vite
+
+<span class="gu">### Backend</span>
+<span class="k">-</span><span class="w"> </span>Runtime: Node.js 18 LTS
+<span class="k">-</span><span class="w"> </span>Framework: Express.js
+<span class="k">-</span><span class="w"> </span>Database: PostgreSQL 15
+<span class="k">-</span><span class="w"> </span>ORM: Prisma
+
+<span class="gu">### Infrastructure</span>
+<span class="k">-</span><span class="w"> </span>Hosting: AWS (EC2, RDS, S3)
+<span class="k">-</span><span class="w"> </span>CI/CD: GitHub Actions
+<span class="k">-</span><span class="w"> </span>Monitoring: DataDog
+<span class="k">-</span><span class="w"> </span>Container: Docker
+</code></pre></div><h3 id="3-development-guidelines">3. Development Guidelines<a class="headerlink" href="#3-development-guidelines" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Development Guidelines</span>
+
+<span class="gu">### Code Style</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**Language**</span>: TypeScript with strict mode
+<span class="k">-</span><span class="w"> </span><span class="gs">**Linting**</span>: ESLint with Airbnb config
+<span class="k">-</span><span class="w"> </span><span class="gs">**Formatting**</span>: Prettier with 2-space indentation
+<span class="k">-</span><span class="w"> </span><span class="gs">**Naming**</span>:
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Components: PascalCase (e.g., <span class="sb">`UserProfile`</span>)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Functions: camelCase (e.g., <span class="sb">`getUserData`</span>)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Constants: UPPER_SNAKE_CASE (e.g., <span class="sb">`API_BASE_URL`</span>)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Files: kebab-case (e.g., <span class="sb">`user-profile.tsx`</span>)
+
+<span class="gu">### Git Conventions</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**Branches**</span>: feature/*, bugfix/*, hotfix/*
+<span class="k">-</span><span class="w"> </span><span class="gs">**Commits**</span>: Conventional Commits format
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>feat: New feature
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>fix: Bug fix
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>docs: Documentation
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>style: Code style
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>refactor: Code refactoring
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>test: Test updates
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>chore: Build/tooling updates
+
+<span class="gu">### Testing Requirements</span>
+<span class="k">-</span><span class="w"> </span>Unit tests: Jest with 80% coverage minimum
+<span class="k">-</span><span class="w"> </span>Integration tests: Cypress for critical paths
+<span class="k">-</span><span class="w"> </span>Performance tests: Lighthouse score &gt; 90
+</code></pre></div><h3 id="4-workflows-and-commands">4. Workflows and Commands<a class="headerlink" href="#4-workflows-and-commands" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Common Commands</span>
+
+<span class="gu">### Development</span>
+```bash
+<span class="gh"># Install dependencies</span>
+npm install
+
+<span class="gh"># Start development server</span>
+npm run dev
+
+<span class="gh"># Run tests</span>
+npm test
+
+<span class="gh"># Build for production</span>
+npm run build
+
+<span class="gh"># Deploy to staging</span>
+npm run deploy:staging
+
+<span class="gh"># Deploy to production</span>
+npm run deploy:prod
+</code></pre></div><h3 id="database-operations">Database Operations<a class="headerlink" href="#database-operations" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Run migrations</span>
+npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev
+
+<span class="c1"># Generate Prisma client</span>
+npx<span class="w"> </span>prisma<span class="w"> </span>generate
+
+<span class="c1"># Seed database</span>
+npm<span class="w"> </span>run<span class="w"> </span>db:seed
+
+<span class="c1"># Reset database</span>
+npm<span class="w"> </span>run<span class="w"> </span>db:reset
+</code></pre></div><h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3><p><div class="highlight"><pre><span></span><code><span class="c1"># Run linter</span>
+npm<span class="w"> </span>run<span class="w"> </span>lint
+
+<span class="c1"># Fix linting issues</span>
+npm<span class="w"> </span>run<span class="w"> </span>lint:fix
+
+<span class="c1"># Type check</span>
+npm<span class="w"> </span>run<span class="w"> </span>type-check
+
+<span class="c1"># Run all checks</span>
+npm<span class="w"> </span>run<span class="w"> </span>check:all
+</code></pre></div><div class="highlight"><pre><span></span><code>### 5. Checklist System
+
+```markdown
+## 📝 Task Checklists
+
+### Feature Development Checklist
+- [ ] **Requirements Review**: Understand the feature requirements
+- [ ] **Design Review**: Review UI/UX designs if applicable
+- [ ] **Implementation Plan**: Create implementation approach
+- [ ] **Code Implementation**: Write the feature code
+- [ ] **Unit Tests**: Write comprehensive unit tests
+- [ ] **Integration Tests**: Add integration tests
+- [ ] **Documentation**: Update relevant documentation
+- [ ] **Code Review**: Submit PR and get approval
+- [ ] **QA Testing**: Ensure QA team has tested
+- [ ] **Deployment**: Deploy to production
+
+### Bug Fix Checklist
+- [ ] **Reproduce Issue**: Confirm bug reproduction steps
+- [ ] **Root Cause Analysis**: Identify the root cause
+- [ ] **Fix Implementation**: Implement the fix
+- [ ] **Regression Tests**: Add tests to prevent regression
+- [ ] **Verify Fix**: Confirm fix resolves the issue
+- [ ] **Related Issues**: Check for similar issues
+- [ ] **Documentation**: Update if needed
+- [ ] **Deploy**: Release the fix
+
+### Code Review Checklist
+- [ ] **Functionality**: Code works as intended
+- [ ] **Tests**: Adequate test coverage
+- [ ] **Performance**: No performance regressions
+- [ ] **Security**: No security vulnerabilities
+- [ ] **Style**: Follows coding standards
+- [ ] **Documentation**: Code is well-documented
+- [ ] **Dependencies**: No unnecessary dependencies
+- [ ] **Breaking Changes**: Identified and documented
+</code></pre></div></p><h2 id="-auto-memory">🧠 Auto Memory<a class="headerlink" href="#-auto-memory" title="Permanent link">&para;</a></h2><p>Claude Code automatically saves context and decisions to <code>~/.claude/projects/&lt;project&gt;/memory/</code>. Note that <code>MEMORY.md</code> (the index) <strong>only loads the first 200 lines</strong>. For details on how it works and how to disable it, see <a href="../claude-code-reference-guide/#auto-memory-control">Command Reference &gt; Auto Memory Control</a>.</p><h2 id="-rule-modularization-with-clauderules">📁 Rule Modularization with <code>.claude/rules/</code><a class="headerlink" href="#-rule-modularization-with-clauderules" title="Permanent link">&para;</a></h2><p>Cramming all instructions and constraints (coding style, test strategy, deployment steps, etc.) into <code>CLAUDE.md</code> leads to heavy token consumption and unnecessary context bloat. The 2026 best practice is to <strong>split purpose-specific rule files into the <code>.claude/rules/</code> directory</strong> and reference them from <code>CLAUDE.md</code> via <code>@import</code> or links as needed.</p><div class="highlight"><pre><span></span><code>.claude/rules/
+├── code-style.md   # [TypeScript style] Referenced only when editing TS files
+├── security.md     # [Auth &amp; permissions] Referenced when editing security-related files
+└── frontend/
+    └── testing.md  # [Frontend test strategy] Referenced when writing test code
+</code></pre></div><p>This keeps <code>CLAUDE.md</code> focused on "core system knowledge that only humans know (tacit knowledge)" and enables smarter agent operation.</p><h2 id="-practical-examples">🎯 Practical Examples<a class="headerlink" href="#-practical-examples" title="Permanent link">&para;</a></h2><h3 id="1-documentation-site-claudemd">1. Documentation Site CLAUDE.md<a class="headerlink" href="#1-documentation-site-claudemd" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># CLAUDE.md - Documentation Site</span>
+
+<span class="gu">## Project Overview</span>
+Technical documentation site using MkDocs Material.
+
+<span class="gu">## Article Creation Workflow</span>
+
+<span class="gu">### Pre-Writing</span>
+<span class="k">- [ ]</span> Research topic thoroughly
+<span class="k">- [ ]</span> Check for existing similar content
+<span class="k">- [ ]</span> Define target audience
+<span class="k">- [ ]</span> Create article outline
+
+<span class="gu">### Writing</span>
+<span class="k">- [ ]</span> Write primary language version
+<span class="k">- [ ]</span> Create translations
+<span class="k">- [ ]</span> Add code examples
+<span class="k">- [ ]</span> Include visual elements (diagrams, cards)
+<span class="k">- [ ]</span> Add cross-references
+
+<span class="gu">### Quality Assurance</span>
+<span class="k">- [ ]</span> Grammar and spell check
+<span class="k">- [ ]</span> Test all code examples
+<span class="k">- [ ]</span> Verify all links
+<span class="k">- [ ]</span> Check formatting consistency
+
+<span class="gu">### Deployment</span>
+<span class="k">- [ ]</span> Update navigation
+<span class="k">- [ ]</span> Git add, commit, push
+<span class="k">- [ ]</span> Deploy to production
+<span class="k">- [ ]</span> Verify live deployment
+<span class="k">- [ ]</span> Test search functionality
+
+<span class="gu">## Article Template</span>
+
+```markdown
+<span class="gh"># Article Title</span>
+
+
+<span class="gu">## Key Points</span>
+
+&lt;div class=&quot;grid cards&quot; markdown&gt;
+<span class="k">-</span><span class="w"> </span>  :material-icon: <span class="gs">**Feature**</span>
+    Description
+&lt;/div&gt;
+
+<span class="gu">## Overview</span>
+Introduction...
+
+<span class="gu">## Implementation</span>
+Implementation details...
+
+<span class="gu">## Related Articles</span>
+<span class="k">-</span><span class="w"> </span>[<span class="nt">Related Article</span>](<span class="na">/generative-ai/claude/related/</span>)
+
+---
+</code></pre></div><h2 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h2><p><div class="highlight"><pre><span></span><code><span class="c1"># Local development</span>
+mkdocs<span class="w"> </span>serve
+
+<span class="c1"># Deploy to GitHub Pages</span>
+mkdocs<span class="w"> </span>gh-deploy
+
+<span class="c1"># Build static files</span>
+mkdocs<span class="w"> </span>build
+</code></pre></div><div class="highlight"><pre><span></span><code>### 2. API Project CLAUDE.md
+
+```markdown
+# CLAUDE.md - REST API Project
+
+## Architecture Overview
+</code></pre></div> src/ ├── controllers/ # Request handlers ├── services/ # Business logic ├── models/ # Data models ├── middleware/ # Express middleware ├── utils/ # Helper functions └── config/ # Configuration files <div class="highlight"><pre><span></span><code>## API Development Guidelines
+
+### Endpoint Naming
+- Use nouns, not verbs
+- Use plural for collections
+- Use kebab-case for multi-word resources
+
+Examples:
+- GET /api/users
+- GET /api/users/:id
+- POST /api/users
+- GET /api/user-profiles
+
+### Response Format
+```json
+{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {},
+  &quot;error&quot;: null,
+  &quot;metadata&quot;: {
+    &quot;timestamp&quot;: &quot;2024-01-01T00:00:00Z&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;
+  }
+}
+</code></pre></div></p><h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1">// Always use this error format</span>
+<span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;Error message&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ERROR_CODE&#39;</span><span class="p">);</span>
+</code></pre></div><h2 id="testing-requirements">Testing Requirements<a class="headerlink" href="#testing-requirements" title="Permanent link">&para;</a></h2><p>All endpoints must have: 1. Unit tests for business logic 2. Integration tests for API endpoints 3. Load tests for performance-critical endpoints</p><h2 id="security-checklist">Security Checklist<a class="headerlink" href="#security-checklist" title="Permanent link">&para;</a></h2><ul class="task-list"><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Input validation on all endpoints</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Authentication required (except public endpoints)</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> Rate limiting implemented</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> SQL injection prevention</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> XSS prevention</li><li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled><span class="task-list-indicator"></span></label> CORS properly configured <div class="highlight"><pre><span></span><code>### 3. Frontend Project CLAUDE.md
+
+```markdown
+# CLAUDE.md - React Application
+
+## Component Development
+
+### Component Structure
+```typescript
+// components/UserProfile/UserProfile.tsx
+import React from &#39;react&#39;;
+import { UserProfileProps } from &#39;./UserProfile.types&#39;;
+import { useUserProfile } from &#39;./UserProfile.hooks&#39;;
+import styles from &#39;./UserProfile.module.css&#39;;
+
+export const UserProfile: React.FC&lt;UserProfileProps&gt; = ({ userId }) =&gt; {
+  const { user, loading, error } = useUserProfile(userId);
+
+  // Component logic
+};
+</code></pre></div></li></ul><h3 id="state-management-rules">State Management Rules<a class="headerlink" href="#state-management-rules" title="Permanent link">&para;</a></h3><ol><li>Local state for UI-only state</li><li>Context for cross-component state</li><li>Redux for global application state</li><li>React Query for server state</li></ol><h3 id="performance-guidelines">Performance Guidelines<a class="headerlink" href="#performance-guidelines" title="Permanent link">&para;</a></h3><ul><li>Use React.memo for expensive components</li><li>Implement virtual scrolling for long lists</li><li>Lazy load routes and heavy components</li><li>Optimize images with next-gen formats</li></ul><h2 id="accessibility-requirements">Accessibility Requirements<a class="headerlink" href="#accessibility-requirements" title="Permanent link">&para;</a></h2><p>All components must: - [ ] Have proper ARIA labels - [ ] Support keyboard navigation - [ ] Meet WCAG 2.1 AA standards - [ ] Pass automated a11y tests - [ ] Include screen reader testing</p><h2 id="css-guidelines">CSS Guidelines<a class="headerlink" href="#css-guidelines" title="Permanent link">&para;</a></h2><p><div class="highlight"><pre><span></span><code><span class="c">/* Use CSS Modules */</span>
+<span class="p">.</span><span class="nc">container</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c">/* Mobile-first approach */</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+
+<span class="w">  </span><span class="err">@media</span><span class="w"> </span><span class="err">(</span><span class="k">min-width</span><span class="p">:</span><span class="w"> </span><span class="mi">768</span><span class="kt">px</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">padding</span><span class="o">:</span><span class="w"> </span><span class="mi">2</span><span class="kt">rem</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="err">}</span>
+
+<span class="c">/* Use CSS variables for theming */</span>
+<span class="p">.</span><span class="nc">button</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--primary-color</span><span class="p">);</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--text-on-primary</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><span></span><code>## 💡 Best Practices
+
+### 1. Clear and Actionable Instructions
+
+```markdown
+# Good ✅
+## File Naming
+- Components: PascalCase (e.g., UserProfile.tsx)
+- Utilities: camelCase (e.g., formatDate.ts)
+- Tests: *.test.ts or *.spec.ts
+
+# Bad ❌
+## File Naming
+Files should be named appropriately.
+</code></pre></div></p><h3 id="2-specific-code-examples">2. Specific Code Examples<a class="headerlink" href="#2-specific-code-examples" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gh"># Good ✅</span>
+<span class="gu">## Error Handling Pattern</span>
+```typescript
+try {
+  const result = await apiCall();
+  return { success: true, data: result };
+} catch (error) {
+  logger.error(&#39;API call failed&#39;, { error, context });
+  return { success: false, error: error.message };
+}
+</code></pre></div><h1 id="bad-">Bad ❌<a class="headerlink" href="#bad-" title="Permanent link">&para;</a></h1><h2 id="error-handling_1">Error Handling<a class="headerlink" href="#error-handling_1" title="Permanent link">&para;</a></h2><p>Handle errors properly. <div class="highlight"><pre><span></span><code>### 3. Effective Use of Checklists
+
+```markdown
+# Good ✅
+## PR Checklist
+- [ ] Tests pass locally
+- [ ] No console.log statements
+- [ ] Documentation updated
+- [ ] Changelog entry added
+- [ ] Performance impact assessed
+
+# Bad ❌
+## PR Requirements
+Make sure everything is good before submitting.
+</code></pre></div></p><h2 id="-continuous-improvement">🔄 Continuous Improvement<a class="headerlink" href="#-continuous-improvement" title="Permanent link">&para;</a></h2><h3 id="1-regular-reviews">1. Regular Reviews<a class="headerlink" href="#1-regular-reviews" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Maintenance Schedule</span>
+
+<span class="gu">### Weekly</span>
+<span class="k">-</span><span class="w"> </span>Review and update task checklists
+<span class="k">-</span><span class="w"> </span>Check for outdated dependencies
+<span class="k">-</span><span class="w"> </span>Review error logs
+
+<span class="gu">### Monthly</span>
+<span class="k">-</span><span class="w"> </span>Update documentation
+<span class="k">-</span><span class="w"> </span>Review and refine guidelines
+<span class="k">-</span><span class="w"> </span>Analyze code metrics
+
+<span class="gu">### Quarterly</span>
+<span class="k">-</span><span class="w"> </span>Major dependency updates
+<span class="k">-</span><span class="w"> </span>Architecture review
+<span class="k">-</span><span class="w"> </span>Performance audit
+</code></pre></div><h3 id="2-feedback-collection">2. Feedback Collection<a class="headerlink" href="#2-feedback-collection" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="gu">## Feedback Collection</span>
+
+<span class="gu">### Developer Feedback</span>
+<span class="k">-</span><span class="w"> </span>What guidelines are unclear?
+<span class="k">-</span><span class="w"> </span>What tasks are repetitive?
+<span class="k">-</span><span class="w"> </span>What tools are missing?
+
+<span class="gu">### AI Performance</span>
+<span class="k">-</span><span class="w"> </span>Track successful completions
+<span class="k">-</span><span class="w"> </span>Identify common mistakes
+<span class="k">-</span><span class="w"> </span>Measure time savings
+
+<span class="gu">### Improvement Ideas</span>
+<span class="k">- [ ]</span> Add more code examples
+<span class="k">- [ ]</span> Create video tutorials
+<span class="k">- [ ]</span> Build custom tools
+</code></pre></div><h2 id="-learning-resources">🎓 Learning Resources<a class="headerlink" href="#-learning-resources" title="Permanent link">&para;</a></h2><h3 id="recommended-articles">Recommended Articles<a class="headerlink" href="#recommended-articles" title="Permanent link">&para;</a></h3><ul><li><a href="../claude-code-best-practices/">Claude Code Best Practices</a></li><li><a href="../claude-code-control-best-practices/">Claude Code Control Methods</a></li><li><a href="../../../ai-development/ai-development-tools/">AI Development Tools Comparison</a></li></ul><h3 id="external-resources">External Resources<a class="headerlink" href="#external-resources" title="Permanent link">&para;</a></h3><ul><li><a href="https://docs.anthropic.com">Anthropic Claude Documentation</a></li><li><a href="https://squidfunk.github.io/mkdocs-material/">MkDocs Material</a></li><li><a href="https://www.conventionalcommits.org/">Conventional Commits</a></li></ul><h2 id="-next-steps">🚀 Next Steps<a class="headerlink" href="#-next-steps" title="Permanent link">&para;</a></h2><ol><li><strong>Apply to Existing Projects</strong>: Add CLAUDE.md to your current project</li><li><strong>Share with Team</strong>: Review content with team members</li><li><strong>Continuous Refinement</strong>: Improve content through usage</li><li><strong>Measure Impact</strong>: Quantify productivity improvements</li></ol><hr><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="March 15, 2026 10:43:32 JST">March 15, 2026 10:43:32</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../../javascripts/mermaid-init.js"></script><script src="../../../../javascripts/mobile-nav.js"></script><script src="../../../../javascripts/daily-progress.js"></script><script src="../../../../javascripts/fix-md-links.js"></script><script src="../../../../javascripts/mobile-category-tabs.js"></script></body></html>

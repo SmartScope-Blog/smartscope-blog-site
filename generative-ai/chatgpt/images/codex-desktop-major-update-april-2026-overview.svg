@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" width="800" height="560" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Codex大型アップデートの全体像</title>
+  <desc id="desc">2026年2月2日のアプリ公開から4月16日の大型拡張までの流れと、Coding AgentからWorkflow Centerへの変化を示す図</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A6A63"/>
+    </marker>
+  </defs>
+
+  <rect x="18" y="18" width="764" height="524" rx="18" fill="#FCFBF7" stroke="#D7D1C6" stroke-width="1.5"/>
+
+  <text x="400" y="54" text-anchor="middle" fill="#1E5B8F" font-size="28" font-weight="700">Codex大型アップデートの全体像</text>
+  <text x="400" y="76" text-anchor="middle" fill="#5F5B53" font-size="14">2月公開と4月拡張は別イベント。4月16日に作業面が一気に広がった</text>
+
+  <line x1="120" y1="138" x2="680" y2="138" stroke="#B8B1A5" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="150" cy="138" r="14" fill="#FFFFFF" stroke="#C86A34" stroke-width="4"/>
+  <circle cx="400" cy="138" r="14" fill="#FFFFFF" stroke="#2E86D1" stroke-width="4"/>
+  <circle cx="650" cy="138" r="14" fill="#FFFFFF" stroke="#0F8C63" stroke-width="4"/>
+
+  <text x="150" y="104" text-anchor="middle" fill="#8A461F" font-size="16" font-weight="700">2026-02-02</text>
+  <text x="150" y="180" text-anchor="middle" fill="#8A461F" font-size="18" font-weight="700">macOSアプリ公開</text>
+  <text x="150" y="202" text-anchor="middle" fill="#8A461F" font-size="13">複数エージェント / skills / automations</text>
+
+  <text x="400" y="104" text-anchor="middle" fill="#185FA5" font-size="16" font-weight="700">2026-03-04</text>
+  <text x="400" y="180" text-anchor="middle" fill="#185FA5" font-size="18" font-weight="700">Windows対応</text>
+  <text x="400" y="202" text-anchor="middle" fill="#185FA5" font-size="13">デスクトップ面がWindowsまで拡大</text>
+
+  <text x="650" y="104" text-anchor="middle" fill="#0F6E56" font-size="16" font-weight="700">2026-04-16</text>
+  <text x="650" y="180" text-anchor="middle" fill="#0F6E56" font-size="18" font-weight="700">大型アップデート</text>
+  <text x="650" y="202" text-anchor="middle" fill="#0F6E56" font-size="13">Computer Use / Browser / 90+ plugins</text>
+
+  <rect x="34" y="226" width="214" height="264" rx="16" fill="#FAE9DF" stroke="#C86A34" stroke-width="2.5"/>
+  <text x="54" y="262" fill="#8A461F" font-size="24" font-weight="700">Before</text>
+  <text x="54" y="290" fill="#8A461F" font-size="18" font-weight="700">Coding Agent</text>
+  <text x="54" y="312" fill="#8A461F" font-size="13">主戦場は repo / CLI</text>
+
+  <rect x="54" y="334" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="359" fill="#7A3915" font-size="15" font-weight="700">中心価値</text>
+  <text x="142" y="359" fill="#7A3915" font-size="13">生成・修正</text>
+
+  <rect x="54" y="388" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="413" fill="#7A3915" font-size="15" font-weight="700">主な文脈</text>
+  <text x="142" y="413" fill="#7A3915" font-size="13">repo / CLI</text>
+
+  <rect x="54" y="442" width="182" height="40" rx="10" fill="#FFFFFF" stroke="#D9A17F"/>
+  <text x="68" y="467" fill="#7A3915" font-size="15" font-weight="700">継続性</text>
+  <text x="138" y="467" fill="#7A3915" font-size="12">長期継続は弱い</text>
+
+  <line x1="270" y1="348" x2="308" y2="348" stroke="#6A6A63" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="289" y="320" text-anchor="middle" fill="#6A6A63" font-size="17" font-weight="700">役割拡張</text>
+
+  <rect x="326" y="226" width="430" height="264" rx="16" fill="#E8F6F0" stroke="#0F8C63" stroke-width="2.5"/>
+  <text x="346" y="262" fill="#0F6E56" font-size="24" font-weight="700">After</text>
+  <text x="346" y="290" fill="#0F6E56" font-size="18" font-weight="700">Workflow Center</text>
+  <text x="346" y="312" fill="#0F6E56" font-size="13">作業・接続・継続を同じ面に寄せる</text>
+
+  <rect x="346" y="334" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="359" fill="#0F6E56" font-size="15" font-weight="700">1. 作業面</text>
+  <text x="462" y="359" fill="#0F6E56" font-size="14">Computer Use / Browser</text>
+
+  <rect x="346" y="388" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="413" fill="#0F6E56" font-size="15" font-weight="700">2. 接続面</text>
+  <text x="462" y="413" fill="#0F6E56" font-size="14">90+ plugins / PR comments / SSH</text>
+
+  <rect x="346" y="442" width="390" height="40" rx="10" fill="#FFFFFF" stroke="#50A88B"/>
+  <text x="360" y="467" fill="#0F6E56" font-size="15" font-weight="700">3. 継続面</text>
+  <text x="462" y="467" fill="#0F6E56" font-size="14">Memory / schedule</text>
+
+  <text x="400" y="520" text-anchor="middle" fill="#1E5B8F" font-size="18" font-weight="700">本質は「モデル強化」より「開発ワークフローの統合」</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" font-family="'Helvetica Neue', Arial, sans-serif">
+  <rect width="640" height="180" fill="#0d1117" rx="8"/>
+
+  <!-- Title -->
+  <text x="320" y="28" text-anchor="middle" fill="#8b949e" font-size="12" font-weight="600" letter-spacing="1.5">FIG 2 — 式の分解</text>
+
+  <!-- Background box -->
+  <rect x="40" y="44" width="560" height="120" fill="#161b22" stroke="#30363d" rx="8"/>
+
+  <!-- Main formula: PBR = PER × ROE -->
+  <text x="145" y="82" text-anchor="middle" fill="#58a6ff" font-size="22" font-weight="700">PBR</text>
+  <text x="195" y="82" text-anchor="middle" fill="#6e7681" font-size="22">=</text>
+  <text x="260" y="82" text-anchor="middle" fill="#f0883e" font-size="22" font-weight="700">PER</text>
+  <text x="315" y="82" text-anchor="middle" fill="#6e7681" font-size="16">×</text>
+  <text x="375" y="82" text-anchor="middle" fill="#3fb950" font-size="22" font-weight="700">ROE</text>
+
+  <!-- Expanded fraction form -->
+  <!-- PBR fraction -->
+  <text x="145" y="116" text-anchor="middle" fill="#8b949e" font-size="12">株価</text>
+  <line x1="118" y1="121" x2="172" y2="121" stroke="#484f58" stroke-width="1"/>
+  <text x="145" y="138" text-anchor="middle" fill="#8b949e" font-size="12">BPS</text>
+
+  <text x="195" y="128" text-anchor="middle" fill="#6e7681" font-size="14">=</text>
+
+  <!-- PER fraction -->
+  <text x="250" y="116" text-anchor="middle" fill="#8b949e" font-size="12">株価</text>
+  <line x1="223" y1="121" x2="277" y2="121" stroke="#484f58" stroke-width="1"/>
+  <text x="250" y="138" text-anchor="middle" fill="#8b949e" font-size="12">EPS</text>
+
+  <text x="300" y="128" text-anchor="middle" fill="#6e7681" font-size="14">×</text>
+
+  <!-- ROE fraction -->
+  <text x="345" y="116" text-anchor="middle" fill="#8b949e" font-size="12">EPS</text>
+  <line x1="321" y1="121" x2="370" y2="121" stroke="#484f58" stroke-width="1"/>
+  <text x="345" y="138" text-anchor="middle" fill="#8b949e" font-size="12">BPS</text>
+
+  <!-- Annotation -->
+  <text x="430" y="128" text-anchor="start" fill="#6e7681" font-size="11">← EPSが約分されてPBRになる</text>
+</svg>

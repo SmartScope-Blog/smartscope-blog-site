@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>配当利回りとトータルリターン</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-background-info: #E6F1FB;
+  --color-text-info: #185FA5;
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --color-border-secondary: rgba(0,0,0,0.25);
+  --color-border-info: #85B7EB;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --color-up: #26A69A;
+  --color-down: #EF5350;
+  --color-warning: #FF9800;
+  --color-accent: #2979FF;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-background-info: #0C447C;
+  --color-text-info: #85B7EB;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --color-border-secondary: rgba(255,255,255,0.25);
+  --color-border-info: #378ADD;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-md-color-scheme]) {
+    --color-text-primary: #D3D1C7;
+    --color-text-secondary: #B4B2A9;
+    --color-background-primary: #1e1e1e;
+    --color-background-secondary: #2a2a2a;
+    --color-background-info: #0C447C;
+    --color-text-info: #85B7EB;
+    --color-border-tertiary: rgba(255,255,255,0.12);
+    --color-border-secondary: rgba(255,255,255,0.25);
+    --color-border-info: #378ADD;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--color-background-primary); color: var(--color-text-primary); line-height: 1.6; }
+.widget { max-width: 720px; margin: 0 auto; padding: 8px; }
+.tab-bar { display: flex; gap: 2px; border-bottom: 2px solid var(--color-border-tertiary); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn { flex-shrink: 0; padding: 8px 14px; border: none; background: none; color: var(--color-text-secondary); font-size: 13px; font-family: var(--font-sans); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--color-text-primary); }
+.tab-btn.active { color: var(--color-accent); border-bottom-color: var(--color-accent); font-weight: 600; }
+.tab-panel { display: none; padding: 16px 4px; animation: fadeIn 0.3s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.panel-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.panel-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 14px; line-height: 1.6; }
+.slider-group { margin-bottom: 14px; }
+.slider-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.slider-label .val { font-weight: 700; color: var(--color-accent); }
+input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--color-border-tertiary); border-radius: 3px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--color-accent); cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--color-accent); cursor: pointer; border: none; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; border: 1px solid var(--color-border-tertiary); text-align: center; }
+.metric-card .label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric-card .value { font-size: 22px; font-weight: 700; }
+.metric-card .value.up { color: var(--color-up); }
+.metric-card .value.down { color: var(--color-down); }
+.metric-card .value.warn { color: var(--color-warning); }
+.status-msg { font-size: 13px; padding: 10px 14px; border-radius: var(--border-radius-md); margin-top: 10px; line-height: 1.5; }
+.status-msg.ok { background: rgba(38,166,154,0.1); color: var(--color-up); border-left: 3px solid var(--color-up); }
+.status-msg.warn { background: rgba(255,152,0,0.1); color: var(--color-warning); border-left: 3px solid var(--color-warning); }
+.status-msg.danger { background: rgba(239,83,80,0.1); color: var(--color-down); border-left: 3px solid var(--color-down); }
+.bar-container { margin: 10px 0; }
+.bar-bg { height: 24px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; display: flex; border: 1px solid var(--color-border-tertiary); }
+.bar-fill { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; transition: width 0.3s; }
+.bar-fill.dividend { background: var(--color-down); }
+.bar-fill.reinvest { background: var(--color-up); }
+.bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.compare-card { border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px; background: var(--color-background-secondary); }
+.compare-card h4 { font-size: 14px; margin-bottom: 10px; text-align: center; }
+.compare-card .total-return { font-size: 28px; font-weight: 700; text-align: center; margin: 8px 0; }
+.tax-bars { margin: 14px 0; }
+.tax-bar-row { display: flex; align-items: center; margin-bottom: 8px; gap: 8px; }
+.tax-bar-label { width: 80px; font-size: 12px; flex-shrink: 0; }
+.tax-bar-track { flex: 1; height: 22px; background: var(--color-border-tertiary); border-radius: 4px; overflow: hidden; position: relative; }
+.tax-bar-value { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: #fff; transition: width 0.3s; }
+.tax-bar-amount { width: 90px; text-align: right; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+@media (max-width: 480px) {
+  .tab-btn { padding: 6px 10px; font-size: 12px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="trap">利回りの罠</button>
+    <button class="tab-btn" role="tab" data-tab="payout">配当性向</button>
+    <button class="tab-btn" role="tab" data-tab="total">トータルリターン</button>
+    <button class="tab-btn" role="tab" data-tab="tax">税金の影響</button>
+  </div>
+
+  <!-- Tab 1: 利回りの罠 -->
+  <div class="tab-panel active" id="panel-trap">
+    <div class="panel-title">利回りの罠 — 株価下落が生む「見かけの高利回り」</div>
+    <div class="panel-desc">株価スライダーを下げてみると、配当が変わらなくても利回りが倍増する仕組みが体感できる。</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>株価</span><span class="val" id="trap-price-val">4,000円</span></div>
+      <input type="range" id="trap-price" min="500" max="5000" step="50" value="4000">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>年間配当金</span><span class="val" id="trap-div-val">100円</span></div>
+      <input type="range" id="trap-div" min="0" max="200" step="5" value="100">
+    </div>
+    <div class="metrics">
+      <div class="metric-card"><div class="label">配当利回り</div><div class="value" id="trap-yield">2.5%</div></div>
+      <div class="metric-card"><div class="label">株価の変化</div><div class="value" id="trap-price-change">±0%</div></div>
+      <div class="metric-card"><div class="label">配当の変化</div><div class="value" id="trap-div-change">±0円</div></div>
+    </div>
+    <div class="status-msg ok" id="trap-status">基準値: 株価4,000円・配当100円（利回り2.5%）</div>
+  </div>
+
+  <!-- Tab 2: 配当性向 -->
+  <div class="tab-panel" id="panel-payout">
+    <div class="panel-title">配当性向 — 利益のうち何%を配当に回しているか</div>
+    <div class="panel-desc">配当金を上げすぎると配当性向が危険水準に入る。80%を超えると警告、100%を超えると利益以上を配当に回している。</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>EPS（1株利益）</span><span class="val" id="po-eps-val">200円</span></div>
+      <input type="range" id="po-eps" min="50" max="400" step="10" value="200">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>配当金</span><span class="val" id="po-div-val">60円</span></div>
+      <input type="range" id="po-div" min="0" max="300" step="5" value="60">
+    </div>
+    <div class="metrics">
+      <div class="metric-card"><div class="label">配当性向</div><div class="value" id="po-ratio">30%</div></div>
+    </div>
+    <div class="bar-container">
+      <div class="bar-bg">
+        <div class="bar-fill dividend" id="po-bar-div" style="width:30%">配当 30%</div>
+        <div class="bar-fill reinvest" id="po-bar-re" style="width:70%">再投資 70%</div>
+      </div>
+      <div class="bar-label"><span>配当に回す</span><span>事業に再投資</span></div>
+    </div>
+    <div class="status-msg ok" id="po-status">健全な水準。減益時にも配当維持の余地がある。</div>
+  </div>
+
+  <!-- Tab 3: トータルリターン -->
+  <div class="tab-panel" id="panel-total">
+    <div class="panel-title">トータルリターン — 配当だけで判断すると見誤る</div>
+    <div class="panel-desc">2銘柄を並べて比較。配当利回りが高くても、株価下落でトータルが負けるケースを確認できる。</div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>銘柄A</h4>
+        <div class="slider-group">
+          <div class="slider-label"><span>株価変動</span><span class="val" id="ta-price-val">-30%</span></div>
+          <input type="range" id="ta-price" min="-50" max="50" step="1" value="-30">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>配当利回り</span><span class="val" id="ta-div-val">5.0%</span></div>
+          <input type="range" id="ta-div" min="0" max="10" step="0.1" value="5">
+        </div>
+        <div class="total-return" id="ta-total">-25.0%</div>
+      </div>
+      <div class="compare-card">
+        <h4>銘柄B</h4>
+        <div class="slider-group">
+          <div class="slider-label"><span>株価変動</span><span class="val" id="tb-price-val">+20%</span></div>
+          <input type="range" id="tb-price" min="-50" max="50" step="1" value="20">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>配当利回り</span><span class="val" id="tb-div-val">1.0%</span></div>
+          <input type="range" id="tb-div" min="0" max="10" step="0.1" value="1">
+        </div>
+        <div class="total-return" id="tb-total">+21.0%</div>
+      </div>
+    </div>
+    <div class="status-msg ok" id="total-status">銘柄Bの方がトータルリターンで優位。配当利回りだけでは投資成果は測れない。</div>
+  </div>
+
+  <!-- Tab 4: 税金の影響 -->
+  <div class="tab-panel" id="panel-tax">
+    <div class="panel-title">税金の影響 — 手取りは額面通りではない</div>
+    <div class="panel-desc">100万円投資した場合の税引後年間配当額を比較。米国株は二重課税でさらに目減りする。</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>表面利回り</span><span class="val" id="tax-yield-val">5.0%</span></div>
+      <input type="range" id="tax-yield" min="0.5" max="10" step="0.1" value="5">
+    </div>
+    <div class="metrics">
+      <div class="metric-card"><div class="label">国内株 税引後</div><div class="value up" id="tax-domestic">3.98%</div></div>
+      <div class="metric-card"><div class="label">米国株 税引後</div><div class="value warn" id="tax-us">3.59%</div></div>
+      <div class="metric-card"><div class="label">差額</div><div class="value down" id="tax-diff">-0.40%</div></div>
+    </div>
+    <div class="tax-bars" id="tax-bar-area">
+      <div class="tax-bar-row">
+        <div class="tax-bar-label">国内株</div>
+        <div class="tax-bar-track"><div class="tax-bar-value" id="tax-bar-dom" style="width:79.7%;background:var(--color-up)">39,843円</div></div>
+        <div class="tax-bar-amount" id="tax-amt-dom">39,843円</div>
+      </div>
+      <div class="tax-bar-row">
+        <div class="tax-bar-label">米国株</div>
+        <div class="tax-bar-track"><div class="tax-bar-value" id="tax-bar-us" style="width:71.7%;background:var(--color-warning)">35,858円</div></div>
+        <div class="tax-bar-amount" id="tax-amt-us">35,858円</div>
+      </div>
+    </div>
+    <div class="status-msg warn" id="tax-status">米国株は現地10% + 国内約20%の二重課税。確定申告で外国税額控除の適用が可能。</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Tab switching
+  var btns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+  function sign(n) { return n >= 0 ? '+' + n : '' + n; }
+  function cls(n) { return n > 0 ? 'up' : n < 0 ? 'down' : ''; }
+
+  // Tab 1: Yield Trap
+  var BASE_PRICE = 4000, BASE_DIV = 100;
+  function updateTrap() {
+    var p = +document.getElementById('trap-price').value;
+    var d = +document.getElementById('trap-div').value;
+    var y = p > 0 ? (d / p * 100) : 0;
+    var pc = ((p - BASE_PRICE) / BASE_PRICE * 100);
+    var dc = d - BASE_DIV;
+    document.getElementById('trap-price-val').textContent = fmt(p) + '円';
+    document.getElementById('trap-div-val').textContent = fmt(d) + '円';
+    document.getElementById('trap-yield').textContent = y.toFixed(1) + '%';
+    document.getElementById('trap-yield').className = 'value' + (y > 4 ? ' warn' : y > 6 ? ' down' : '');
+    var pce = document.getElementById('trap-price-change');
+    pce.textContent = sign(pc.toFixed(1)) + '%';
+    pce.className = 'value ' + cls(pc);
+    var dce = document.getElementById('trap-div-change');
+    dce.textContent = sign(dc) + '円';
+    dce.className = 'value ' + cls(dc);
+    var st = document.getElementById('trap-status');
+    if (pc < -20 && dc <= 0) {
+      st.className = 'status-msg danger';
+      st.textContent = '株価が' + Math.abs(pc.toFixed(0)) + '%下落。配当は増えていないのに利回りが' + y.toFixed(1) + '%に上昇。これが「見かけの高利回り」の正体。';
+    } else if (pc < 0 && dc <= 0) {
+      st.className = 'status-msg warn';
+      st.textContent = '株価下落で利回りが上昇中。配当が増えたわけではない点に注意。';
+    } else if (dc > 0) {
+      st.className = 'status-msg ok';
+      st.textContent = '配当増額による利回り上昇。これは好ましいパターン。';
+    } else {
+      st.className = 'status-msg ok';
+      st.textContent = '基準値: 株価' + fmt(BASE_PRICE) + '円・配当' + fmt(BASE_DIV) + '円（利回り' + (BASE_DIV / BASE_PRICE * 100).toFixed(1) + '%）';
+    }
+  }
+  document.getElementById('trap-price').addEventListener('input', updateTrap);
+  document.getElementById('trap-div').addEventListener('input', updateTrap);
+
+  // Tab 2: Payout Ratio
+  function updatePayout() {
+    var eps = +document.getElementById('po-eps').value;
+    var div = +document.getElementById('po-div').value;
+    var ratio = eps > 0 ? (div / eps * 100) : 0;
+    document.getElementById('po-eps-val').textContent = fmt(eps) + '円';
+    document.getElementById('po-div-val').textContent = fmt(div) + '円';
+    var re = document.getElementById('po-ratio');
+    re.textContent = ratio.toFixed(0) + '%';
+    re.className = 'value' + (ratio > 100 ? ' down' : ratio > 80 ? ' warn' : '');
+    var dp = Math.min(ratio, 100);
+    var rp = Math.max(100 - ratio, 0);
+    document.getElementById('po-bar-div').style.width = dp + '%';
+    document.getElementById('po-bar-div').textContent = dp > 15 ? '配当 ' + ratio.toFixed(0) + '%' : '';
+    document.getElementById('po-bar-re').style.width = rp + '%';
+    document.getElementById('po-bar-re').textContent = rp > 15 ? '再投資 ' + rp.toFixed(0) + '%' : '';
+    var st = document.getElementById('po-status');
+    if (ratio > 100) {
+      st.className = 'status-msg danger';
+      st.textContent = '利益以上を配当に回している。貯蓄を切り崩している状態であり、持続不可能。';
+    } else if (ratio > 80) {
+      st.className = 'status-msg warn';
+      st.textContent = '配当性向が高い。少しの減益で配当維持が困難になるリスクがある。';
+    } else if (ratio > 50) {
+      st.className = 'status-msg ok';
+      st.textContent = '中程度の水準。安定業種ならば許容範囲だが、景気変動の影響に注意。';
+    } else {
+      st.className = 'status-msg ok';
+      st.textContent = '健全な水準。減益時にも配当維持の余地がある。';
+    }
+  }
+  document.getElementById('po-eps').addEventListener('input', updatePayout);
+  document.getElementById('po-div').addEventListener('input', updatePayout);
+
+  // Tab 3: Total Return
+  function updateTotal() {
+    var ap = +document.getElementById('ta-price').value;
+    var ad = +document.getElementById('ta-div').value;
+    var bp = +document.getElementById('tb-price').value;
+    var bd = +document.getElementById('tb-div').value;
+    var at = ap + ad, bt = bp + bd;
+    document.getElementById('ta-price-val').textContent = sign(ap) + '%';
+    document.getElementById('ta-div-val').textContent = ad.toFixed(1) + '%';
+    document.getElementById('tb-price-val').textContent = sign(bp) + '%';
+    document.getElementById('tb-div-val').textContent = bd.toFixed(1) + '%';
+    var ate = document.getElementById('ta-total');
+    ate.textContent = sign(at.toFixed(1)) + '%';
+    ate.style.color = at >= 0 ? 'var(--color-up)' : 'var(--color-down)';
+    var bte = document.getElementById('tb-total');
+    bte.textContent = sign(bt.toFixed(1)) + '%';
+    bte.style.color = bt >= 0 ? 'var(--color-up)' : 'var(--color-down)';
+    var st = document.getElementById('total-status');
+    if (at > bt) {
+      st.textContent = '銘柄Aの方がトータルリターンで優位（' + sign(at.toFixed(1)) + '% vs ' + sign(bt.toFixed(1)) + '%）。';
+    } else if (bt > at) {
+      st.textContent = '銘柄Bの方がトータルリターンで優位（' + sign(bt.toFixed(1)) + '% vs ' + sign(at.toFixed(1)) + '%）。配当利回りだけでは投資成果は測れない。';
+    } else {
+      st.textContent = '両銘柄のトータルリターンは同じ（' + sign(at.toFixed(1)) + '%）。';
+    }
+    st.className = 'status-msg ok';
+  }
+  ['ta-price','ta-div','tb-price','tb-div'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', updateTotal);
+  });
+
+  // Tab 4: Tax
+  var DOM_TAX = 0.20315;
+  var US_LOCAL = 0.10;
+  function updateTax() {
+    var y = +document.getElementById('tax-yield').value;
+    var domAfter = y * (1 - DOM_TAX);
+    var usAfter = y * (1 - US_LOCAL) * (1 - DOM_TAX);
+    var diff = usAfter - domAfter;
+    var invest = 1000000;
+    var domAmt = Math.round(invest * domAfter / 100);
+    var usAmt = Math.round(invest * usAfter / 100);
+    document.getElementById('tax-yield-val').textContent = y.toFixed(1) + '%';
+    document.getElementById('tax-domestic').textContent = domAfter.toFixed(2) + '%';
+    document.getElementById('tax-us').textContent = usAfter.toFixed(2) + '%';
+    document.getElementById('tax-diff').textContent = diff.toFixed(2) + '%';
+    var maxAmt = invest * 10 / 100;
+    document.getElementById('tax-bar-dom').style.width = (domAmt / maxAmt * 100) + '%';
+    document.getElementById('tax-bar-dom').textContent = fmt(domAmt) + '円';
+    document.getElementById('tax-amt-dom').textContent = fmt(domAmt) + '円';
+    document.getElementById('tax-bar-us').style.width = (usAmt / maxAmt * 100) + '%';
+    document.getElementById('tax-bar-us').textContent = fmt(usAmt) + '円';
+    document.getElementById('tax-amt-us').textContent = fmt(usAmt) + '円';
+  }
+  document.getElementById('tax-yield').addEventListener('input', updateTax);
+
+  // Color scheme inheritance
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

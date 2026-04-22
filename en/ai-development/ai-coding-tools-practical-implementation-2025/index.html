@@ -1,0 +1,1127 @@
+<!doctype html><html lang="en" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="author" content="SmartScope"><link rel="canonical" href="https://smartscope.blog/en/ai-development/ai-coding-tools-practical-implementation-2025/"><link rel="alternate" href="../../../ai-development/ai-coding-tools-practical-implementation-2025/" hreflang="ja"><link rel="alternate" href="./" hreflang="en"><link rel="icon" href="../../../assets/images/favicon.png"><meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Ai coding tools practical implementation 2025 - SmartScope</title><link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css"><link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel="stylesheet" href="../../../stylesheets/extra.css"><link rel="stylesheet" href="../../../stylesheets/mobile-fix.css"><link rel="stylesheet" href="../../../stylesheets/footer-links.css"><link rel="stylesheet" href="../../../stylesheets/hub-v2.css"><script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XJMK21G4NW"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XJMK21G4NW",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XJMK21G4NW",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script><script>"undefined"!=typeof __md_analytics&&__md_analytics()</script><script>
+  (function(){
+    var w=screen.width,h=screen.height;
+    var isLinux=/Linux/.test(navigator.platform)&&!/Android/.test(navigator.userAgent);
+    if((isLinux&&w===1280&&h===720)||(w===1280&&h===1200)||navigator.webdriver){
+      window['ga-disable-G-XJMK21G4NW']=true;
+    }
+  })();
+  </script><meta name="google-adsense-account" content="ca-pub-7306039962034088"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306039962034088" crossorigin="anonymous"></script><meta property="og:type" content="website"><meta property="og:title" content="Ai coding tools practical implementation 2025"><meta property="og:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta property="og:url" content="https://smartscope.blog/en/ai-development/ai-coding-tools-practical-implementation-2025/"><meta property="og:site_name" content="SmartScope"><meta property="og:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Ai coding tools practical implementation 2025"><meta name="twitter:description" content="技術ノート・ドキュメント集 - MkDocs Material高度機能実装例"><meta name="twitter:image" content="https://smartscope.blog/assets/images/ogp-default.jpg"></head><body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"><input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off"><input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off"><label class="md-overlay" for="__drawer"></label><div data-md-component="skip"><a href="#claude-4-openai-codex--gemini-cli-implementation-guide-practical-integration-steps-for-developers-2025" class="md-skip"> Skip to content </a></div><div data-md-component="announce"></div><header class="md-header md-header--shadow md-header--lifted" data-md-component="header"><nav class="md-header__inner md-grid" aria-label="Header"><a href="../../" title="SmartScope" class="md-header__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a><label class="md-header__button md-icon" for="__drawer"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></label><div class="md-header__title" data-md-component="header-title"><div class="md-header__ellipsis"><div class="md-header__topic"><span class="md-ellipsis"> SmartScope </span></div><div class="md-header__topic" data-md-component="header-topic"><span class="md-ellipsis"> Ai coding tools practical implementation 2025 </span></div></div></div><form class="md-header__option" data-md-component="palette"><input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ダークモードに切り替え" type="radio" name="__palette" id="__palette_0"><label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label><input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange" aria-label="ライトモードに切り替え" type="radio" name="__palette" id="__palette_1"><label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg></label></form><script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script><div class="md-header__option"><div class="md-select"><button class="md-header__button md-icon" aria-label="Select language"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button><div class="md-select__inner"><ul class="md-select__list"><li class="md-select__item"><a href="../../../ai-development/ai-coding-tools-practical-implementation-2025/" hreflang="ja" class="md-select__link"> 日本語 </a></li><li class="md-select__item"><a href="./" hreflang="en" class="md-select__link"> English </a></li></ul></div></div></div><label class="md-header__button md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required><label class="md-search__icon md-icon" for="__search"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg></label><nav class="md-search__options" aria-label="Search"><button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></nav><div class="md-search__suggest" data-md-component="search-suggest"></div></form><div class="md-search__output"><div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix><div class="md-search-result" data-md-component="search-result"><div class="md-search-result__meta"> Initializing search </div><ol class="md-search-result__list" role="presentation"></ol></div></div></div></div></div></nav><nav class="md-tabs" aria-label="Tabs" data-md-component="tabs"><div class="md-grid"><ul class="md-tabs__list"><li class="md-tabs__item"><a href="../../" class="md-tabs__link"> 🏠 Home </a></li><li class="md-tabs__item"><a href="../../blog/" class="md-tabs__link"> 📰 Blog </a></li><li class="md-tabs__item"><a href="../../generative-ai/" class="md-tabs__link"> 🤖 Generative AI </a></li><li class="md-tabs__item"><a href="../../investments/guide/" class="md-tabs__link"> 📊 Investment Guide </a></li><li class="md-tabs__item"><a href="../../Infrastructure/" class="md-tabs__link"> 🖥️ Infrastructure </a></li><li class="md-tabs__item"><a href="../../MkDocs/" class="md-tabs__link"> 📘 MkDocs & Site </a></li></ul></div></nav></header><div class="md-container" data-md-component="container"><main class="md-main" data-md-component="main"><div class="md-main__inner md-grid"><div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0"><label class="md-nav__title" for="__drawer"><a href="../../" title="SmartScope" class="md-nav__button md-logo" aria-label="SmartScope" data-md-component="logo"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg></a> SmartScope </label><ul class="md-nav__list" data-md-scrollfix><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../" class="md-nav__link"><span class="md-ellipsis"> 🏠 Home </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../blog/" class="md-nav__link"><span class="md-ellipsis"> 📰 Blog </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../generative-ai/" class="md-nav__link"><span class="md-ellipsis"> 🤖 Generative AI </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../investments/guide/" class="md-nav__link"><span class="md-ellipsis"> 📊 Investment Guide </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../Infrastructure/" class="md-nav__link"><span class="md-ellipsis"> 🖥️ Infrastructure </span><span class="md-nav__icon md-icon"></span></a></li><li class="md-nav__item md-nav__item--pruned md-nav__item--nested"><a href="../../MkDocs/" class="md-nav__link"><span class="md-ellipsis"> 📘 MkDocs & Site </span><span class="md-nav__icon md-icon"></span></a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary" aria-label="Table of contents"><label class="md-nav__title" for="__toc"><span class="md-nav__icon md-icon"></span> Table of contents </label><ul class="md-nav__list" data-md-component="toc" data-md-scrollfix><li class="md-nav__item"><a href="#introduction" class="md-nav__link"><span class="md-ellipsis"> Introduction </span></a></li><li class="md-nav__item"><a href="#key-points" class="md-nav__link"><span class="md-ellipsis"> Key Points </span></a></li><li class="md-nav__item"><a href="#claude-4-implementation-building-long-term-task-support-environment" class="md-nav__link"><span class="md-ellipsis"> Claude 4 Implementation: Building Long-Term Task Support Environment </span></a><nav class="md-nav" aria-label="Claude 4 Implementation: Building Long-Term Task Support Environment"><ul class="md-nav__list"><li class="md-nav__item"><a href="#environment-setup" class="md-nav__link"><span class="md-ellipsis"> Environment Setup </span></a></li><li class="md-nav__item"><a href="#claude-4-client-implementation" class="md-nav__link"><span class="md-ellipsis"> Claude 4 Client Implementation </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#openai-codex-implementation-chatgpt-integrated-development-environment" class="md-nav__link"><span class="md-ellipsis"> OpenAI Codex Implementation: ChatGPT Integrated Development Environment </span></a><nav class="md-nav" aria-label="OpenAI Codex Implementation: ChatGPT Integrated Development Environment"><ul class="md-nav__list"><li class="md-nav__item"><a href="#codex-agent-configuration" class="md-nav__link"><span class="md-ellipsis"> Codex Agent Configuration </span></a></li><li class="md-nav__item"><a href="#github-actions-integration" class="md-nav__link"><span class="md-ellipsis"> GitHub Actions Integration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#google-gemini-cli-implementation-terminal-integration" class="md-nav__link"><span class="md-ellipsis"> Google Gemini CLI Implementation: Terminal Integration </span></a><nav class="md-nav" aria-label="Google Gemini CLI Implementation: Terminal Integration"><ul class="md-nav__list"><li class="md-nav__item"><a href="#installation-and-initial-configuration" class="md-nav__link"><span class="md-ellipsis"> Installation and Initial Configuration </span></a></li><li class="md-nav__item"><a href="#creating-custom-commands" class="md-nav__link"><span class="md-ellipsis"> Creating Custom Commands </span></a></li><li class="md-nav__item"><a href="#advanced-workflow-integration" class="md-nav__link"><span class="md-ellipsis"> Advanced Workflow Integration </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#building-integrated-workflow" class="md-nav__link"><span class="md-ellipsis"> Building Integrated Workflow </span></a><nav class="md-nav" aria-label="Building Integrated Workflow"><ul class="md-nav__list"><li class="md-nav__item"><a href="#three-tool-integration-script" class="md-nav__link"><span class="md-ellipsis"> Three-Tool Integration Script </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#performance-measurement-and-optimization" class="md-nav__link"><span class="md-ellipsis"> Performance Measurement and Optimization </span></a><nav class="md-nav" aria-label="Performance Measurement and Optimization"><ul class="md-nav__list"><li class="md-nav__item"><a href="#productivity-measurement-tool" class="md-nav__link"><span class="md-ellipsis"> Productivity Measurement Tool </span></a></li></ul></nav></li><li class="md-nav__item"><a href="#summary" class="md-nav__link"><span class="md-ellipsis"> Summary </span></a></li><li class="md-nav__item"><a href="#related-articles" class="md-nav__link"><span class="md-ellipsis"> Related Articles </span></a></li></ul></nav></div></div></div><div class="md-content" data-md-component="content"><article class="md-content__inner md-typeset"><ul><li>Claude 4</li><li>OpenAI Codex</li><li>Google Gemini CLI</li><li>AI Development Tools</li><li>Implementation Guide</li><li>Development Environment Setup</li><li>implementation-guide categories:</li><li>AI Development &amp; Automation</li><li>Tools &amp; Development Efficiency author: Claude Code status: practical experience_level: intermediate</li></ul><hr><h1 id="claude-4-openai-codex--gemini-cli-implementation-guide-practical-integration-steps-for-developers-2025">Claude 4, OpenAI Codex &amp; Gemini CLI Implementation Guide: Practical Integration Steps for Developers 2025<a class="headerlink" href="#claude-4-openai-codex--gemini-cli-implementation-guide-practical-integration-steps-for-developers-2025" title="Permanent link">&para;</a></h1><h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2><p>This guide provides detailed implementation methods and practical examples for the latest AI development tools introduced in Must-See for AI Developers: Claude 4 Launch, OpenAI Codex &amp; Terminal Revolution - July 22, 2025 Breaking News (archived). A concrete guide for developers moving from theory to practice.</p><h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2><div class="grid cards"><ul><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>Environment Setup Automation</strong></p><p>Build an optimal development environment integrating three AI tools in 30 minutes</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m14.6 16.6 4.6-4.6-4.6-4.6L16 6l6 6-6 6zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6z"/></svg></span> <strong>Code Generation Optimization</strong></p><p>Efficient code generation workflow leveraging each tool's strengths</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12h7c-.53 4.11-3.28 7.78-7 8.92zH5V6.3l7-3.11M12 1 3 5v6c0 5.55 3.84 10.73 9 12 5.16-1.27 9-6.45 9-12V5z"/></svg></span> <strong>Secure Integration</strong></p><p>API configuration and data protection procedures safe for enterprise environments</p></li><li><p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>Performance Measurement</strong></p><p>Quantitative productivity evaluation and bottleneck identification methods</p></li></ul></div><h2 id="claude-4-implementation-building-long-term-task-support-environment">Claude 4 Implementation: Building Long-Term Task Support Environment<a class="headerlink" href="#claude-4-implementation-building-long-term-task-support-environment" title="Permanent link">&para;</a></h2><h3 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Build development environment for Claude 4</span>
+mkdir<span class="w"> </span>claude4-workspace<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>claude4-workspace
+
+<span class="c1"># Install required dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>anthropic<span class="w"> </span>python-dotenv<span class="w"> </span>pyyaml
+
+<span class="c1"># Prepare configuration file</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>claude4_config.yaml<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s"># Claude 4 configuration file</span>
+<span class="s">claude_config:</span>
+<span class="s">  model: &quot;claude-4-opus-20250514&quot;</span>
+<span class="s">  max_tokens: 8192</span>
+<span class="s">  temperature: 0.1</span>
+
+<span class="s">project_settings:</span>
+<span class="s">  context_window: 200000</span>
+<span class="s">  long_task_mode: true</span>
+<span class="s">  multi_file_analysis: true</span>
+
+<span class="s">security:</span>
+<span class="s">  api_key_env: &quot;CLAUDE_API_KEY&quot;</span>
+<span class="s">  log_level: &quot;INFO&quot;</span>
+<span class="s">  sensitive_data_filter: true</span>
+<span class="s">EOF</span>
+</code></pre></div><h3 id="claude-4-client-implementation">Claude 4 Client Implementation<a class="headerlink" href="#claude-4-client-implementation" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># claude4_client.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Claude4Client</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;claude4_config.yaml&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize Claude 4 client&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Anthropic</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;security&#39;</span><span class="p">][</span><span class="s1">&#39;api_key_env&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Logging setup</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;security&#39;</span><span class="p">][</span><span class="s1">&#39;log_level&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_codebase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Comprehensive analysis of multiple files&quot;&quot;&quot;</span>
+        <span class="n">combined_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">file_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">file_map</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">combined_content</span><span class="p">)</span>
+                    <span class="n">combined_content</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">--- </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> ---</span><span class="se">\n</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File read error: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;claude_config&#39;</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">],</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;claude_config&#39;</span><span class="p">][</span><span class="s1">&#39;max_tokens&#39;</span><span class="p">],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;claude_config&#39;</span><span class="p">][</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    Analyze the following codebase and provide:</span>
+<span class="s2">                    1. Architecture overview</span>
+<span class="s2">                    2. Potential issues</span>
+<span class="s2">                    3. Improvement suggestions</span>
+<span class="s2">                    4. Dependency analysis</span>
+
+<span class="s2">                    Codebase:</span>
+<span class="s2">                    </span><span class="si">{</span><span class="n">combined_content</span><span class="si">}</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;analysis&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="s2">&quot;file_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">),</span>
+            <span class="s2">&quot;total_tokens&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">combined_content</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">long_term_refactoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute long-term refactoring task&quot;&quot;&quot;</span>
+        <span class="c1"># Analyze project structure</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+
+        <span class="n">python_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2">/**/*.py&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">js_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2">/**/*.js&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyze_codebase</span><span class="p">(</span><span class="n">python_files</span> <span class="o">+</span> <span class="n">js_files</span><span class="p">)</span>
+
+        <span class="n">refactoring_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Long-term refactoring task: </span><span class="si">{</span><span class="n">task_description</span><span class="si">}</span>
+
+<span class="s2">        Current analysis results:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">analysis</span><span class="p">[</span><span class="s1">&#39;analysis&#39;</span><span class="p">]</span><span class="si">}</span>
+
+<span class="s2">        Create a concrete refactoring plan in the following format:</span>
+<span class="s2">        1. Phased execution steps (each phase within 1-2 hours)</span>
+<span class="s2">        2. Specific code changes for each phase</span>
+<span class="s2">        3. Testing strategy</span>
+<span class="s2">        4. Risk assessment and countermeasures</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;claude_config&#39;</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">],</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;claude_config&#39;</span><span class="p">][</span><span class="s1">&#39;max_tokens&#39;</span><span class="p">],</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">refactoring_prompt</span><span class="p">}]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+
+<span class="c1"># Usage example</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Claude4Client</span><span class="p">()</span>
+
+    <span class="c1"># Multiple file analysis example</span>
+    <span class="n">files_to_analyze</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src/main.py&quot;</span><span class="p">,</span> <span class="s2">&quot;src/utils.py&quot;</span><span class="p">,</span> <span class="s2">&quot;tests/test_main.py&quot;</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">analyze_codebase</span><span class="p">(</span><span class="n">files_to_analyze</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Analysis result:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;analysis&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Generate long-term refactoring plan</span>
+    <span class="n">plan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">long_term_refactoring</span><span class="p">(</span>
+        <span class="s2">&quot;./my_project&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;Split monolith into microservices&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Refactoring plan:&quot;</span><span class="p">,</span> <span class="n">plan</span><span class="p">)</span>
+</code></pre></div><div class="admonition tip"><p class="admonition-title">Claude 4 Utilization Tips</p><p>To maximize Claude 4's long-term task execution capability, structure tasks clearly and save intermediate results regularly</p></div><h2 id="openai-codex-implementation-chatgpt-integrated-development-environment">OpenAI Codex Implementation: ChatGPT Integrated Development Environment<a class="headerlink" href="#openai-codex-implementation-chatgpt-integrated-development-environment" title="Permanent link">&para;</a></h2><h3 id="codex-agent-configuration">Codex Agent Configuration<a class="headerlink" href="#codex-agent-configuration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># codex_agent.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CodexAgent</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize OpenAI Codex Agent&quot;&quot;&quot;</span>
+        <span class="n">openai</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversation_history</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">project_context</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement complete software feature&quot;&quot;&quot;</span>
+
+        <span class="n">system_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        You are an experienced software developer. Implement a new feature with the following project context.</span>
+
+<span class="s2">        Project context:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">project_context</span><span class="si">}</span>
+
+<span class="s2">        Implementation requirements:</span>
+<span class="s2">        1. Detailed feature specification</span>
+<span class="s2">        2. Required files and directory structure</span>
+<span class="s2">        3. Implementation code (complete version)</span>
+<span class="s2">        4. Test code</span>
+<span class="s2">        5. Documentation</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4-code-interpreter&quot;</span><span class="p">,</span>  <span class="c1"># Codex-specific model</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">system_prompt</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Feature to implement: </span><span class="si">{</span><span class="n">feature_description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+            <span class="p">],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">4000</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+        <span class="c1"># Structure the result</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_implementation_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fix_bugs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_log</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Automatic bug fixing&quot;&quot;&quot;</span>
+
+        <span class="n">bug_fix_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Analyze the following error log and source code, identify bugs, and provide fixed code.</span>
+
+<span class="s2">        Error log:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">error_log</span><span class="si">}</span>
+
+<span class="s2">        Source code:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">source_code</span><span class="si">}</span>
+
+<span class="s2">        Answer in the following format:</span>
+<span class="s2">        1. Bug cause</span>
+<span class="s2">        2. Fixed code</span>
+<span class="s2">        3. Fix explanation</span>
+<span class="s2">        4. Additional test suggestions</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4-code-interpreter&quot;</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">bug_fix_prompt</span><span class="p">}],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_bug_fix_result</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pytest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Comprehensive test automation&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Execute tests</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="n">test_command</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span>
+            <span class="p">)</span>
+
+            <span class="n">test_output</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+                <span class="s2">&quot;return_code&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Analyze test results with Codex</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">test_output</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
+                <span class="n">analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_test_failures</span><span class="p">(</span><span class="n">test_output</span><span class="p">)</span>
+                <span class="n">test_output</span><span class="p">[</span><span class="s2">&quot;analysis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">analysis</span>
+                <span class="n">test_output</span><span class="p">[</span><span class="s2">&quot;suggested_fixes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suggest_test_fixes</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">test_output</span>
+
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Test execution timed out&quot;</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Test execution error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_implementation_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse implementation result&quot;&quot;&quot;</span>
+        <span class="c1"># Structure implementation result (in actual implementation use regex or NLP)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;specification&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature specification...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_structure&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;file1.py&quot;</span><span class="p">,</span> <span class="s2">&quot;file2.py&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;implementation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file1.py&quot;</span><span class="p">:</span> <span class="s2">&quot;code content...&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;tests&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;test_file1.py&quot;</span><span class="p">:</span> <span class="s2">&quot;test code...&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;README content...&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_bug_fix_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse bug fix result&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;bug_cause&quot;</span><span class="p">:</span> <span class="s2">&quot;Bug cause...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fixed_code&quot;</span><span class="p">:</span> <span class="s2">&quot;Fixed code...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;explanation&quot;</span><span class="p">:</span> <span class="s2">&quot;Fix explanation...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;additional_tests&quot;</span><span class="p">:</span> <span class="s2">&quot;Additional tests...&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_test_failures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_output</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze test failures&quot;&quot;&quot;</span>
+        <span class="n">analysis_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Analyze the following test execution results and identify the cause of failures:</span>
+
+<span class="s2">        Standard output:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">test_output</span><span class="p">[</span><span class="s1">&#39;stdout&#39;</span><span class="p">]</span><span class="si">}</span>
+
+<span class="s2">        Error output:</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">test_output</span><span class="p">[</span><span class="s1">&#39;stderr&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4-code-interpreter&quot;</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">analysis_prompt</span><span class="p">}],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_suggest_test_fixes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysis</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Suggest test fixes&quot;&quot;&quot;</span>
+        <span class="c1"># Generate fix suggestions based on analysis</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Fix suggestion 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Fix suggestion 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Fix suggestion 3&quot;</span><span class="p">]</span>
+
+<span class="c1"># Usage example and workflow integration</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_development_workflow</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create development workflow&quot;&quot;&quot;</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">CodexAgent</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">))</span>
+
+    <span class="c1"># 1. Implement new feature</span>
+    <span class="n">feature_result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">create_feature</span><span class="p">(</span>
+        <span class="s2">&quot;User authentication system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Flask web application, using PostgreSQL database&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 2. Save implemented code</span>
+    <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">feature_result</span><span class="p">[</span><span class="s2">&quot;implementation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="c1"># 3. Run tests</span>
+    <span class="n">test_result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_tests</span><span class="p">()</span>
+
+    <span class="c1"># 4. Fix bugs if any</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">test_result</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">feature_result</span><span class="p">[</span><span class="s2">&quot;implementation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">source_code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="n">bug_fix</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">fix_bugs</span><span class="p">(</span><span class="n">test_result</span><span class="p">[</span><span class="s2">&quot;stderr&quot;</span><span class="p">],</span> <span class="n">source_code</span><span class="p">)</span>
+
+            <span class="c1"># Save fixed version</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bug_fix</span><span class="p">[</span><span class="s2">&quot;fixed_code&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">feature_result</span><span class="p">,</span> <span class="n">test_result</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">create_development_workflow</span><span class="p">()</span>
+</code></pre></div><h3 id="github-actions-integration">GitHub Actions Integration<a class="headerlink" href="#github-actions-integration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/codex-integration.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenAI Codex Integration</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">develop</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">OPENAI_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.OPENAI_API_KEY }}</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">codex-analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">pip install openai pytest black flake8</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Codex Code Review</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/codex_review.py --changed-files ${{ github.event.pull_request.changed_files }}</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auto-fix Code Issues</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/codex_autofix.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Tests with Codex</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/codex_test_runner.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Comment PR with Analysis</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/github-script@v6</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">const fs = require(&#39;fs&#39;);</span>
+<span class="w">          </span><span class="no">const analysis = fs.readFileSync(&#39;codex_analysis.md&#39;, &#39;utf8&#39;);</span>
+<span class="w">          </span><span class="no">github.rest.issues.createComment({</span>
+<span class="w">            </span><span class="no">issue_number: context.issue.number,</span>
+<span class="w">            </span><span class="no">owner: context.repo.owner,</span>
+<span class="w">            </span><span class="no">repo: context.repo.repo,</span>
+<span class="w">            </span><span class="no">body: analysis</span>
+<span class="w">          </span><span class="no">});</span>
+</code></pre></div><div class="admonition warning"><p class="admonition-title">Notes When Using Codex</p><p>OpenAI Codex is a research preview, so conduct thorough testing and validation before production use</p></div><h2 id="google-gemini-cli-implementation-terminal-integration">Google Gemini CLI Implementation: Terminal Integration<a class="headerlink" href="#google-gemini-cli-implementation-terminal-integration" title="Permanent link">&para;</a></h2><h3 id="installation-and-initial-configuration">Installation and Initial Configuration<a class="headerlink" href="#installation-and-initial-configuration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># Install Gemini CLI</span>
+curl<span class="w"> </span>-fsSL<span class="w"> </span>https://cli.gemini.google.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+
+<span class="c1"># Set environment variables</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_api_key_here&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_PROJECT_ID</span><span class="o">=</span><span class="s2">&quot;your_project_id&quot;</span>
+
+<span class="c1"># Create configuration file</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/gemini
+cat<span class="w"> </span>&gt;<span class="w"> </span>~/.config/gemini/config.toml<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">[default]</span>
+<span class="s">model = &quot;gemini-2.0-flash-exp&quot;</span>
+<span class="s">temperature = 0.1</span>
+<span class="s">max_tokens = 8192</span>
+
+<span class="s">[coding]</span>
+<span class="s">model = &quot;gemini-2.0-flash-thinking-exp-1219&quot;</span>
+<span class="s">temperature = 0.0</span>
+<span class="s">context_window = 32000</span>
+
+<span class="s">[security]</span>
+<span class="s">log_requests = false</span>
+<span class="s">sanitize_output = true</span>
+<span class="s">respect_gitignore = true</span>
+<span class="s">EOF</span>
+</code></pre></div><h3 id="creating-custom-commands">Creating Custom Commands<a class="headerlink" href="#creating-custom-commands" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># ~/.local/bin/ai-dev (make executable: chmod +x ~/.local/bin/ai-dev)</span>
+<span class="c1">#!/bin/bash</span>
+
+<span class="c1"># AI development assistance script</span>
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nv">COMMAND</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nb">shift</span>
+
+<span class="k">case</span><span class="w"> </span><span class="nv">$COMMAND</span><span class="w"> </span><span class="k">in</span>
+<span class="w">    </span><span class="s2">&quot;review&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Running code review...&quot;</span>
+<span class="w">        </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Review the following code and point out improvements and potential issues. Analyze especially from security, performance, and maintainability perspectives.&quot;</span><span class="w"> </span>--files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span><span class="s2">&quot;optimize&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;⚡ Generating performance optimization suggestions...&quot;</span>
+<span class="w">        </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Analyze the performance of the following code and present optimization suggestions with concrete code examples.&quot;</span><span class="w"> </span>--files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span><span class="s2">&quot;test&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🧪 Generating test cases...&quot;</span>
+<span class="w">        </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Generate comprehensive test cases for the following code. Include edge cases, error handling, and performance tests.&quot;</span><span class="w"> </span>--files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span><span class="s2">&quot;debug&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;error.log&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🐛 Analyzing debug...&quot;</span>
+<span class="w">            </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Analyze the following error log and source code to suggest the cause and solution.&quot;</span><span class="w"> </span>--files<span class="w"> </span>error.log<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ error.log file not found&quot;</span>
+<span class="w">            </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span><span class="s2">&quot;refactor&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔧 Generating refactoring suggestions...&quot;</span>
+<span class="w">        </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Refactor the following code and present concrete improvements to enhance readability, maintainability, and extensibility.&quot;</span><span class="w"> </span>--files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span><span class="s2">&quot;explain&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;📖 Generating code explanation...&quot;</span>
+<span class="w">        </span>gemini<span class="w"> </span>--profile<span class="w"> </span>coding<span class="w"> </span><span class="s2">&quot;Explain the behavior of the following code in detail. Describe from algorithm, data structure, and design pattern perspectives.&quot;</span><span class="w"> </span>--files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+
+<span class="w">    </span>*<span class="o">)</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;AI Development Assistant&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: ai-dev &lt;command&gt; [files...]&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Commands:&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  review    - Run code review&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  optimize  - Performance optimization suggestions&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  test      - Generate test cases&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  debug     - Error analysis (requires error.log)&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  refactor  - Refactoring suggestions&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  explain   - Code explanation&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Examples:&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  ai-dev review src/main.py&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  ai-dev test src/utils.py&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  ai-dev debug src/problematic.py&quot;</span>
+<span class="w">        </span><span class="p">;;</span>
+<span class="k">esac</span>
+</code></pre></div><h3 id="advanced-workflow-integration">Advanced Workflow Integration<a class="headerlink" href="#advanced-workflow-integration" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># gemini_workflow.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GeminiWorkflow</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~/.config/gemini/config.toml&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">config_path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_code_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Batch analysis of entire project&quot;&quot;&quot;</span>
+
+        <span class="c1"># Collect Python files</span>
+        <span class="n">python_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_files</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="s2">&quot;*.py&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Collect JavaScript/TypeScript files</span>
+        <span class="n">js_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_files</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="s2">&quot;*.js&quot;</span><span class="p">)</span> <span class="o">+</span> \
+                  <span class="bp">self</span><span class="o">.</span><span class="n">_collect_files</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="s2">&quot;*.ts&quot;</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;python_analysis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_files</span><span class="p">(</span><span class="n">python_files</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;javascript_analysis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_files</span><span class="p">(</span><span class="n">js_files</span><span class="p">,</span> <span class="s2">&quot;javascript&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;architecture_analysis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_architecture</span><span class="p">(</span><span class="n">project_path</span><span class="p">),</span>
+            <span class="s2">&quot;security_analysis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_security_scan</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collect_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect files based on pattern&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;find </span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2"> -name &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39; -type f&quot;</span><span class="p">,</span>
+            <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Language-specific analysis&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;no_files&quot;</span><span class="p">,</span> <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="n">language</span><span class="p">}</span>
+
+        <span class="c1"># Limit to maximum 5 files (API rate limit countermeasure)</span>
+        <span class="n">files_to_analyze</span> <span class="o">=</span> <span class="n">files</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">analysis_results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files_to_analyze</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;gemini --profile coding &#39;Evaluate the quality of this code and suggest improvements&#39; --files </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span>
+                <span class="p">)</span>
+
+                <span class="n">analysis_results</span><span class="p">[</span><span class="n">file_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;analysis&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                    <span class="s2">&quot;issues&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_issues</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+                <span class="p">}</span>
+
+            <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+                <span class="n">analysis_results</span><span class="p">[</span><span class="n">file_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;timeout&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Analysis timed out&quot;</span>
+                <span class="p">}</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">analysis_results</span><span class="p">[</span><span class="n">file_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="n">language</span><span class="p">,</span>
+            <span class="s2">&quot;files_analyzed&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">analysis_results</span><span class="p">),</span>
+            <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">analysis_results</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Architecture analysis&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Get project structure</span>
+            <span class="n">structure_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;tree </span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2"> -I &#39;__pycache__|node_modules|.git&#39;&quot;</span><span class="p">,</span>
+                <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Architecture analysis by Gemini</span>
+            <span class="n">gemini_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;echo &#39;</span><span class="si">{</span><span class="n">structure_result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">&#39; | gemini --profile coding &#39;Analyze this project structure and describe architectural features, design patterns, and improvement suggestions&#39;&quot;</span><span class="p">,</span>
+                <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;project_structure&quot;</span><span class="p">:</span> <span class="n">structure_result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                <span class="s2">&quot;architecture_analysis&quot;</span><span class="p">:</span> <span class="n">gemini_result</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="p">}</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_security_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Security scan&quot;&quot;&quot;</span>
+        <span class="n">security_patterns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;password.*=&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;api[_-]?key.*=&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret.*=&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;token.*=&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eval</span><span class="se">\\</span><span class="s2">(&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exec</span><span class="se">\\</span><span class="s2">(&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;subprocess</span><span class="se">\\</span><span class="s2">.call&quot;</span>
+        <span class="p">]</span>
+
+        <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">security_patterns</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;grep -r -n &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2"> --include=&#39;*.py&#39; --include=&#39;*.js&#39; --include=&#39;*.ts&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">text</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+                    <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">,</span>
+                        <span class="s2">&quot;matches&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="p">})</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;completed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;findings_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">findings</span><span class="p">),</span>
+            <span class="s2">&quot;findings&quot;</span><span class="p">:</span> <span class="n">findings</span><span class="p">,</span>
+            <span class="s2">&quot;risk_level&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">findings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;medium&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">findings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;low&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysis_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract issues from analysis results&quot;&quot;&quot;</span>
+        <span class="c1"># Simple implementation example (actual needs more sophisticated NLP processing)</span>
+        <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">analysis_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">keyword</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;issue&#39;</span><span class="p">,</span> <span class="s1">&#39;bug&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;improve&#39;</span><span class="p">,</span> <span class="s1">&#39;problem&#39;</span><span class="p">]):</span>
+                <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">issues</span>
+
+<span class="c1"># Usage example</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">GeminiWorkflow</span><span class="p">()</span>
+
+    <span class="c1"># Execute project analysis</span>
+    <span class="n">project_path</span> <span class="o">=</span> <span class="s2">&quot;./my_project&quot;</span>
+    <span class="n">analysis_results</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">batch_code_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+
+    <span class="c1"># Save results</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;analysis_report.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">analysis_results</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Generate summary report</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔍 Project analysis completed&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python files analyzed: </span><span class="si">{</span><span class="n">analysis_results</span><span class="p">[</span><span class="s1">&#39;python_analysis&#39;</span><span class="p">][</span><span class="s1">&#39;files_analyzed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JavaScript files analyzed: </span><span class="si">{</span><span class="n">analysis_results</span><span class="p">[</span><span class="s1">&#39;javascript_analysis&#39;</span><span class="p">][</span><span class="s1">&#39;files_analyzed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Security risk level: </span><span class="si">{</span><span class="n">analysis_results</span><span class="p">[</span><span class="s1">&#39;security_analysis&#39;</span><span class="p">][</span><span class="s1">&#39;risk_level&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div><div class="admonition tip"><p class="admonition-title">Gemini CLI Utilization Tips</p><p>For efficient terminal work, leverage aliases and custom scripts to shorten frequently used commands</p></div><h2 id="building-integrated-workflow">Building Integrated Workflow<a class="headerlink" href="#building-integrated-workflow" title="Permanent link">&para;</a></h2><h3 id="three-tool-integration-script">Three-Tool Integration Script<a class="headerlink" href="#three-tool-integration-script" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># integrated_ai_workflow.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude4_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Claude4Client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">codex_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodexAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gemini_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeminiWorkflow</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntegratedAIWorkflow</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">claude</span> <span class="o">=</span> <span class="n">Claude4Client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">codex</span> <span class="o">=</span> <span class="n">CodexAgent</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gemini</span> <span class="o">=</span> <span class="n">GeminiWorkflow</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">comprehensive_project_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Comprehensive project analysis using three AI tools&quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚀 Starting comprehensive project analysis...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Execute analysis with each tool in parallel</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_claude_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_codex_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gemini_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">claude_result</span><span class="p">,</span> <span class="n">codex_result</span><span class="p">,</span> <span class="n">gemini_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
+
+        <span class="c1"># Integrate results</span>
+        <span class="n">integrated_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate_analyses</span><span class="p">(</span>
+            <span class="n">claude_result</span><span class="p">,</span> <span class="n">codex_result</span><span class="p">,</span> <span class="n">gemini_result</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate final report</span>
+        <span class="n">final_report</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_final_report</span><span class="p">(</span><span class="n">integrated_result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;project_path&quot;</span><span class="p">:</span> <span class="n">project_path</span><span class="p">,</span>
+            <span class="s2">&quot;individual_analyses&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;claude&quot;</span><span class="p">:</span> <span class="n">claude_result</span><span class="p">,</span>
+                <span class="s2">&quot;codex&quot;</span><span class="p">:</span> <span class="n">codex_result</span><span class="p">,</span>
+                <span class="s2">&quot;gemini&quot;</span><span class="p">:</span> <span class="n">gemini_result</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;integrated_analysis&quot;</span><span class="p">:</span> <span class="n">integrated_result</span><span class="p">,</span>
+            <span class="s2">&quot;final_report&quot;</span><span class="p">:</span> <span class="n">final_report</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_claude_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analysis from long-term perspective with Claude 4&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧠 Analyzing with Claude 4...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Collect project files</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+        <span class="n">python_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">project_path</span><span class="si">}</span><span class="s2">/**/*.py&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">python_files</span><span class="p">:</span>
+            <span class="n">analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">claude</span><span class="o">.</span><span class="n">analyze_codebase</span><span class="p">(</span><span class="n">python_files</span><span class="p">)</span>
+
+            <span class="c1"># Also generate long-term refactoring plan</span>
+            <span class="n">refactoring_plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">claude</span><span class="o">.</span><span class="n">long_term_refactoring</span><span class="p">(</span>
+                <span class="n">project_path</span><span class="p">,</span> 
+                <span class="s2">&quot;Improve maintainability and scalability of entire codebase&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Claude 4&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="s2">&quot;Long-term perspective and architecture analysis&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;codebase_analysis&quot;</span><span class="p">:</span> <span class="n">analysis</span><span class="p">,</span>
+                <span class="s2">&quot;refactoring_plan&quot;</span><span class="p">:</span> <span class="n">refactoring_plan</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Claude 4&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;no_python_files&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No Python files found for analysis&quot;</span>
+            <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_codex_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation-focused analysis with OpenAI Codex&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🤖 Analyzing with OpenAI Codex...&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Run tests</span>
+            <span class="n">test_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codex</span><span class="o">.</span><span class="n">run_tests</span><span class="p">(</span><span class="s2">&quot;python -m pytest tests/&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Bug fix suggestions (if tests failed)</span>
+            <span class="n">bug_fixes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">test_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="c1"># Simplified implementation</span>
+                <span class="n">bug_fixes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Generate fix suggestions for test failures&quot;</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenAI Codex&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="s2">&quot;Implementation and test automation&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;test_results&quot;</span><span class="p">:</span> <span class="n">test_result</span><span class="p">,</span>
+                <span class="s2">&quot;bug_fixes&quot;</span><span class="p">:</span> <span class="n">bug_fixes</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+            <span class="p">}</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenAI Codex&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_gemini_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Practical analysis with Google Gemini CLI&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;💎 Analyzing with Google Gemini CLI...&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gemini</span><span class="o">.</span><span class="n">batch_code_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Google Gemini CLI&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="s2">&quot;Practical issue detection and security&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;analysis&quot;</span><span class="p">:</span> <span class="n">analysis</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+            <span class="p">}</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Google Gemini CLI&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_integrate_analyses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">claude_result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">codex_result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">gemini_result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Integrate three analysis results&quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract common issues</span>
+        <span class="n">common_issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_common_issues</span><span class="p">(</span><span class="n">claude_result</span><span class="p">,</span> <span class="n">codex_result</span><span class="p">,</span> <span class="n">gemini_result</span><span class="p">)</span>
+
+        <span class="c1"># Generate prioritized task list</span>
+        <span class="n">prioritized_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_prioritized_tasks</span><span class="p">(</span><span class="n">claude_result</span><span class="p">,</span> <span class="n">codex_result</span><span class="p">,</span> <span class="n">gemini_result</span><span class="p">)</span>
+
+        <span class="c1"># Role assignment leveraging each tool&#39;s strengths</span>
+        <span class="n">tool_recommendations</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;long_term_planning&quot;</span><span class="p">:</span> <span class="s2">&quot;Adopt Claude 4&#39;s long-term refactoring plan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;immediate_fixes&quot;</span><span class="p">:</span> <span class="s2">&quot;Prioritize implementing OpenAI Codex bug fix suggestions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;security_hardening&quot;</span><span class="p">:</span> <span class="s2">&quot;Implement countermeasures based on Gemini CLI security analysis&quot;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;common_issues&quot;</span><span class="p">:</span> <span class="n">common_issues</span><span class="p">,</span>
+            <span class="s2">&quot;prioritized_tasks&quot;</span><span class="p">:</span> <span class="n">prioritized_tasks</span><span class="p">,</span>
+            <span class="s2">&quot;tool_recommendations&quot;</span><span class="p">:</span> <span class="n">tool_recommendations</span><span class="p">,</span>
+            <span class="s2">&quot;integration_timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_common_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract common issues from multiple analysis results&quot;&quot;&quot;</span>
+        <span class="c1"># Simplified implementation</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;Need for performance optimization&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Improvement of error handling&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Lack of documentation&quot;</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_prioritized_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate prioritized task list&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;Fix security vulnerabilities&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;estimated_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2-4 hours&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;assigned_tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Gemini CLI&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;Fix test failures&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;estimated_time&quot;</span><span class="p">:</span> <span class="s2">&quot;1-2 hours&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;assigned_tool&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenAI Codex&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;Long-term architecture improvement&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;estimated_time&quot;</span><span class="p">:</span> <span class="s2">&quot;1-2 weeks&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;assigned_tool&quot;</span><span class="p">:</span> <span class="s2">&quot;Claude 4&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_final_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integrated_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate final report&quot;&quot;&quot;</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2"># Comprehensive AI Analysis Report</span>
+
+<span class="s2">## Analysis Summary</span>
+<span class="s2">- Common issues: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;common_issues&#39;</span><span class="p">])</span><span class="si">}</span>
+<span class="s2">- Priority tasks: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;prioritized_tasks&#39;</span><span class="p">])</span><span class="si">}</span>
+<span class="s2">- Generated: </span><span class="si">{</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;integration_timestamp&#39;</span><span class="p">]</span><span class="si">}</span>
+
+<span class="s2">## Key Findings</span>
+<span class="si">{</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">issue</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;common_issues&#39;</span><span class="p">]])</span><span class="si">}</span>
+
+<span class="s2">## Recommended Actions</span>
+<span class="si">{</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (Priority: </span><span class="si">{</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Est. time: </span><span class="si">{</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;estimated_time&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;prioritized_tasks&#39;</span><span class="p">]])</span><span class="si">}</span>
+
+<span class="s2">## Recommended Use of Each Tool</span>
+<span class="s2">- **Long-term planning**: </span><span class="si">{</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;tool_recommendations&#39;</span><span class="p">][</span><span class="s1">&#39;long_term_planning&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">- **Immediate fixes**: </span><span class="si">{</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;tool_recommendations&#39;</span><span class="p">][</span><span class="s1">&#39;immediate_fixes&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">- **Security**: </span><span class="si">{</span><span class="n">integrated_analysis</span><span class="p">[</span><span class="s1">&#39;tool_recommendations&#39;</span><span class="p">][</span><span class="s1">&#39;security_hardening&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="c1"># Main execution function</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">IntegratedAIWorkflow</span><span class="p">()</span>
+
+    <span class="n">project_path</span> <span class="o">=</span> <span class="s2">&quot;./my_project&quot;</span>  <span class="c1"># Project to analyze</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">workflow</span><span class="o">.</span><span class="n">comprehensive_project_analysis</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+
+        <span class="c1"># Save results</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;comprehensive_analysis_report.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📋 Final Report:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;final_report&quot;</span><span class="p">])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Detailed analysis results saved to comprehensive_analysis_report.json&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error occurred during analysis: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div><h2 id="performance-measurement-and-optimization">Performance Measurement and Optimization<a class="headerlink" href="#performance-measurement-and-optimization" title="Permanent link">&para;</a></h2><h3 id="productivity-measurement-tool">Productivity Measurement Tool<a class="headerlink" href="#productivity-measurement-tool" title="Permanent link">&para;</a></h3><div class="highlight"><pre><span></span><code><span class="c1"># productivity_metrics.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProductivityMetrics</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_file</span> <span class="o">=</span> <span class="s2">&quot;ai_productivity_metrics.json&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_existing_metrics</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_existing_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load existing measurement results&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;sessions&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;total_sessions&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;average_session_time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;total_lines_generated&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;total_bugs_fixed&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ai_tools_used</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start development session&quot;&quot;&quot;</span>
+        <span class="n">session_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;session_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">session_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="n">session_id</span><span class="p">,</span>
+            <span class="s2">&quot;task_description&quot;</span><span class="p">:</span> <span class="n">task_description</span><span class="p">,</span>
+            <span class="s2">&quot;ai_tools_used&quot;</span><span class="p">:</span> <span class="n">ai_tools_used</span><span class="p">,</span>
+            <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;duration_minutes&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;lines_generated&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;files_modified&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;bugs_fixed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;tests_written&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;in_progress&quot;</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span> <span class="o">=</span> <span class="n">session_data</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Session started: </span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task: </span><span class="si">{</span><span class="n">task_description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tools used: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ai_tools_used</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">session_id</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">final_status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;completed&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;End development session&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;current_session&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No active session found&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Record session end time</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">])</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="n">end_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;duration_minutes&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">duration</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">final_status</span>
+        <span class="p">})</span>
+
+        <span class="c1"># Analyze code changes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_analyze_code_changes</span><span class="p">()</span>
+
+        <span class="c1"># Save session data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_summary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_metrics</span><span class="p">()</span>
+
+        <span class="c1"># Display results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_display_session_results</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_code_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze code changes&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Analyze changes using Git</span>
+            <span class="n">git_diff</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;--numstat&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">git_diff</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">git_diff</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">total_additions</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">files_modified</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">additions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">filename</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+                        <span class="n">total_additions</span> <span class="o">+=</span> <span class="n">additions</span>
+                        <span class="n">files_modified</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">[</span><span class="s2">&quot;lines_generated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_additions</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">[</span><span class="s2">&quot;files_modified&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">files_modified</span>
+
+            <span class="c1"># Detect test files</span>
+            <span class="n">test_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">[</span><span class="s2">&quot;files_modified&quot;</span><span class="p">]</span> 
+                         <span class="k">if</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_test.py&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span><span class="p">[</span><span class="s2">&quot;tests_written&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_files</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error during code change analysis: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update summary information&quot;&quot;&quot;</span>
+        <span class="n">sessions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">sessions</span><span class="p">:</span>
+            <span class="n">total_sessions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
+            <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;duration_minutes&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">)</span>
+            <span class="n">total_lines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;lines_generated&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">)</span>
+            <span class="n">total_bugs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;bugs_fixed&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s2">&quot;total_sessions&quot;</span><span class="p">:</span> <span class="n">total_sessions</span><span class="p">,</span>
+                <span class="s2">&quot;average_session_time&quot;</span><span class="p">:</span> <span class="n">total_time</span> <span class="o">/</span> <span class="n">total_sessions</span> <span class="k">if</span> <span class="n">total_sessions</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;total_lines_generated&quot;</span><span class="p">:</span> <span class="n">total_lines</span><span class="p">,</span>
+                <span class="s2">&quot;total_bugs_fixed&quot;</span><span class="p">:</span> <span class="n">total_bugs</span><span class="p">,</span>
+                <span class="s2">&quot;last_updated&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save metrics file&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_display_session_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display session results&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_session</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📈 Session Results:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Time: </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;duration_minutes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> minutes&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Lines generated: </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;lines_generated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> lines&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Files modified: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;files_modified&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Tests created: </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;tests_written&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Bugs fixed: </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;bugs_fixed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Efficiency evaluation</span>
+        <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="s1">&#39;duration_minutes&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lines_per_minute</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s1">&#39;lines_generated&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">session</span><span class="p">[</span><span class="s1">&#39;duration_minutes&#39;</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Productivity: </span><span class="si">{</span><span class="n">lines_per_minute</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> lines/min&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_productivity_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate productivity report&quot;&quot;&quot;</span>
+        <span class="n">cutoff_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+
+        <span class="n">recent_sessions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">cutoff_date</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">recent_sessions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;No session data for the past </span><span class="si">{</span><span class="n">days</span><span class="si">}</span><span class="s2"> days&quot;</span>
+
+        <span class="c1"># Calculate statistics</span>
+        <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;duration_minutes&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">recent_sessions</span><span class="p">)</span>
+        <span class="n">total_lines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;lines_generated&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">recent_sessions</span><span class="p">)</span>
+        <span class="n">avg_session_time</span> <span class="o">=</span> <span class="n">total_time</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">recent_sessions</span><span class="p">)</span>
+
+        <span class="c1"># Tool usage analysis</span>
+        <span class="n">tool_usage</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">recent_sessions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;ai_tools_used&quot;</span><span class="p">]:</span>
+                <span class="n">tool_usage</span><span class="p">[</span><span class="n">tool</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool_usage</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># Generate report</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2"># AI Development Productivity Report (Past </span><span class="si">{</span><span class="n">days</span><span class="si">}</span><span class="s2"> Days)</span>
+
+<span class="s2">## Overview</span>
+<span class="s2">- Sessions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">recent_sessions</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">- Total development time: </span><span class="si">{</span><span class="n">total_time</span><span class="si">}</span><span class="s2"> minutes (</span><span class="si">{</span><span class="n">total_time</span><span class="o">/</span><span class="mi">60</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> hours)</span>
+<span class="s2">- Total lines generated: </span><span class="si">{</span><span class="n">total_lines</span><span class="si">}</span><span class="s2"> lines</span>
+<span class="s2">- Average session time: </span><span class="si">{</span><span class="n">avg_session_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> minutes</span>
+
+<span class="s2">## Productivity Metrics</span>
+<span class="s2">- Lines per hour: </span><span class="si">{</span><span class="n">total_lines</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">total_time</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> lines/hour</span>
+<span class="s2">- Lines per session: </span><span class="si">{</span><span class="n">total_lines</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">recent_sessions</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> lines/session</span>
+
+<span class="s2">## AI Tool Usage</span>
+<span class="si">{</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">tool</span><span class="si">}</span><span class="s2">: Used </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> times&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">tool</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">sorted</span><span class="p">(</span><span class="n">tool_usage</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span><span class="si">}</span>
+
+<span class="s2">## Most Productive Sessions</span>
+<span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_top_sessions</span><span class="p">(</span><span class="n">recent_sessions</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_top_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sessions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify most productive sessions&quot;&quot;&quot;</span>
+        <span class="n">sorted_sessions</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">sessions</span><span class="p">,</span> 
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;lines_generated&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;duration_minutes&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> 
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sorted_sessions</span><span class="p">[:</span><span class="n">top_n</span><span class="p">]):</span>
+            <span class="n">efficiency</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;lines_generated&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;duration_minutes&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;task_description&#39;</span><span class="p">][:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">... &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">efficiency</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> lines/min, </span><span class="si">{</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;duration_minutes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> min)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Usage example</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">productivity_tracking_example</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Productivity tracking usage example&quot;&quot;&quot;</span>
+    <span class="n">tracker</span> <span class="o">=</span> <span class="n">ProductivityMetrics</span><span class="p">()</span>
+
+    <span class="c1"># Start session</span>
+    <span class="n">session_id</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">start_session</span><span class="p">(</span>
+        <span class="s2">&quot;Implement new API feature&quot;</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;Claude 4&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenAI Codex&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Simulate development work</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;💻 Development in progress...&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Simulate actual development time</span>
+
+    <span class="c1"># End session</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">end_session</span><span class="p">(</span><span class="n">session_id</span><span class="p">,</span> <span class="s2">&quot;completed&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate report</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">generate_productivity_report</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">report</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">productivity_tracking_example</span><span class="p">()</span>
+</code></pre></div><h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2><ul><li><strong>Claude 4</strong>: Optimal for long-term tasks and comprehensive analysis, creating complex refactoring plans</li><li><strong>OpenAI Codex</strong>: Daily development support and test automation, ease of use through ChatGPT integration</li><li><strong>Google Gemini CLI</strong>: Real-time support via terminal integration, security scanning</li></ul><h2 id="related-articles">Related Articles<a class="headerlink" href="#related-articles" title="Permanent link">&para;</a></h2><ul><li>Must-See for AI Developers: Claude 4 Launch, OpenAI Codex &amp; Terminal Revolution - July 22, 2025 Breaking News (archived)</li><li><a href="../../generative-ai/claude/claude-code-mcp-practical-guide/">Claude Code MCP Practical Guide: Complete Integration Steps for Developers</a></li></ul><aside class="md-source-file"><span class="md-source-file__fact"><span class="md-icon" title="Last update"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="February 17, 2026 23:29:52 JST">February 17, 2026 23:29:52</span></span></aside><form class="md-feedback" name="feedback" hidden><fieldset><legend class="md-feedback__title"> この記事は役に立ちましたか？ </legend><div class="md-feedback__inner"><div class="md-feedback__list"><button class="md-feedback__icon md-icon" type="submit" title="役に立った" data-md-value="1"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg></button><button class="md-feedback__icon md-icon" type="submit" title="改善が必要" data-md-value="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg></button></div><div class="md-feedback__note"><div data-md-value="1" hidden> フィードバックありがとうございます！ </div><div data-md-value="0" hidden> フィードバックありがとうございます。改善に努めます。 </div></div></div></fieldset></form></article></div><script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div><button type="button" class="md-top md-icon" data-md-component="top" hidden><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button></main><footer class="md-footer"><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-copyright"><div class="md-copyright__highlight"> &copy; 2024-2026 SmartScope. All rights reserved. | 記事はAIが調査・執筆し、ファクトチェックを経て公開しています。 </div><div class="md-footer-links"><a href="../../../privacy-policy/">プライバシーポリシー</a><span class="md-footer-separator">|</span><a href="../../../contact/">お問い合わせ</a><span class="md-footer-separator">|</span><a href="../../../about/">運営者情報</a></div></div><div class="md-social"><a href="https://x.com/PNovavisio32590" target="_blank" rel="noopener" title="X (Twitter)" class="md-social__link"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg></a></div></div></div></footer></div><div class="md-dialog" data-md-component="dialog"><div class="md-dialog__inner md-typeset"></div></div><script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.indexes", "navigation.path", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow", "content.code.copy", "content.code.select", "content.tooltips", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script><script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script><script src="../../../javascripts/extra.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script><script src="../../../javascripts/mermaid-init.js"></script><script src="../../../javascripts/mobile-nav.js"></script><script src="../../../javascripts/daily-progress.js"></script><script src="../../../javascripts/fix-md-links.js"></script><script src="../../../javascripts/mobile-category-tabs.js"></script></body></html>
