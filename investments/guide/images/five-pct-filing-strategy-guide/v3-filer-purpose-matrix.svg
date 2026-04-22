@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="474" viewBox="0 0 800 474" role="img" aria-labelledby="title desc">
+  <title id="title">提出者タイプと保有目的のマトリクス</title>
+  <desc id="desc">提出者タイプと保有目的を掛け合わせ、シグナル強度を色の濃淡で示した2軸マトリクス</desc>
+  <rect width="800" height="474" fill="#ffffff"/>
+
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#1E293B">提出者タイプ × 保有目的で、シグナルの強さは変わる</text>
+
+  <text x="236" y="98" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#1D9E75">純投資</text>
+  <text x="410" y="98" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#1D9E75">重要提案行為</text>
+  <text x="584" y="98" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#1D9E75">事業提携等</text>
+
+  <text x="92" y="160" font-family="sans-serif" font-size="16" font-weight="700" fill="#7F77DD" dominant-baseline="middle">アクティビスト</text>
+  <text x="92" y="250" font-family="sans-serif" font-size="16" font-weight="700" fill="#888780" dominant-baseline="middle">パッシブ</text>
+  <text x="92" y="340" font-family="sans-serif" font-size="16" font-weight="700" fill="#1D9E75" dominant-baseline="middle">事業会社</text>
+
+  <rect x="152" y="122" width="168" height="76" rx="12" fill="#CFCBF7" stroke="#7F77DD" stroke-width="2.5"/>
+  <text x="236" y="152" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#332D7C">中〜強</text>
+  <text x="236" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#332D7C">前段階の</text>
+  <text x="236" y="194" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#332D7C">エンゲージメント余地</text>
+
+  <rect x="326" y="122" width="168" height="76" rx="12" fill="#1D9E75" stroke="#0E5A40" stroke-width="2.5"/>
+  <text x="410" y="152" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#ffffff">最強</text>
+  <text x="410" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#ffffff">経営提案と</text>
+  <text x="410" y="194" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#ffffff">初回filingが直結</text>
+
+  <rect x="500" y="122" width="168" height="76" rx="12" fill="#BCE8D7" stroke="#1D9E75" stroke-width="2.5"/>
+  <text x="584" y="152" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0E5A40">中</text>
+  <text x="584" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">案件次第で</text>
+  <text x="584" y="194" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">再編期待</text>
+
+  <rect x="152" y="212" width="168" height="76" rx="12" fill="#F3F2ED" stroke="#B3B1A8" stroke-width="2.5"/>
+  <text x="236" y="242" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#6E6D66">ほぼノイズ</text>
+  <text x="236" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6E6D66">機械的保有で</text>
+  <text x="236" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6E6D66">経営関与が薄い</text>
+
+  <rect x="326" y="212" width="168" height="76" rx="12" fill="#E5E7EB" stroke="#C6CAD0" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <text x="410" y="242" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#6B7280">実質ほぼ無し</text>
+  <text x="410" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6B7280">制度上かなり</text>
+  <text x="410" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6B7280">想定しにくい</text>
+
+  <rect x="500" y="212" width="168" height="76" rx="12" fill="#ECECEC" stroke="#B3B1A8" stroke-width="2.5"/>
+  <text x="584" y="242" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#6E6D66">弱〜中</text>
+  <text x="584" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6E6D66">提携期待は</text>
+  <text x="584" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#6E6D66">通常は低い</text>
+
+  <rect x="152" y="302" width="168" height="76" rx="12" fill="#EAF6F1" stroke="#8DCBB4" stroke-width="2.5"/>
+  <text x="236" y="332" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#22674F">弱〜中</text>
+  <text x="236" y="356" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#22674F">単なる政策保有なら</text>
+  <text x="236" y="374" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#22674F">弱い</text>
+
+  <rect x="326" y="302" width="168" height="76" rx="12" fill="#9AD8C2" stroke="#1D9E75" stroke-width="2.5"/>
+  <text x="410" y="332" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0E5A40">中</text>
+  <text x="410" y="356" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">経営提案が出るなら</text>
+  <text x="410" y="374" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">再評価余地</text>
+
+  <rect x="500" y="302" width="168" height="76" rx="12" fill="#66C5A4" stroke="#1D9E75" stroke-width="2.5"/>
+  <text x="584" y="332" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0E5A40">中〜強</text>
+  <text x="584" y="356" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">提携・買収の</text>
+  <text x="584" y="374" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0E5A40">文脈が乗る</text>
+
+  <text x="710" y="138" font-family="sans-serif" font-size="14" font-weight="700" fill="#1E293B">凡例</text>
+  <rect x="710" y="156" width="74" height="20" rx="4" fill="#1D9E75"/>
+  <rect x="710" y="182" width="74" height="20" rx="4" fill="#66C5A4"/>
+  <rect x="710" y="208" width="74" height="20" rx="4" fill="#BCE8D7"/>
+  <rect x="710" y="234" width="74" height="20" rx="4" fill="#F3F2ED" stroke="#B3B1A8"/>
+  <text x="747" y="170" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">強</text>
+  <text x="747" y="196" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0E5A40">中強</text>
+  <text x="747" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0E5A40">中</text>
+  <text x="747" y="248" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#6E6D66">弱</text>
+
+  <text x="400" y="440" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#5F5E5A">注: 2025年7月公表の制度見直しで、「重要提案行為等」と「共同保有者」まわりの定義が明確化された</text>
+</svg>

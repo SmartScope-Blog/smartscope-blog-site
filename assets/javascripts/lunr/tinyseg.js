@@ -26,7 +26,7 @@
 
     return function(lunr) {
         // TinySegmenter 0.1 -- Super compact Japanese tokenizer in Javascript
-        // (c) 2008 Taku Kudo <taku@chasen.org>
+        // (c) 2008 Taku Kudo <redacted.example.invalid>
         // TinySegmenter is freely distributable under the terms of a new BSD licence.
         // For details, see http://chasen.org/~taku/software/TinySegmenter/LICENCE.txt
 

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360" viewBox="0 0 800 360" role="img" aria-labelledby="title desc">
+  <title id="title">filing後に利益が残る3要因</title>
+  <desc id="desc">提出ラグ、解読コスト、経営変化の遅効性の3要因が株価再評価の段階進行につながる構造図</desc>
+  <rect width="800" height="360" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow-v4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#888780"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="34" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#1E293B">filing後に利益が残る構造的理由</text>
+
+  <rect x="70" y="76" width="220" height="82" rx="12" fill="#FCECCF" stroke="#EF9F27" stroke-width="2"/>
+  <text x="180" y="104" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#8A5A12">提出ラグ</text>
+  <text x="180" y="128" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#8A5A12">5%超過から提出まで</text>
+  <text x="180" y="144" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#8A5A12">最大5営業日</text>
+
+  <rect x="70" y="178" width="220" height="82" rx="12" fill="#EEEDFE" stroke="#7F77DD" stroke-width="2"/>
+  <text x="180" y="206" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#463F9F">解読コスト</text>
+  <text x="180" y="230" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#463F9F">提出者の質を</text>
+  <text x="180" y="246" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#463F9F">瞬時に読める人が少ない</text>
+
+  <rect x="70" y="280" width="220" height="52" rx="12" fill="#DFF4EA" stroke="#1D9E75" stroke-width="2"/>
+  <text x="180" y="302" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#0E5A40">経営変化の遅効性</text>
+  <text x="180" y="320" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#0E5A40">効果は数週間〜数カ月後に顕在化</text>
+
+  <line x1="300" y1="117" x2="472" y2="117" stroke="#888780" stroke-width="2" marker-end="url(#arrow-v4)"/>
+  <line x1="300" y1="219" x2="472" y2="219" stroke="#888780" stroke-width="2" marker-end="url(#arrow-v4)"/>
+  <line x1="300" y1="306" x2="472" y2="306" stroke="#888780" stroke-width="2" marker-end="url(#arrow-v4)"/>
+
+  <rect x="490" y="118" width="246" height="120" rx="16" fill="#EAF6F1" stroke="#1D9E75" stroke-width="3"/>
+  <text x="613" y="156" text-anchor="middle" font-family="sans-serif" font-size="19" font-weight="700" fill="#0E5A40">株価の再評価は段階的</text>
+  <text x="613" y="182" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#0E5A40">t+1以降にも</text>
+  <text x="613" y="202" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#0E5A40">超過リターンの余地</text>
+  <text x="613" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0E5A40">一気ではなく、読み解きと追認で進む</text>
+</svg>

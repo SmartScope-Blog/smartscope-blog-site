@@ -6,7 +6,7 @@
   <rect x="40" y="30" width="600" height="100" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="2"/>
   <text x="60" y="58" fill="#8A5210" font-size="15" font-weight="700">セッションログ（永続・追記専用）</text>
   <text x="60" y="78" fill="#8A5210" font-size="11">イベントの全量を保持 — 障害時も生存、復旧の起点</text>
-  <g font-size="10" fill="#8A5210">
+  <g font-size="11" fill="#8A5210">
     <rect x="60"  y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="96"  y="108" text-anchor="middle">event 1</text>
     <rect x="138" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="174" y="108" text-anchor="middle">event 2</text>
     <rect x="216" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="252" y="108" text-anchor="middle">event 3</text>
@@ -29,17 +29,17 @@
   <g>
     <rect x="60"  y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
     <text x="145" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">ハーネスA (cattle)</text>
-    <text x="145" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">水平スケール可</text>
+    <text x="145" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">水平スケール可</text>
   </g>
   <g>
     <rect x="240" y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
     <text x="325" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">ハーネスB (cattle)</text>
-    <text x="325" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">同じセッションを再開可</text>
+    <text x="325" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">同じセッションを再開可</text>
   </g>
   <g>
     <rect x="420" y="244" width="200" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD" stroke-dasharray="3 3"/>
     <text x="520" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">将来のハーネス</text>
-    <text x="520" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">同じIFに差し替え可能</text>
+    <text x="520" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">同じIFに差し替え可能</text>
   </g>
 
   <!-- IF labels brain → hands -->
@@ -56,23 +56,23 @@
   <g>
     <rect x="60"  y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="145" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">コンテナ</text>
-    <text x="145" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">bash / ファイル操作</text>
+    <text x="145" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">bash / ファイル操作</text>
   </g>
   <g>
     <rect x="240" y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="325" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">MCPサーバー</text>
-    <text x="325" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">外部ツール経由</text>
+    <text x="325" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">外部ツール経由</text>
   </g>
   <g>
     <rect x="420" y="406" width="200" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="520" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">顧客VPC</text>
-    <text x="520" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">ピアリング不要</text>
+    <text x="520" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">ピアリング不要</text>
   </g>
 
   <!-- Vault -->
   <rect x="190" y="500" width="300" height="50" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="1.5" stroke-dasharray="5 3"/>
   <text x="340" y="522" text-anchor="middle" fill="#5F5E5A" font-size="12" font-weight="700">認証情報Vault</text>
-  <text x="340" y="540" text-anchor="middle" fill="#5F5E5A" font-size="10">手足からもハーネスからも隔離</text>
+  <text x="340" y="540" text-anchor="middle" fill="#5F5E5A" font-size="11">手足からもハーネスからも隔離</text>
 
   <!-- Bottom messages -->
   <text x="340" y="580" text-anchor="middle" fill="#463F9F" font-size="13" font-weight="700">ハーネスが落ちる → 新ハーネスがセッションログから再開</text>

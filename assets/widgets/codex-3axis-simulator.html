@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 3-Axis Control Simulator</title>
+<style>
+:root {
+  --color-text-primary: var(--md-typeset-color, #2C2C2A);
+  --color-text-secondary: var(--md-default-fg-color--light, #5F5E5A);
+  --color-background-primary: var(--md-default-bg-color, #ffffff);
+  --color-background-secondary: var(--md-code-bg-color, #f5f5f5);
+  --color-background-info: #E6F1FB;
+  --color-text-info: #185FA5;
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --color-border-secondary: rgba(0,0,0,0.25);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Risk color tokens */
+  --teal-accent: #1D9E75;
+  --teal-fill: #E1F5EE;
+  --amber-accent: #BA7517;
+  --amber-fill: #FAEEDA;
+  --coral-accent: #D85A30;
+  --coral-fill: #FAECE7;
+  --red-accent: #E24B4A;
+  --red-fill: #FCEBEB;
+  --gray-accent: #888780;
+  --gray-fill: #F1EFE8;
+  --blue-accent: #378ADD;
+  --blue-fill: #E6F1FB;
+  --purple-accent: #534AB7;
+  --purple-fill: #EEEDFE;
+}
+[data-md-color-scheme="slate"] {
+  --color-text-primary: #D3D1C7;
+  --color-text-secondary: #B4B2A9;
+  --color-background-primary: #1e1e1e;
+  --color-background-secondary: #2a2a2a;
+  --color-background-info: #0C447C;
+  --color-text-info: #85B7EB;
+  --color-border-tertiary: rgba(255,255,255,0.12);
+  --color-border-secondary: rgba(255,255,255,0.25);
+
+  --teal-fill: #0D3D2C;
+  --amber-fill: #3D2A06;
+  --coral-fill: #3D1E12;
+  --red-fill: #3D1212;
+  --gray-fill: #2a2a2a;
+  --blue-fill: #0C2E4C;
+  --purple-fill: #1E1A45;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-background-primary);
+  padding: 16px;
+  line-height: 1.5;
+}
+.simulator {
+  max-width: 780px;
+  margin: 0 auto;
+}
+/* Presets */
+.presets-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.preset-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.preset-btn:hover {
+  border-color: var(--blue-accent);
+  background: var(--blue-fill);
+  color: var(--blue-accent);
+}
+.preset-btn.active {
+  background: var(--blue-fill);
+  border-color: var(--blue-accent);
+  color: var(--blue-accent);
+  font-weight: 600;
+}
+/* Controls grid */
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 580px) {
+  .controls { grid-template-columns: 1fr; }
+}
+.control-group {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 10px;
+  padding: 12px;
+}
+.control-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.axis-flag {
+  font-family: monospace;
+  font-size: 10px;
+  background: var(--color-border-tertiary);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 400;
+}
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.axis-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.axis-btn:hover {
+  border-color: var(--color-border-secondary);
+  opacity: 0.85;
+}
+/* Toggle */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.toggle-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+}
+.toggle-wrap {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.toggle-wrap input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  background: var(--gray-accent);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+}
+.toggle-wrap input:checked + .toggle-track {
+  background: var(--teal-accent);
+}
+.toggle-wrap input:checked + .toggle-track::after {
+  transform: translateX(18px);
+}
+/* Output panel */
+.output-panel {
+  border: 1.5px solid var(--color-border-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.output-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  padding: 10px 14px 8px;
+  background: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-border-tertiary);
+}
+.output-body {
+  padding: 14px;
+  background: var(--color-background-primary);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+@media (max-width: 500px) {
+  .output-body { grid-template-columns: 1fr; }
+}
+.output-left {}
+.output-command {
+  font-family: monospace;
+  font-size: 13px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--color-text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.output-usecase {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.claude-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: var(--blue-fill);
+  color: var(--blue-accent);
+  border: 1px solid var(--blue-accent);
+}
+.claude-badge-wrap {
+  margin-top: 6px;
+}
+/* Risk meter */
+.risk-wrap {
+  min-width: 120px;
+  text-align: center;
+}
+.risk-label-top {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+.risk-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.risk-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-border-tertiary);
+  transition: background 0.2s;
+}
+.risk-bar.filled-low  { background: var(--teal-accent); }
+.risk-bar.filled-mid  { background: var(--amber-accent); }
+.risk-bar.filled-high { background: var(--coral-accent); }
+.risk-bar.filled-ext  { background: var(--red-accent); }
+.risk-text {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+.risk-low  { background: var(--teal-fill);  color: var(--teal-accent);  border: 1px solid var(--teal-accent); }
+.risk-mid  { background: var(--amber-fill); color: var(--amber-accent); border: 1px solid var(--amber-accent); }
+.risk-high { background: var(--coral-fill); color: var(--coral-accent); border: 1px solid var(--coral-accent); }
+.risk-ext  { background: var(--red-fill);   color: var(--red-accent);   border: 1px solid var(--red-accent); }
+</style>
+</head>
+<body>
+<div class="simulator">
+
+  <!-- Presets -->
+  <div class="presets-label">Quick Presets</div>
+  <div class="presets">
+    <button class="preset-btn" data-preset="default">Default (safe)</button>
+    <button class="preset-btn active" data-preset="fullauto">--full-auto</button>
+    <button class="preset-btn" data-preset="autonet">Auto + network</button>
+    <button class="preset-btn" data-preset="fullaccess">Full access</button>
+    <button class="preset-btn" data-preset="yolo">--dangerously-bypass...</button>
+  </div>
+
+  <!-- 3-axis controls -->
+  <div class="controls">
+    <!-- approval_policy -->
+    <div class="control-group">
+      <div class="control-label">approval_policy <span class="axis-flag">-a</span></div>
+      <div class="btn-group" id="approval-group">
+        <button class="axis-btn" data-axis="approval" data-val="untrusted">untrusted</button>
+        <button class="axis-btn" data-axis="approval" data-val="on-request">on-request</button>
+        <button class="axis-btn" data-axis="approval" data-val="never">never</button>
+      </div>
+    </div>
+    <!-- sandbox_mode -->
+    <div class="control-group">
+      <div class="control-label">sandbox_mode <span class="axis-flag">-s</span></div>
+      <div class="btn-group" id="sandbox-group">
+        <button class="axis-btn" data-axis="sandbox" data-val="read-only">read-only</button>
+        <button class="axis-btn" data-axis="sandbox" data-val="workspace-write">workspace-write</button>
+        <button class="axis-btn" data-axis="sandbox" data-val="danger-full-access">danger-full-access</button>
+      </div>
+    </div>
+    <!-- network_access -->
+    <div class="control-group">
+      <div class="control-label">network_access</div>
+      <div class="toggle-row" style="margin-top:8px;">
+        <div class="toggle-desc">Allow outbound<br>network requests</div>
+        <div class="toggle-wrap">
+          <input type="checkbox" id="network-toggle">
+          <label class="toggle-track" for="network-toggle"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="output-panel">
+    <div class="output-header">Generated Command &amp; Risk Assessment</div>
+    <div class="output-body">
+      <div class="output-left">
+        <div class="output-command" id="output-command"></div>
+        <div class="output-usecase" id="output-usecase"></div>
+        <div class="claude-badge-wrap" id="claude-badge-wrap"></div>
+      </div>
+      <div class="risk-wrap">
+        <div class="risk-label-top">Risk Level</div>
+        <div class="risk-meter" id="risk-meter">
+          <div class="risk-bar" id="rbar1"></div>
+          <div class="risk-bar" id="rbar2"></div>
+          <div class="risk-bar" id="rbar3"></div>
+          <div class="risk-bar" id="rbar4"></div>
+        </div>
+        <span class="risk-text" id="risk-text"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+var state = {
+  approval: 'on-request',
+  sandbox: 'workspace-write',
+  network: false
+};
+
+var PRESETS = {
+  default:    { approval: 'untrusted',   sandbox: 'workspace-write',    network: false },
+  fullauto:   { approval: 'on-request',  sandbox: 'workspace-write',    network: false },
+  autonet:    { approval: 'never',       sandbox: 'workspace-write',    network: true },
+  fullaccess: { approval: 'never',       sandbox: 'danger-full-access', network: true },
+  yolo:       { approval: 'never',       sandbox: 'danger-full-access', network: true }
+};
+
+function calcRisk(s) {
+  var base = 1;
+  if (s.approval === 'on-request') base += 0.5;
+  else if (s.approval === 'never') base += 1.5;
+  if (s.sandbox === 'workspace-write') base += 0.5;
+  else if (s.sandbox === 'danger-full-access') base += 1.5;
+  if (s.network) base += 0.5;
+  return Math.min(4, Math.round(base));
+}
+
+function buildCommand(s, presetKey) {
+  if (presetKey === 'yolo') {
+    return 'codex --dangerously-bypass-approvals-and-sandbox\n  "your task here"';
+  }
+  if (presetKey === 'fullauto') {
+    return 'codex --full-auto\n  "your task here"';
+  }
+  var parts = ['codex'];
+  parts.push('-a ' + s.approval);
+  parts.push('-s ' + s.sandbox);
+  if (s.network && s.sandbox === 'workspace-write') {
+    parts.push("-c 'sandbox_workspace_write.network_access=true'");
+  }
+  parts.push('"your task here"');
+  return parts.join(' \\\n  ');
+}
+
+var USECASES = {
+  1: "Safe exploration: code review, test run, analysis. No destructive changes possible.",
+  2: "Balanced automation: daily development, lint/format, unit tests with workspace write.",
+  3: "Network-enabled automation: dependency updates, GitHub API calls, deploy scripts.",
+  4: "Full unrestricted: CI/CD pipelines, isolated containers, staging deploys only."
+};
+
+var CLAUDE_EQUIV = {
+  default:    null,
+  fullauto:   { label: 'Claude Code equivalent', cmd: 'claude (default)' },
+  autonet:    { label: 'Claude Code equivalent', cmd: 'claude --allowedTools ...' },
+  fullaccess: { label: 'Claude Code equivalent', cmd: 'claude --dangerously-skip-permissions' },
+  yolo:       { label: 'Claude Code equivalent', cmd: 'claude --dangerously-skip-permissions' }
+};
+
+var RISK_LABELS = { 1: 'Low', 2: 'Medium', 3: 'High', 4: 'Extreme' };
+var RISK_CLASSES = { 1: 'risk-low', 2: 'risk-mid', 3: 'risk-high', 4: 'risk-ext' };
+var RISK_BAR_CLASSES = { 1: 'filled-low', 2: 'filled-mid', 3: 'filled-high', 4: 'filled-ext' };
+
+var AXIS_RISK = {
+  approval: { untrusted: 1, 'on-request': 2, never: 3 },
+  sandbox: { 'read-only': 1, 'workspace-write': 2, 'danger-full-access': 3 }
+};
+
+function getApprovalRiskClass(val) {
+  var r = AXIS_RISK.approval[val] || 1;
+  return r === 1 ? ['teal-fill','teal-accent'] : r === 2 ? ['amber-fill','amber-accent'] : ['coral-fill','coral-accent'];
+}
+function getSandboxRiskClass(val) {
+  var r = AXIS_RISK.sandbox[val] || 1;
+  return r === 1 ? ['teal-fill','teal-accent'] : r === 2 ? ['gray-fill','gray-accent'] : ['red-fill','red-accent'];
+}
+
+var activePreset = 'fullauto';
+
+function render() {
+  var risk = calcRisk(state);
+
+  // Render command
+  document.getElementById('output-command').textContent = buildCommand(state, activePreset);
+
+  // Risk meter bars
+  var bars = ['rbar1','rbar2','rbar3','rbar4'];
+  bars.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    el.className = 'risk-bar';
+    if (i < risk) el.classList.add(RISK_BAR_CLASSES[risk]);
+  });
+
+  // Risk text
+  var rt = document.getElementById('risk-text');
+  rt.textContent = RISK_LABELS[risk];
+  rt.className = 'risk-text ' + RISK_CLASSES[risk];
+
+  // Use case
+  document.getElementById('output-usecase').textContent = USECASES[risk];
+
+  // Claude badge
+  var badgeWrap = document.getElementById('claude-badge-wrap');
+  var equiv = CLAUDE_EQUIV[activePreset];
+  if (equiv) {
+    badgeWrap.innerHTML = '<span class="claude-badge">Claude Code: ' + equiv.cmd + '</span>';
+  } else {
+    badgeWrap.innerHTML = '';
+  }
+
+  // Style axis buttons based on risk
+  document.querySelectorAll('[data-axis="approval"]').forEach(function(btn) {
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    btn.style.fontWeight = '';
+    if (btn.dataset.val === state.approval) {
+      var c = getApprovalRiskClass(state.approval);
+      btn.style.background = 'var(--' + c[0] + ')';
+      btn.style.borderColor = 'var(--' + c[1] + ')';
+      btn.style.color = 'var(--' + c[1] + ')';
+      btn.style.fontWeight = '700';
+    }
+  });
+  document.querySelectorAll('[data-axis="sandbox"]').forEach(function(btn) {
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    btn.style.fontWeight = '';
+    if (btn.dataset.val === state.sandbox) {
+      var c = getSandboxRiskClass(state.sandbox);
+      btn.style.background = 'var(--' + c[0] + ')';
+      btn.style.borderColor = 'var(--' + c[1] + ')';
+      btn.style.color = 'var(--' + c[1] + ')';
+      btn.style.fontWeight = '700';
+    }
+  });
+
+  // Preset buttons
+  document.querySelectorAll('.preset-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.preset === activePreset);
+  });
+}
+
+// Axis button clicks
+document.querySelectorAll('.axis-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var axis = btn.dataset.axis;
+    var val = btn.dataset.val;
+    state[axis] = val;
+    activePreset = null;
+    render();
+  });
+});
+
+// Network toggle
+document.getElementById('network-toggle').addEventListener('change', function() {
+  state.network = this.checked;
+  activePreset = null;
+  render();
+});
+
+// Preset buttons
+document.querySelectorAll('.preset-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var key = btn.dataset.preset;
+    activePreset = key;
+    var p = PRESETS[key];
+    state.approval = p.approval;
+    state.sandbox = p.sandbox;
+    state.network = p.network;
+    document.getElementById('network-toggle').checked = p.network;
+    render();
+  });
+});
+
+// Init
+document.getElementById('network-toggle').checked = false;
+render();
+</script>
+<!-- Dark mode sync -->
+<script>
+(function() {
+  try {
+    var scheme = window.parent.document.body.getAttribute('data-md-color-scheme');
+    if (scheme) document.documentElement.setAttribute('data-md-color-scheme', scheme);
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-md-color-scheme') {
+          var s = window.parent.document.body.getAttribute('data-md-color-scheme');
+          document.documentElement.setAttribute('data-md-color-scheme', s || '');
+        }
+      });
+    });
+    observer.observe(window.parent.document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

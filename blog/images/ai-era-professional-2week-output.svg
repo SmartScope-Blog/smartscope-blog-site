@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="260" viewBox="0 0 800 260" role="img" aria-labelledby="title desc">
+  <title id="title">2週間で出す5つのアウトプット</title>
+  <desc id="desc">現状業務マップから効果の数値化までの5ステップ</desc>
+  <rect width="800" height="260" fill="#ffffff"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="23" font-weight="700" fill="#12343b">2週間で出す5つのアウトプット</text>
+  <g font-family="sans-serif">
+    <rect x="26" y="92" width="128" height="88" rx="8" fill="#e7f5f6" stroke="#2f7c85" stroke-width="2"/>
+    <text x="90" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#12343b">Step 1</text>
+    <text x="90" y="145" text-anchor="middle" font-size="16" font-weight="700" fill="#12343b">現状業務マップ</text>
+    <text x="90" y="166" text-anchor="middle" font-size="12" fill="#4b5563">流れと工数</text>
+
+    <rect x="186" y="92" width="128" height="88" rx="8" fill="#e9f7ec" stroke="#2f7c5f" stroke-width="2"/>
+    <text x="250" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#12343b">Step 2</text>
+    <text x="250" y="145" text-anchor="middle" font-size="16" font-weight="700" fill="#12343b">AI置換候補</text>
+    <text x="250" y="166" text-anchor="middle" font-size="12" fill="#4b5563">4分類</text>
+
+    <rect x="346" y="92" width="128" height="88" rx="8" fill="#fff4d6" stroke="#b56b00" stroke-width="2"/>
+    <text x="410" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#3b2a12">Step 3</text>
+    <text x="410" y="145" text-anchor="middle" font-size="16" font-weight="700" fill="#3b2a12">ハーネス設計図</text>
+    <text x="410" y="166" text-anchor="middle" font-size="12" fill="#4b5563">制御点</text>
+
+    <rect x="506" y="92" width="128" height="88" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+    <text x="570" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">Step 4</text>
+    <text x="570" y="145" text-anchor="middle" font-size="16" font-weight="700" fill="#111827">パイロット計画</text>
+    <text x="570" y="166" text-anchor="middle" font-size="12" fill="#4b5563">20件検証</text>
+
+    <rect x="666" y="92" width="108" height="88" rx="8" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>
+    <text x="720" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#831843">Step 5</text>
+    <text x="720" y="145" text-anchor="middle" font-size="15" font-weight="700" fill="#831843">効果の数値化</text>
+    <text x="720" y="166" text-anchor="middle" font-size="12" fill="#4b5563">横展開</text>
+  </g>
+  <g stroke="#111827" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="158" y1="136" x2="181" y2="136"/>
+    <line x1="318" y1="136" x2="341" y2="136"/>
+    <line x1="478" y1="136" x2="501" y2="136"/>
+    <line x1="638" y1="136" x2="661" y2="136"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#111827"/>
+    </marker>
+  </defs>
+</svg>
