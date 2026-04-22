@@ -5,24 +5,24 @@
   <!-- Left: Before -->
   <rect x="20" y="20" width="340" height="340" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
   <rect x="20" y="20" width="340" height="36" rx="12" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+  <rect x="20" y="44" width="340" height="2" fill="#1D9E75"/>
   <text x="190" y="44" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Before: Sonnet 4.5 Era (Effective)</text>
 
-  <rect x="45" y="76" width="290" height="68" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <rect x="45" y="76" width="290" height="60" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
   <text x="190" y="98" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Model Weakness</text>
-  <text x="190" y="118" text-anchor="middle" fill="#A6431F" font-size="12">Cuts tasks short near the</text>
-  <text x="190" y="134" text-anchor="middle" fill="#A6431F" font-size="12">context limit</text>
+  <text x="190" y="118" text-anchor="middle" fill="#A6431F" font-size="12">Cuts tasks short near context limit ("context anxiety")</text>
 
-  <text x="190" y="163" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+  <text x="190" y="155" text-anchor="middle" fill="#888780" font-size="20">↓</text>
 
-  <rect x="45" y="176" width="290" height="60" rx="8" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
-  <text x="190" y="198" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Harness Workaround Added</text>
-  <text x="190" y="218" text-anchor="middle" fill="#0F6E56" font-size="12">"Context reset" mechanism built into harness</text>
+  <rect x="45" y="168" width="290" height="60" rx="8" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="190" y="190" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Harness Workaround Added</text>
+  <text x="190" y="210" text-anchor="middle" fill="#0F6E56" font-size="12">"Context reset" mechanism built into harness</text>
 
-  <text x="190" y="255" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+  <text x="190" y="247" text-anchor="middle" fill="#888780" font-size="20">↓</text>
 
-  <rect x="45" y="268" width="290" height="48" rx="8" fill="#FFFFFF" stroke="#1D9E75" stroke-width="1"/>
-  <text x="190" y="290" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Result: Problem solved, works well</text>
-  <text x="190" y="306" text-anchor="middle" fill="#5F5E5A" font-size="12">The right call at the time</text>
+  <rect x="45" y="260" width="290" height="48" rx="8" fill="#FFFFFF" stroke="#1D9E75" stroke-width="1"/>
+  <text x="190" y="282" text-anchor="middle" fill="#0F6E56" font-size="14" font-weight="700">Result: Problem solved, works well</text>
+  <text x="190" y="298" text-anchor="middle" fill="#5F5E5A" font-size="12">The right call at the time</text>
 
   <!-- Center: model evolution arrow -->
   <rect x="370" y="140" width="60" height="80" rx="30" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
@@ -33,28 +33,28 @@
   <!-- Right: After -->
   <rect x="440" y="20" width="340" height="340" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
   <rect x="440" y="20" width="340" height="36" rx="12" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+  <rect x="440" y="44" width="340" height="2" fill="#D85A30"/>
   <text x="610" y="44" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">After: Opus 4.5 Era (Problem)</text>
 
-  <rect x="465" y="76" width="290" height="68" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
+  <rect x="465" y="76" width="290" height="60" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
   <text x="610" y="98" text-anchor="middle" fill="#1F5C94" font-size="14" font-weight="700">Model Resolved the Weakness</text>
-  <text x="610" y="118" text-anchor="middle" fill="#1F5C94" font-size="12">Completes tasks without worrying</text>
-  <text x="610" y="134" text-anchor="middle" fill="#1F5C94" font-size="12">about the context limit</text>
+  <text x="610" y="118" text-anchor="middle" fill="#1F5C94" font-size="12">Completes tasks without context anxiety</text>
 
-  <text x="610" y="163" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+  <text x="610" y="155" text-anchor="middle" fill="#888780" font-size="20">↓</text>
 
-  <rect x="465" y="176" width="290" height="60" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="5 3"/>
-  <text x="610" y="198" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Workaround Code Still Runs</text>
-  <text x="610" y="218" text-anchor="middle" fill="#A6431F" font-size="12">Unnecessary reset mechanism fires every time</text>
+  <rect x="465" y="168" width="290" height="60" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="610" y="190" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Workaround Code Still Runs</text>
+  <text x="610" y="210" text-anchor="middle" fill="#A6431F" font-size="12">Unnecessary reset mechanism fires every time</text>
 
-  <text x="610" y="255" text-anchor="middle" fill="#888780" font-size="20">↓</text>
+  <text x="610" y="247" text-anchor="middle" fill="#888780" font-size="20">↓</text>
 
-  <rect x="465" y="268" width="290" height="48" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
-  <text x="610" y="290" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Result: Dead weight that drags you down</text>
-  <text x="610" y="306" text-anchor="middle" fill="#A6431F" font-size="12">Yesterday's fix is today's tech debt</text>
+  <rect x="465" y="260" width="290" height="48" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+  <text x="610" y="282" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">Result: Dead weight that drags you down</text>
+  <text x="610" y="298" text-anchor="middle" fill="#A6431F" font-size="12">Yesterday's fix is today's tech debt</text>
 
   <!-- Bottom message -->
   <rect x="20" y="384" width="760" height="80" rx="10" fill="#FFFFFF" stroke="#888780" stroke-width="1"/>
   <text x="400" y="408" text-anchor="middle" fill="#5F5E5A" font-size="14" font-weight="700">Key point: Every time the model improves, harness workarounds need revisiting</text>
   <text x="400" y="430" text-anchor="middle" fill="#5F5E5A" font-size="13">→ Design a framework that makes workarounds swappable, not a specific workaround</text>
-  <text x="400" y="450" text-anchor="middle" fill="#888780" font-size="11" opacity="0.85">(Bitter Lesson: hand-crafted tricks lose to scaling in the long run — Rich Sutton)</text>
+  <text x="400" y="450" text-anchor="middle" fill="#888780" font-size="10" opacity="0.85">(Bitter Lesson: hand-crafted tricks lose to scaling in the long run — Rich Sutton)</text>
 </svg>

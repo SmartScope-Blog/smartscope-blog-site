@@ -11,35 +11,35 @@
   <rect x="60" y="120" width="180" height="160" rx="10" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.8"/>
   <text x="150" y="148" text-anchor="middle" fill="#463F9F" font-size="15" font-weight="700">頭脳</text>
   <text x="150" y="168" text-anchor="middle" fill="#463F9F" font-size="11">Claude + ハーネス</text>
-  <text x="150" y="196" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">推論ループ</text>
-  <text x="150" y="212" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">ツールルーティング</text>
+  <text x="150" y="196" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">推論ループ</text>
+  <text x="150" y="212" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">ツールルーティング</text>
 
   <!-- Hands (sandbox) inside -->
   <rect x="260" y="120" width="180" height="160" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.8"/>
   <text x="350" y="148" text-anchor="middle" fill="#0F6E56" font-size="15" font-weight="700">手足</text>
   <text x="350" y="168" text-anchor="middle" fill="#0F6E56" font-size="11">サンドボックス</text>
-  <text x="350" y="196" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">コード実行</text>
-  <text x="350" y="212" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">🔑 認証情報 同居</text>
+  <text x="350" y="196" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">コード実行</text>
+  <text x="350" y="212" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">🔑 認証情報 同居</text>
 
   <!-- Session inside -->
   <rect x="460" y="120" width="170" height="160" rx="10" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.8"/>
   <text x="545" y="148" text-anchor="middle" fill="#8A5210" font-size="15" font-weight="700">記録</text>
   <text x="545" y="168" text-anchor="middle" fill="#8A5210" font-size="11">イベントログ</text>
-  <text x="545" y="196" text-anchor="middle" fill="#8A5210" font-size="11" opacity="0.85">WebSocket配信</text>
-  <text x="545" y="212" text-anchor="middle" fill="#8A5210" font-size="11" opacity="0.85">コンテナと同運命</text>
+  <text x="545" y="196" text-anchor="middle" fill="#8A5210" font-size="10" opacity="0.85">WebSocket配信</text>
+  <text x="545" y="212" text-anchor="middle" fill="#8A5210" font-size="10" opacity="0.85">コンテナと同運命</text>
 
   <!-- Problem boxes below -->
   <rect x="30" y="350" width="300" height="104" rx="10" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
   <text x="180" y="374" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">問題1：認証情報がサンドボックス内</text>
-  <text x="46" y="396" fill="#A6431F" font-size="11">・プロンプトインジェクションで環境変数が読まれる</text>
-  <text x="46" y="414" fill="#A6431F" font-size="11">・攻撃者がトークンを入手</text>
-  <text x="46" y="432" fill="#A6431F" font-size="11">・<tspan font-weight="700">新セッションを立ち上げて作業委任が可能</tspan></text>
+  <text x="46" y="396" fill="#A6431F" font-size="10.5">・プロンプトインジェクションで環境変数が読まれる</text>
+  <text x="46" y="414" fill="#A6431F" font-size="10.5">・攻撃者がトークンを入手</text>
+  <text x="46" y="432" fill="#A6431F" font-size="10.5">・<tspan font-weight="700">新セッションを立ち上げて作業委任が可能</tspan></text>
 
   <rect x="350" y="350" width="300" height="104" rx="10" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
   <text x="500" y="374" text-anchor="middle" fill="#A6431F" font-size="14" font-weight="700">問題2：デバッグ困難／VPC接続困難</text>
-  <text x="366" y="396" fill="#A6431F" font-size="11">・ユーザーデータ同居でログ直接閲覧は不可</text>
-  <text x="366" y="414" fill="#A6431F" font-size="11">・顧客VPC接続にネットワークピアリング必須</text>
-  <text x="366" y="432" fill="#A6431F" font-size="11">・リソース同居を前提にした設計の副作用</text>
+  <text x="366" y="396" fill="#A6431F" font-size="10.5">・ユーザーデータ同居でログ直接閲覧は不可</text>
+  <text x="366" y="414" fill="#A6431F" font-size="10.5">・顧客VPC接続にネットワークピアリング必須</text>
+  <text x="366" y="432" fill="#A6431F" font-size="10.5">・リソース同居を前提にした設計の副作用</text>
 
   <!-- Bottom line -->
   <line x1="30" y1="484" x2="650" y2="484" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 3"/>

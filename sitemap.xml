@@ -1548,25 +1548,11 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-coding-practices-evolution-vibe-to-skills/"/>
     </url>
     <url>
-        <loc>https://smartscope.blog/blog/ai-coding-team-development-case-studies/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-coding-team-development-case-studies/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-coding-team-development-case-studies/"/>
-    </url>
-    <url>
         <loc>https://smartscope.blog/blog/ai-coding-team-development-local-optimization/</loc>
         <lastmod>2026-04-22</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-coding-team-development-local-optimization/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-coding-team-development-local-optimization/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/blog/ai-era-professional-model/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-era-professional-model/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-era-professional-model/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/blog/ai-era-value-shift-map/</loc>
@@ -1595,13 +1581,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-spec-driven-development-output-contract/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-spec-driven-development-output-contract/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/blog/ai-team-design-human-agent-teams/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-team-design-human-agent-teams/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-team-design-human-agent-teams/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/blog/amazon-outage-ai-coding-change-management-2026/</loc>
@@ -1756,13 +1735,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/gh-stack-multi-agent-branch-strategy/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/gh-stack-multi-agent-branch-strategy/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/blog/github-copilot-terminal-output-workaround/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/github-copilot-terminal-output-workaround/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/github-copilot-terminal-output-workaround/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/blog/gpt-5-1-upgrade-guide/</loc>
@@ -3613,6 +3585,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-premium-request-optimization/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/</loc>
+        <lastmod>2026-04-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/generative-ai/github-copilot/github-copilot-reasoning-levels-guide/</loc>
         <lastmod>2026-04-22</lastmod>
         <changefreq>daily</changefreq>
@@ -3625,6 +3604,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-skills-guide/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-skills-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/generative-ai/github-copilot/github-copilot-terminal-output-workaround/</loc>
+        <lastmod>2026-04-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-terminal-output-workaround/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-terminal-output-workaround/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/generative-ai/google-gemini/</loc>
@@ -3779,13 +3765,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/dividend-yield-total-return/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/dividend-yield-total-return/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/investments/guide/five-pct-filing-strategy-guide/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/five-pct-filing-strategy-guide/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/five-pct-filing-strategy-guide/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/investments/guide/japan-us-sector-lead-lag-pca-strategy/</loc>
@@ -5517,25 +5496,11 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-coding-practices-evolution-vibe-to-skills/"/>
     </url>
     <url>
-        <loc>https://smartscope.blog/en/blog/ai-coding-team-development-case-studies/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-coding-team-development-case-studies/"/>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-coding-team-development-case-studies/"/>
-    </url>
-    <url>
         <loc>https://smartscope.blog/en/blog/ai-coding-team-development-local-optimization/</loc>
         <lastmod>2026-04-22</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-coding-team-development-local-optimization/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-coding-team-development-local-optimization/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/en/blog/ai-era-professional-model/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-era-professional-model/"/>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-era-professional-model/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/blog/ai-era-value-shift-map/</loc>
@@ -5564,13 +5529,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-spec-driven-development-output-contract/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-spec-driven-development-output-contract/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/en/blog/ai-team-design-human-agent-teams/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/ai-team-design-human-agent-teams/"/>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/ai-team-design-human-agent-teams/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/blog/amazon-outage-ai-coding-change-management-2026/</loc>
@@ -5725,13 +5683,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/gh-stack-multi-agent-branch-strategy/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/gh-stack-multi-agent-branch-strategy/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/en/blog/github-copilot-terminal-output-workaround/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/github-copilot-terminal-output-workaround/"/>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/github-copilot-terminal-output-workaround/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/blog/gpt-5-1-upgrade-guide/</loc>
@@ -7582,6 +7533,13 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-premium-request-optimization/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/</loc>
+        <lastmod>2026-04-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-pricing-model-collapse-2026/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-reasoning-levels-guide/</loc>
         <lastmod>2026-04-22</lastmod>
         <changefreq>daily</changefreq>
@@ -7594,6 +7552,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-skills-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-skills-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-terminal-output-workaround/</loc>
+        <lastmod>2026-04-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/github-copilot/github-copilot-terminal-output-workaround/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/github-copilot/github-copilot-terminal-output-workaround/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/google-gemini/</loc>
@@ -7748,13 +7713,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/dividend-yield-total-return/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/dividend-yield-total-return/"/>
-    </url>
-    <url>
-        <loc>https://smartscope.blog/en/investments/guide/five-pct-filing-strategy-guide/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/five-pct-filing-strategy-guide/"/>
-        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/five-pct-filing-strategy-guide/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/investments/guide/japan-us-sector-lead-lag-pca-strategy/</loc>

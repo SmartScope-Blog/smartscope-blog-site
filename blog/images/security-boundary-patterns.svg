@@ -47,23 +47,23 @@
 
   <rect x="40" y="362" width="270" height="44" rx="6" fill="#F1EFE8" stroke="#888780" stroke-width="1" stroke-dasharray="4 3"/>
   <text x="175" y="382" text-anchor="middle" fill="#5F5E5A" font-size="11" font-weight="700">Vault (リポジトリトークン)</text>
-  <text x="175" y="398" text-anchor="middle" fill="#5F5E5A" font-size="11">ハーネス・Claudeからは見えない</text>
+  <text x="175" y="398" text-anchor="middle" fill="#5F5E5A" font-size="10">ハーネス・Claudeからは見えない</text>
 
   <line x1="175" y1="408" x2="175" y2="432" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
 
   <rect x="40" y="438" width="270" height="52" rx="6" fill="#FFFFFF" stroke="#1D9E75"/>
   <text x="175" y="458" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">初期化時にクローン</text>
-  <text x="175" y="478" text-anchor="middle" fill="#0F6E56" font-size="11">リモートURLにトークンを埋め込み済み</text>
+  <text x="175" y="478" text-anchor="middle" fill="#0F6E56" font-size="10">リモートURLにトークンを埋め込み済み</text>
 
   <line x1="175" y1="494" x2="175" y2="516" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
 
   <rect x="40" y="522" width="270" height="52" rx="6" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
   <text x="175" y="542" text-anchor="middle" fill="#0F6E56" font-size="11" font-weight="700">サンドボックス内</text>
-  <text x="175" y="562" text-anchor="middle" fill="#0F6E56" font-size="11">git push / pull がそのまま動く</text>
+  <text x="175" y="562" text-anchor="middle" fill="#0F6E56" font-size="10">git push / pull がそのまま動く</text>
 
   <text x="175" y="598" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">エージェントもハーネスも</text>
   <text x="175" y="616" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">トークンに触れない</text>
-  <text x="175" y="636" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">（存在自体を知らない）</text>
+  <text x="175" y="636" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">（存在自体を知らない）</text>
 
   <!-- Pattern 2: MCP -->
   <rect x="350" y="320" width="310" height="330" rx="12" fill="#E6F1FB" stroke="#378ADD" stroke-width="2"/>
@@ -76,13 +76,13 @@
 
   <rect x="370" y="428" width="270" height="52" rx="6" fill="#FFFFFF" stroke="#378ADD"/>
   <text x="505" y="448" text-anchor="middle" fill="#1F5C94" font-size="11" font-weight="700">MCP プロキシ</text>
-  <text x="505" y="468" text-anchor="middle" fill="#1F5C94" font-size="11">session token を受け取る</text>
+  <text x="505" y="468" text-anchor="middle" fill="#1F5C94" font-size="10">session token を受け取る</text>
 
   <line x1="505" y1="484" x2="505" y2="506" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
 
   <rect x="370" y="512" width="270" height="44" rx="6" fill="#F1EFE8" stroke="#888780" stroke-width="1" stroke-dasharray="4 3"/>
   <text x="505" y="532" text-anchor="middle" fill="#5F5E5A" font-size="11" font-weight="700">Vault (OAuth 認証情報)</text>
-  <text x="505" y="548" text-anchor="middle" fill="#5F5E5A" font-size="11">プロキシのみが参照</text>
+  <text x="505" y="548" text-anchor="middle" fill="#5F5E5A" font-size="10">プロキシのみが参照</text>
 
   <line x1="505" y1="560" x2="505" y2="582" stroke="#888780" stroke-width="1" marker-end="url(#arrD)"/>
 

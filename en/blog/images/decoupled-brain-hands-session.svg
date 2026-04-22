@@ -6,7 +6,7 @@
   <rect x="40" y="30" width="600" height="100" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width="2"/>
   <text x="60" y="58" fill="#8A5210" font-size="15" font-weight="700">Session Log (Durable, Append-Only)</text>
   <text x="60" y="78" fill="#8A5210" font-size="11">Full record of everything that happened — survives any crash</text>
-  <g font-size="11" fill="#8A5210">
+  <g font-size="10" fill="#8A5210">
     <rect x="60"  y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="96"  y="108" text-anchor="middle">event 1</text>
     <rect x="138" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="174" y="108" text-anchor="middle">event 2</text>
     <rect x="216" y="92" width="72" height="24" rx="4" fill="#FFFFFF" stroke="#BA7517"/><text x="252" y="108" text-anchor="middle">event 3</text>
@@ -28,17 +28,17 @@
   <g>
     <rect x="60"  y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
     <text x="145" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">Harness A (cattle)</text>
-    <text x="145" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">Horizontally scalable</text>
+    <text x="145" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">Horizontally scalable</text>
   </g>
   <g>
     <rect x="240" y="244" width="170" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD"/>
     <text x="325" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">Harness B (cattle)</text>
-    <text x="325" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">Can resume same session</text>
+    <text x="325" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">Can resume same session</text>
   </g>
   <g>
     <rect x="420" y="244" width="200" height="44" rx="6" fill="#FFFFFF" stroke="#7F77DD" stroke-dasharray="3 3"/>
     <text x="520" y="262" text-anchor="middle" fill="#463F9F" font-size="11" font-weight="700">Future Harness</text>
-    <text x="520" y="278" text-anchor="middle" fill="#463F9F" font-size="11" opacity="0.85">Swappable via same IF</text>
+    <text x="520" y="278" text-anchor="middle" fill="#463F9F" font-size="10" opacity="0.85">Swappable via same IF</text>
   </g>
 
   <line x1="160" y1="302" x2="160" y2="338" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
@@ -54,23 +54,23 @@
   <g>
     <rect x="60"  y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="145" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">Container</text>
-    <text x="145" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">bash / file operations</text>
+    <text x="145" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">bash / file operations</text>
   </g>
   <g>
     <rect x="240" y="406" width="170" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="325" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">MCP Server</text>
-    <text x="325" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">External tools</text>
+    <text x="325" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">External tools</text>
   </g>
   <g>
     <rect x="420" y="406" width="200" height="58" rx="8" fill="#FFFFFF" stroke="#1D9E75"/>
     <text x="520" y="428" text-anchor="middle" fill="#0F6E56" font-size="12" font-weight="700">Customer VPC</text>
-    <text x="520" y="450" text-anchor="middle" fill="#0F6E56" font-size="11" opacity="0.85">No peering required</text>
+    <text x="520" y="450" text-anchor="middle" fill="#0F6E56" font-size="10" opacity="0.85">No peering required</text>
   </g>
 
   <!-- Vault -->
   <rect x="190" y="500" width="300" height="50" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="1.5" stroke-dasharray="5 3"/>
   <text x="340" y="522" text-anchor="middle" fill="#5F5E5A" font-size="12" font-weight="700">Credential Vault</text>
-  <text x="340" y="540" text-anchor="middle" fill="#5F5E5A" font-size="11">Isolated from both hands and harness</text>
+  <text x="340" y="540" text-anchor="middle" fill="#5F5E5A" font-size="10">Isolated from both hands and harness</text>
 
   <text x="340" y="580" text-anchor="middle" fill="#463F9F" font-size="13" font-weight="700">Harness crashes → new harness resumes from session log</text>
   <text x="340" y="600" text-anchor="middle" fill="#0F6E56" font-size="13" font-weight="700">Container crashes → provision() builds new container, inference continues</text>
