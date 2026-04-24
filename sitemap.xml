@@ -2115,6 +2115,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-app-automation-guide/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/generative-ai/chatgpt/codex-automations-ai-news-brief-design/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-automations-ai-news-brief-design/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-automations-ai-news-brief-design/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/generative-ai/chatgpt/codex-cli-0-39-0-to-0-44-0-updates/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -5636,6 +5643,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/claude-opus-4-6-complete-guide/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/blog/claude-opus-4-6-complete-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/claude-opus-4-6-complete-guide.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/blog/claude-sonnet-4-6-release/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -5774,6 +5787,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/mcp-obsolete-skills-compile-tool-integration/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/blog/mcp-obsolete-skills-compile-tool-integration/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/blog/mcp-obsolete-skills-compile-tool-integration.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/blog/mcp-obsolete-skills-compile-tool-integration.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/blog/meta-rayban-display-ai-future/</loc>
@@ -6063,11 +6082,24 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/claude-cloudflare-dns/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/claude-cloudflare-dns.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/claude-cloudflare-dns.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-app-automation-guide/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-app-automation-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-app-automation-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-automations-ai-news-brief-design/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-automations-ai-news-brief-design/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-automations-ai-news-brief-design/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-0-39-0-to-0-44-0-updates/</loc>
@@ -6126,6 +6158,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-cli-approval-modes-no-approval/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-approval-modes-no-approval.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-approval-modes-no-approval.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-approval-policy-implementation/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -6159,6 +6197,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-diagnostic-logs-deep-dive/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-cli-diagnostic-logs-deep-dive/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-diagnostic-logs-deep-dive.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-diagnostic-logs-deep-dive.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-gh-cli-limitations/</loc>
@@ -6210,6 +6254,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-cli-reconnecting-issue-2025/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-reconnecting-issue-2025.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-reconnecting-issue-2025.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-session-approval-guide/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -6229,6 +6279,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-update-not-reflecting-2025/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-cli-update-not-reflecting-2025/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-update-not-reflecting-2025.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-update-not-reflecting-2025.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-cli-usage-best-practices/</loc>
@@ -6259,6 +6315,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-context-window-error/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-context-window-error.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-context-window-error.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-dangerously-skip-permissions-guardrails/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -6280,11 +6342,23 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-network-restrictions-solution/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-network-restrictions-solution.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-network-restrictions-solution.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-plan-mode-complete-guide/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-plan-mode-complete-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-plan-mode-complete-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-plan-mode-complete-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-plan-mode-complete-guide.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-review-command-deep-dive/</loc>
@@ -6299,6 +6373,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-vs-claude-code-2026-benchmark.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-web-parallel-feature-development/</loc>
@@ -6581,6 +6661,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/claude-code-askuserquestion-tool-guide/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-askuserquestion-tool-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-code-askuserquestion-tool-guide.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-auto-mode-guide/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -6600,6 +6686,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-code-auto-permission-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/claude-code-auto-permission-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-auto-permission-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-code-auto-permission-guide.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-auto-permission-quick-tips/</loc>
@@ -6973,6 +7065,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/claude-code-remote-access/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-remote-access.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-code-remote-access.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-remote-control/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -7113,6 +7211,12 @@
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/claude-code-windows-native-installation/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/claude-code-windows-native-installation.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-code-windows-native-installation.zh/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/claude-connectors-directory-2025/</loc>
         <lastmod>2026-04-24</lastmod>
         <changefreq>daily</changefreq>
@@ -7202,6 +7306,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-pptx-skill-practical-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/claude-pptx-skill-practical-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/claude-pptx-skill-practical-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/claude-pptx-skill-practical-guide.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/claude-skills-api-implementation/</loc>
@@ -7377,6 +7487,12 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/serena-mcp-implementation-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/claude/serena-mcp-implementation-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/claude/serena-mcp-implementation-guide.zh/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/claude/serena-mcp-implementation-guide.zh/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/claude/serena-mcp-security-best-practices/</loc>
