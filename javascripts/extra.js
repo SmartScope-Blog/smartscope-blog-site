@@ -267,12 +267,16 @@ function addReadingTime() {
     const content = document.querySelector('.md-content__inner');
     if (!content) return;
     
-    const text = content.textContent;
-    const wordCount = text.trim().split(/\s+/).length;
-    const readingTimeMinutes = Math.ceil(wordCount / 200); // 1分間200語として計算
-    
     // 言語判定
     const en = isEnglish();
+    const text = content.textContent || '';
+    const wordCount = en
+        ? text.trim().split(/\s+/).filter(Boolean).length
+        : text.replace(/\s+/g, '').length;
+    const readingTimeMinutes = Math.max(
+        1,
+        Math.ceil(wordCount / (en ? 200 : 600))
+    );
     
     // ページタイトルの下に読了時間を表示
     const title = document.querySelector('.md-content h1');
