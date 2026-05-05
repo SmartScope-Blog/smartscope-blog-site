@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex /goal Objective Checker</title>
+<style>
+:root {
+  --primary: #1D9E75;
+  --secondary: #378ADD;
+  --accent: #D85A30;
+  --neutral: #888780;
+  --text: #1F2937;
+  --background: #FFFFFF;
+  --surface: #F8FAFA;
+  --primary-soft: #F2FBF8;
+  --accent-soft: #FEF4F1;
+  --border: rgba(136, 135, 128, 0.45);
+  --font-sans: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --widget-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+[data-md-color-scheme="slate"] {
+  --background: #FFFFFF;
+  --surface: #F8FAFA;
+  --text: #1F2937;
+  --border: rgba(136, 135, 128, 0.45);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 14px;
+  color: var(--text);
+  background: var(--background);
+  font-family: var(--font-sans);
+}
+.widget {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+.score {
+  min-width: 86px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+.score.ready {
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+.fields {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px 10px;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.label-block {
+  min-height: 58px;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.hint {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--neutral);
+}
+textarea {
+  width: 100%;
+  min-height: 58px;
+  resize: vertical;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--surface);
+  font: 13px/1.45 var(--font-sans);
+}
+textarea:focus {
+  outline: 2px solid rgba(29, 158, 117, 0.22);
+  border-color: var(--primary);
+}
+.status {
+  display: inline-flex;
+  align-items: center;
+  min-width: 72px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+.status.ready {
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+.output {
+  margin: 0 16px 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.output-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.output-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+.copy {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+pre {
+  min-height: 70px;
+  max-height: 156px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--text);
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  white-space: pre-wrap;
+  font: 13px/1.45 var(--widget-font-mono);
+}
+.warning {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+.warning.ready {
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+@media (max-width: 640px) {
+  body { padding: 10px; }
+  .header { align-items: flex-start; flex-direction: column; }
+  .field-row { grid-template-columns: 1fr; gap: 6px; }
+  .label-block { min-height: auto; }
+}
+</style>
+</head>
+<body>
+<main class="widget">
+  <section class="header" aria-label="Objective checker header">
+    <h1 class="title">Codex /goal Objective Checker</h1>
+    <div id="score" class="score" aria-live="polite">0 / 5 ready</div>
+  </section>
+
+  <section class="fields" aria-label="Objective fields">
+    <div class="field-row">
+      <div class="label-block">
+        <label for="behavior">User-visible behavior</label>
+        <span id="status-behavior" class="status">Missing</span>
+      </div>
+      <textarea id="behavior" placeholder="Example: Users can export the orders table as CSV from the admin screen."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="label-block">
+        <label for="scope">Files in scope</label>
+        <span id="status-scope" class="status">Missing</span>
+      </div>
+      <textarea id="scope" placeholder="Example: app/admin/orders/*, packages/exporter/*, tests/exporter/*."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="label-block">
+        <label for="verification">Verification</label>
+        <span id="status-verification" class="status">Missing</span>
+      </div>
+      <textarea id="verification" placeholder="Example: npm test -- exporter, npm run typecheck, inspect generated CSV fixture."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="label-block">
+        <label for="evidence">Evidence to report</label>
+        <span id="status-evidence" class="status">Missing</span>
+      </div>
+      <textarea id="evidence" placeholder="Example: changed files, test command output, CSV fixture path, remaining risks."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="label-block">
+        <label for="stop">Stop rule</label>
+        <span id="status-stop" class="status">Missing</span>
+      </div>
+      <textarea id="stop" placeholder="Example: stop after 80k tokens, missing credentials, external API dependency, or review approval needed."></textarea>
+    </div>
+  </section>
+
+  <section class="output" aria-label="Objective draft">
+    <div class="output-head">
+      <div class="output-title">objective draft</div>
+      <button id="copy" class="copy" type="button">Copy</button>
+    </div>
+    <pre id="draft">Fill all 5 elements to generate an objective draft.</pre>
+    <div id="warning" class="warning">audit が機能しない可能性: 未入力の要素があります。</div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var fields = [
+    { id: "behavior", label: "User-visible behavior" },
+    { id: "scope", label: "Files in scope" },
+    { id: "verification", label: "Verification" },
+    { id: "evidence", label: "Evidence to report" },
+    { id: "stop", label: "Stop rule" }
+  ];
+  var score = document.getElementById("score");
+  var draft = document.getElementById("draft");
+  var warning = document.getElementById("warning");
+  var copy = document.getElementById("copy");
+
+  function value(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function setStatus(id, ready) {
+    var node = document.getElementById("status-" + id);
+    node.textContent = ready ? "Ready" : "Missing";
+    node.classList.toggle("ready", ready);
+  }
+
+  function render() {
+    var readyCount = 0;
+    fields.forEach(function (field) {
+      var ready = value(field.id).length > 0;
+      if (ready) readyCount += 1;
+      setStatus(field.id, ready);
+    });
+
+    var allReady = readyCount === fields.length;
+    score.textContent = readyCount + " / 5 ready";
+    score.classList.toggle("ready", allReady);
+    warning.classList.toggle("ready", allReady);
+    warning.textContent = allReady
+      ? "objective は audit 可能な形です。Stop rule も入力済みです。"
+      : "audit が機能しない可能性: 未入力の要素があります。";
+
+    if (!allReady) {
+      draft.textContent = "Fill all 5 elements to generate an objective draft.";
+      return;
+    }
+
+    draft.textContent = [
+      "/goal Implement the following objective.",
+      "",
+      "User-visible behavior:",
+      value("behavior"),
+      "",
+      "Files in scope:",
+      value("scope"),
+      "",
+      "Verification:",
+      value("verification"),
+      "",
+      "Evidence to report:",
+      value("evidence"),
+      "",
+      "Stop rule:",
+      value("stop")
+    ].join("\n");
+  }
+
+  fields.forEach(function (field) {
+    document.getElementById(field.id).addEventListener("input", render);
+  });
+
+  copy.addEventListener("click", function () {
+    var text = draft.textContent;
+    if (navigator.clipboard && text.indexOf("/goal") === 0) {
+      navigator.clipboard.writeText(text).then(function () {
+        copy.textContent = "Copied";
+        setTimeout(function () { copy.textContent = "Copy"; }, 1400);
+      });
+      return;
+    }
+    var range = document.createRange();
+    range.selectNodeContents(draft);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
