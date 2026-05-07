@@ -3697,6 +3697,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/google-gemini/gemini-3-1-pro-benchmark-analysis-2026/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/</loc>
+        <lastmod>2026-05-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/generative-ai/google-gemini/notebooklm-complete-guide/</loc>
         <lastmod>2026-05-07</lastmod>
         <changefreq>daily</changefreq>
@@ -7780,6 +7787,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/google-gemini/gemini-3-1-pro-benchmark-analysis-2026/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/google-gemini/gemini-3-1-pro-benchmark-analysis-2026/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/</loc>
+        <lastmod>2026-05-07</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/google-gemini/google-code-wiki-repository-documentation-guide/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/google-gemini/notebooklm-complete-guide/</loc>
