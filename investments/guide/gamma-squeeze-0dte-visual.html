@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ガンマスクイーズの解剖 — 0DTE 時代のオプション市場</title>
-<meta name="description" content="0DTEオプション、ディーラーのデルタヘッジ、ガンマスクイーズが株価の短期変動を増幅する仕組みをインタラクティブに理解するダッシュボード。">
+<title>ガンマスクイーズとは？0DTEオプションが株価を加速させる仕組み</title>
+<meta name="description" content="0DTEオプション、ディーラーのヘッジ注文、ガンマスクイーズが短期相場を増幅する仕組みを、個人投資家向けに図解するインタラクティブダッシュボード。">
 <style>
 :root { --bg:#0b0d12; --bg-2:#11141c; --panel:#161a24; --line:#232838; --text:#e8ecf3; --mute:#7a8499; --gold:#e5b948; --gold-dim:#8a6f2c; --red:#ff5a5a; --green:#4ade80; --blue:#5b9eff; --purple:#b07cff; }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -109,8 +109,8 @@ footer .src { display:block; margin-top:8px; font-size:10px; opacity:.7; letter-
 <header class="intro-hero">
   <div class="container">
     <div class="eyebrow">GAMMA SQUEEZE / 0DTE / DEALER HEDGING</div>
-    <h1>株価の動きを <span class="highlight">増幅させる</span> もう一つの力</h1>
-    <p class="lead">米国株市場では、価格を動かす要因がファンダメンタルズだけではなくなってきている。0DTE（当日満期）オプションの台頭と、それを売買するディーラーのヘッジ動作が、短期的な値動きを機械的に増幅する仕組みを作り出している。この事象を構造から解剖する。</p>
+    <h1>ガンマスクイーズとは？0DTEオプションが株価を <span class="highlight">加速</span> させる仕組み</h1>
+    <p class="lead">上がる相場がさらに上がり、崩れる時は下げも速くなる。0DTE（当日満期）オプションとディーラーのヘッジ注文が、短期相場を機械的に増幅する流れを図解する。</p>
   </div>
 </header>
 <section><div class="container"><div class="section-num">01 / 用語</div><h2>3つの基本概念</h2><p class="intro">本題に入る前に、ここで使う3つの言葉を整理する。これらが組み合わさって「ガンマスクイーズ」と呼ばれる現象が生まれる。</p><div class="def-block"><div class="term">▎CALL OPTION</div><div class="def">「株価が一定価格まで上がれば利益が出る」という権利。少額のプレミアムを払って大きな値幅に賭けられるレバレッジ商品。原資産は買わずに価格上昇に賭けられる。</div></div><div class="def-block"><div class="term">▎DELTA HEDGING</div><div class="def">オプションを売ったマーケットメイカー（ディーラー）は価格変動リスクを抱える。これを打ち消すため、対応する量の現物・先物を反対方向に持つ。価格が動くたびに必要保有量が変わるので、継続的に売買して調整する。</div></div><div class="def-block"><div class="term">▎0DTE</div><div class="def">Zero Days to Expiration。当日満期のオプション。米国市場ではここ数年で急速に普及し、2025年には SPX オプション全体の約 60% を占める月が出てきた。満期までの時間が極端に短いため、ガンマ（デルタの変化率）が高く、ヘッジ需要も瞬間的に大きくなる。</div></div></div></section>
