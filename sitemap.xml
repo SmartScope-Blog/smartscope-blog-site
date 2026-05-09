@@ -2353,6 +2353,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-goal-practical-guide/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/generative-ai/chatgpt/codex-independent-second-pass-review/</loc>
+        <lastmod>2026-05-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-independent-second-pass-review/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-independent-second-pass-review/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/generative-ai/chatgpt/codex-network-restrictions-solution/</loc>
         <lastmod>2026-05-09</lastmod>
         <changefreq>daily</changefreq>
@@ -6410,6 +6417,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-goal-practical-guide/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-goal-practical-guide/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-independent-second-pass-review/</loc>
+        <lastmod>2026-05-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/generative-ai/chatgpt/codex-independent-second-pass-review/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/generative-ai/chatgpt/codex-independent-second-pass-review/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/generative-ai/chatgpt/codex-network-restrictions-solution/</loc>
