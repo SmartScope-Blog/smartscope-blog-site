@@ -3816,6 +3816,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/dividend-yield-total-return/"/>
     </url>
     <url>
+        <loc>https://smartscope.blog/investments/guide/gamma-squeeze-0dte-dashboard/</loc>
+        <lastmod>2026-05-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/gamma-squeeze-0dte-dashboard/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/gamma-squeeze-0dte-dashboard/"/>
+    </url>
+    <url>
         <loc>https://smartscope.blog/investments/guide/japan-us-sector-lead-lag-pca-strategy/</loc>
         <lastmod>2026-05-09</lastmod>
         <changefreq>daily</changefreq>
@@ -7920,6 +7927,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/dividend-yield-total-return/"/>
         <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/dividend-yield-total-return/"/>
+    </url>
+    <url>
+        <loc>https://smartscope.blog/en/investments/guide/gamma-squeeze-0dte-dashboard/</loc>
+        <lastmod>2026-05-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smartscope.blog/en/investments/guide/gamma-squeeze-0dte-dashboard/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://smartscope.blog/investments/guide/gamma-squeeze-0dte-dashboard/"/>
     </url>
     <url>
         <loc>https://smartscope.blog/en/investments/guide/japan-us-sector-lead-lag-pca-strategy/</loc>
